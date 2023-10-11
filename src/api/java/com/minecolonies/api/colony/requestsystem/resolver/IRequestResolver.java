@@ -14,123 +14,115 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Used to resolve a request. In a colony multiple resolvers can exist for a given type R. The resolver with the highest priority is checked first, then second and so forth.
- * <p>
- * The resolver himself is responsible for storing the tokens of requests that he returns
+ * 用于解决请求的接口。在一个殖民地中，可以存在多个解决器，用于解决给定类型 R 的请求。首先检查具有最高优先级的解决器，然后是第二个，依此类推。
  *
- * @param <R> The request type that this resolver can provide.
+ * 解决器本身负责存储它返回的请求的令牌。
+ *
+ * @param <R> 此解决器可以提供的请求类型。
  */
-public interface IRequestResolver<R extends IRequestable> extends IRequester
-{
+public interface IRequestResolver<R extends IRequestable> extends IRequester {
 
     /**
-     * Used to determine which type of requests can be resolved by this Resolver.
+     * 用于确定此解决器可以解决的请求类型。
      *
-     * @return The class that represents this Type of Request this resolver can resolve.
+     * @return 表示此解决器可以解决的请求类型的类。
      */
     TypeToken<? extends R> getRequestType();
 
     /**
-     * A PreCheck used to determine if this request resolver is able to resolve a given request. Should quickly and cheaply check if this resolver COULD resolve this request.
+     * 用于确定此请求解析器是否能够解决给定请求的类型。应快速且廉价地检查此解决器是否可能解决此请求。
      *
-     * @param requestToCheck The request to check.
-     * @param manager        The manager that is checking if this resolver could resolve that request.
-     * @return True when this resolver COULD resolve the given request, false when not.
+     * @param manager 要检查此解决器是否可以解决请求的管理器。
+     * @param requestToCheck 要检查的请求。
+     * @return 如果此解决器可以解决给定请求，则返回 true；否则返回 false。
      */
     boolean canResolveRequest(@NotNull IRequestManager manager, IRequest<? extends R> requestToCheck);
 
     /**
-     * Method used to attempt a resolving operation.
-     * <p>
-     * When this attempt was successful a List with tokens of required requests is returned. This list maybe empty. The list should indicate all sub requests that should be
-     * fullfilled before the @code{resolve(IRequest request)} method is called.
-     * <p>
-     * When this attempt was not successful, eg. this resolver could not schedule a crafting operation, a Null object should be returned. In that case the next resolver will be
-     * tried by the manager.
-     * <p>
-     * IT IS VITAL THAT THE REQUEST RETURNED ARE NOT YET ASSIGNED. SIMULATION AND OTHER STRATEGIES WILL FAIL ELSE! THE MANAGER GIVEN WILL HANDLE ASSIGNING HIMSELF!
+     * 用于尝试解决请求的方法。
      *
-     * @param manager The manager that is attempting to resolve using this resolver.
-     * @param request The request to resolve.
-     * @return The tokens of required requests if the attempt was successful (an empty list is allowed to indicate no requirements), null if the attempt failed.
+     * 当此尝试成功时，将返回所需请求的令牌列表。此列表可能为空。列表应指示在调用 @code{resolve(IRequest request)} 方法之前应该满足的所有子请求。
+     *
+     * 当此尝试不成功时，例如此解决器无法安排制作操作，则应返回 Null 对象。在这种情况下，管理器将尝试下一个解决器。
+     *
+     * 非常重要的是，返回的请求尚未被分配。否则，模拟和其他策略将失败！给定的管理器将自己处理分配！
+     *
+     * @param manager 尝试使用此解决器进行解决的管理器。
+     * @param request 要解决的请求。
+     * @return 如果尝试成功，则返回所需请求的令牌（允许空列表以指示无需求），如果尝试失败，则返回 null。
      */
     @Nullable
     List<IToken<?>> attemptResolveRequest(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> request);
 
     /**
-     * Method used to resolve a given request. Is called the moment all Child requests are resolved.
-     * <p>
-     * The resolver should update the state through the given manager.
-     * <p>
-     * When this method is called all requirements need be fullfilled for this resolver. If this is not the case it will throw a RunTimeException
+     * 用于解决给定请求的方法。在所有子请求都解决后立即调用。
      *
-     * @param request The request to resolve.
-     * @param manager The manager that is resolving this request, under normal conditions this is the colony manager.
-     * @throws RuntimeException is thrown when the resolver could not resolve the request. Should never happen as attemptResolve should be called first, and all requirements should
-     *                          be available to this resolver at this point in time.
+     * 解决器应通过给定的管理器更新状态。
+     *
+     * 当调用此方法时，对于此解决器，所有要求都需要满足。否则，它将抛出 RuntimeException。
+     *
+     * @param request 要解决的请求。
+     * @param manager 正在解决此请求的管理器，正常情况下，这是殖民地管理器。
+     * @throws RuntimeException 当解决器无法解决请求时抛出。这应该永远不会发生，因为首先应该调用 attemptResolve，此时所有要求应该对解决器可用。
      */
     @Nullable
     void resolveRequest(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> request);
 
     /**
-     * Called by the manager given to indicate that this request has been assigned to you.
+     * 由给定的管理器调用，以指示已将此请求分配给您。
      *
-     * @param manager    The systems manager.
-     * @param request    The request assigned.
-     * @param simulation True when simulating.
+     * @param manager 系统管理器。
+     * @param request 已分配的请求。
+     * @param simulation 如果正在模拟，则为 true。
      */
-    default void onRequestAssigned(@NotNull final IRequestManager manager, @NotNull final IRequest<? extends R> request, boolean simulation)
-    {
-        //Noop
+    default void onRequestAssigned(@NotNull final IRequestManager manager, @NotNull final IRequest<? extends R> request, boolean simulation) {
+        // 没有操作
     }
 
     /**
-     * Indicates that a assigned request has been cancelled. Is called before graph is updated.
+     * 表示已取消分配的请求。在更新图形之前调用。
      *
-     * @param manager The manager that indicates the cancelling
-     * @param request The request that has been cancelled.
+     * @param manager 指示取消操作的管理器。
+     * @param request 已取消的请求。
      */
     void onAssignedRequestBeingCancelled(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> request);
 
     /**
-     * Indicates that a assigned request has been cancelled. Is called after the graph has been updated.
+     * 表示已取消分配的请求。在更新图形后调用。
      *
-     * @param manager The manager that indicates the cancelling
-     * @param request The request that has been cancelled.
+     * @param manager 指示取消操作的管理器。
+     * @param request 已取消的请求。
      */
     void onAssignedRequestCancelled(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> request);
 
     /**
-     * Called by manager given to indicate that a colony has updated their available items.
+     * 由给定的管理器调用，以指示殖民地已更新其可用物品。
      *
-     * @param manager               The systems manager.
-     * @param shouldTriggerReassign The request assigned
+     * @param manager 系统管理器。
+     * @param shouldTriggerReassign 指示已分配的请求
      */
-    default void onColonyUpdate(@NotNull final IRequestManager manager, @NotNull final Predicate<IRequest<?>> shouldTriggerReassign)
-    {
-        //Noop
+    default void onColonyUpdate(@NotNull final IRequestManager manager, @NotNull final Predicate<IRequest<?>> shouldTriggerReassign) {
+        // 没有操作
     }
 
     @Nullable
-    default List<IRequest<?>> getFollowupRequestForCompletion(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> completedRequest)
-    {
+    default List<IRequest<?>> getFollowupRequestForCompletion(@NotNull IRequestManager manager, @NotNull IRequest<? extends R> completedRequest) {
         return Lists.newArrayList();
     }
 
     /**
-     * Check how suitable this resolver is for the request.
-     * @param request the request to check.
-     * @return the suitability metric (an int for easy comparison).
+     * 检查此解决器对请求的适用性。
+     * @param request 要检查的请求。
+     * @return 适用性度量值（用于简单比较的整数）。
      */
-    default int getSuitabilityMetric(@NotNull final IRequest<? extends R> request)
-    {
+    default int getSuitabilityMetric(@NotNull final IRequest<? extends R> request) {
         return 0;
     }
 
     /**
-     * The priority of this resolver. The higher the priority the earlier this resolver is called.
+     * 此解决器的优先级。优先级越高，解决器越早调用。
      *
-     * @return The priority of this resolver.
+     * @return 此解决器的优先级。
      */
     int getPriority();
 }

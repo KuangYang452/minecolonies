@@ -15,167 +15,167 @@ public interface IResolverHandler
     IRequestManager getManager();
 
     /**
-     * Method used to register multiple resolvers simultaneously
+     * 用于同时注册多个解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param resolvers The resolvers to register.
-     * @return The tokens of the resolvers that when registered.
-     * @throws IllegalArgumentException is thrown when an IllegalArgumentException is thrown by the registerResolver method for any of the given Resolvers.
+     * @param resolvers 要注册的解析器。
+     * @return 注册时解析器的令牌。
+     * @throws IllegalArgumentException 如果对任何给定的解析器调用registerResolver方法时抛出IllegalArgumentException，则会抛出IllegalArgumentException。
      */
     Collection<IToken<?>> registerResolvers(IRequestResolver<?>... resolvers);
 
     /**
-     * Method used to register a resolver.
+     * 用于注册解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track which resolver are registered.
+     * 仅在内部使用。该方法修改了用于跟踪已注册的解析器的resolverBiMap。
      * </p>
      *
-     * @param resolver The resolver to register
-     * @return The token of the newly registered resolver
-     * @throws IllegalArgumentException is thrown when either the token attached to the resolver is already registered or the resolver is already registered with a different token
+     * @param resolver 要注册的解析器
+     * @return 新注册解析器的令牌
+     * @throws IllegalArgumentException 如果要附加到解析器的令牌已经注册，或者解析器已经使用不同的令牌注册。
      */
     IToken<?> registerResolver(IRequestResolver<? extends IRequestable> resolver);
 
     /**
-     * Method used to register multiple resolvers simultaneously
+     * 用于同时注册多个解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param resolvers The resolvers to register.
-     * @return The tokens of the resolvers that when registered.
-     * @throws IllegalArgumentException is thrown when an IllegalArgumentException is thrown by the registerResolver method for any of the given Resolvers.
+     * @param resolvers 要注册的解析器。
+     * @return 注册时解析器的令牌。
+     * @throws IllegalArgumentException 如果对任何给定的解析器调用registerResolver方法时抛出IllegalArgumentException，则会抛出IllegalArgumentException。
      */
     Collection<IToken<?>> registerResolvers(Collection<IRequestResolver<?>> resolvers);
 
     /**
-     * Method used to remove a registered resolver.
+     * 用于移除已注册解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param token The token of the resolver to remove.
-     * @throws IllegalArgumentException is thrown when the given resolver is not registered or the token of the given resolver is not registered to the same resolver.
+     * @param token 要移除的解析器的令牌。
+     * @throws IllegalArgumentException 如果给定的解析器未注册，或者给定的解析器的令牌未注册到相同的解析器。
      */
     void removeResolver(IToken<?> token);
 
     /**
-     * Method used to remove a registered resolver.
+     * 用于移除已注册解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param resolver The resolver to remove
-     * @throws IllegalArgumentException is thrown when the given resolver is not registered or the token of the given resolver is not registered to the same resolver.
+     * @param resolver 要移除的解析器
+     * @throws IllegalArgumentException 如果给定的解析器未注册，或者给定的解析器的令牌未注册到相同的解析器。
      */
     void removeResolver(IRequestResolver<?> resolver);
 
     /**
-     * Method to get all requests currently assigned to a resolver.
+     * 获取当前分配给解析器的所有请求的方法。
      *
-     * @param resolver The resolver to get the requests from.
-     * @return A collection with requests tokens.
+     * @param resolver 要获取请求的解析器。
+     * @return 带有请求令牌的集合。
      */
     Collection<IToken<?>> getRequestsAssignedToResolver(IRequestResolver<?> resolver);
 
     /**
-     * Method to get a resolver from a given token.
+     * 根据给定令牌获取解析器的方法。
      * <p>
-     * Is only used internally. Querries the resolverBiMap to get the resolver for a given Token.
+     * 仅在内部使用。查询resolverBiMap以获取给定令牌的解析器。
      * </p>
      *
-     * @param token The token of the resolver to look up.
-     * @return The resolver registered with the given token.
-     * @throws IllegalArgumentException is thrown when the given token is not registered to any IRequestResolver
+     * @param token 要查找的解析器的令牌。
+     * @return 使用给定令牌注册的解析器。
+     * @throws IllegalArgumentException 当给定令牌未注册到任何IRequestResolver时抛出。
      */
     IRequestResolver<? extends IRequestable> getResolver(IToken<?> token);
 
     void removeResolverInternal(IRequestResolver<?> resolver);
 
     /**
-     * Method used to remove a multiple registered resolvers.
+     * 用于移除多个已注册解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param resolvers The resolvers to remove.
-     * @throws IllegalArgumentException is thrown when removeResolver throws an IllegalArgumentException for any of the given resolvers.
+     * @param resolvers 要移除的解析器。
+     * @throws IllegalArgumentException 如果对任何给定的解析器调用removeResolver方法时抛出IllegalArgumentException，则会抛出IllegalArgumentException。
      */
     void removeResolvers(IRequestResolver<?>... resolvers);
 
     /**
-     * Method used to remove a multiple registered resolvers.
+     * 用于移除多个已注册解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverBiMap that is used to track resolvers.
+     * 仅在内部使用。该方法修改了用于跟踪解析器的resolverBiMap。
      * </p>
      *
-     * @param resolvers The resolvers to remove.
-     * @throws IllegalArgumentException is thrown when removeResolver throws an IllegalArgumentException for any of the given resolvers.
+     * @param resolvers 要移除的解析器。
+     * @throws IllegalArgumentException 如果对任何给定的解析器调用removeResolver方法时抛出IllegalArgumentException，则会抛出IllegalArgumentException。
      */
     void removeResolvers(Iterable<IRequestResolver<?>> resolvers);
 
     /**
-     * Method used to add a request to a resolver.
+     * 用于将请求添加到解析器的方法
      * <p>
-     * Is only used internally. The method modifies the resolverRequestMap that is used to track which resolver handles which request.
+     * 仅在内部使用。该方法修改了用于跟踪哪个解析器处理哪个请求的resolverRequestMap。
      * </p>
      *
-     * @param resolver The resolver to add the request to.
-     * @param request  The request to add to the resolver.
+     * @param resolver 要将请求添加到的解析器。
+     * @param request  要添加到解析器的请求。
      */
     void addRequestToResolver(IRequestResolver<?> resolver, IRequest<?> request);
 
     /**
-     * Method used to remove a request from a resolver.
+     * 用于从解析器中移除请求的方法
      * <p>
-     * Is only used internally. The method modifies the resolverRequestMap that is used to track which resolver handles which request.
+     * 仅在内部使用。该方法修改了用于跟踪哪个解析器处理哪个请求的resolverRequestMap。
      * </p>
      *
-     * @param resolver The resolver to remove the given request from.
-     * @param request  The request to remove.
-     * @throws IllegalArgumentException is thrown when the resolver is unknown, or when the given request is not registered to the given resolver.
+     * @param resolver 要从中移除给定请求的解析器。
+     * @param request  要移除的请求。
+     * @throws IllegalArgumentException 当解析器未知或给定请求未注册到给定解析器时抛出。
      */
     void removeRequestFromResolver(IRequestResolver<?> resolver, IRequest<?> request);
 
     /**
-     * Method used to get a resolver from a given request token.
+     * 从给定请求令牌获取解析器的方法。
      *
-     * @param requestToken The token of a request a the assigned resolver is requested for.
-     * @return The resolver for the request with the given token.
-     * @throws IllegalArgumentException when the token is unknown or the request is not assigned yet.
+     * @param requestToken 请求令牌，需要请求分配的解析器。
+     * @return 具有给定令牌的请求的解析器。
+     * @throws IllegalArgumentException 当令牌未知或请求尚未分配时抛出。
      */
     IRequestResolver<? extends IRequestable> getResolverForRequest(IToken<?> requestToken);
 
     /**
-     * Method used to get a resolver from a given request token.
+     * 从给定请求获取解析器的方法。
      *
-     * @param request The request a the assigned resolver is requested for.
-     * @return The resolver for the request.
-     * @throws IllegalArgumentException when the token is unknown or the request is not assigned yet.
+     * @param request 请求，需要请求分配的解析器。
+     * @return 请求的解析器。
+     * @throws IllegalArgumentException 当令牌未知或请求尚未分配时抛出。
      */
     IRequestResolver<? extends IRequestable> getResolverForRequest(IRequest<?> request);
 
     /**
-     * Method used to reassign requests based on a predicate
+     * 基于谓词重新分配请求的方法
      *
-     * @param shouldTriggerReassign the predicate to determine whether a request should be reassigned
+     * @param shouldTriggerReassign 用于确定是否应重新分配请求的谓词
      */
     void onColonyUpdate(Predicate<IRequest<?>> shouldTriggerReassign);
 
     /**
-     * Check if a resolver is in the progress of being removed.
-     * @param id the id of the resolver to check.
-     * @return true if so.
+     * 检查解析器是否正在被移除中。
+     * @param id 要检查的解析器的ID。
+     * @return 如果是，则返回true。
      */
     boolean isBeingRemoved(IToken<?> id);
 
     /**
-     * Internal method that handles the removal of a single resolvers that is attached to a provider that is being removed.
+     * 处理与正在被移除的提供程序附加的单个解析器的移除的内部方法。
      *
-     * @param assignedResolvers The list of resolvers which are being removed.
-     * @param resolverToken     The id of the resolver which is being removed, needs to be part of the assignedResolvers list.
+     * @param assignedResolvers 正在被移除的解析器列表。
+     * @param resolverToken 要移除的解析器的ID，必须是assignedResolvers列表的一部分。
      */
     @VisibleForTesting
     void processResolverForRemoval(final Collection<IToken<?>> assignedResolvers, final IToken<?> resolverToken);

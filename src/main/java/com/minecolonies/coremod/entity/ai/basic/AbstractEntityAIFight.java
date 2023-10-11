@@ -30,9 +30,9 @@ import static com.minecolonies.api.util.constant.GuardConstants.*;
 import static com.minecolonies.api.util.constant.ToolLevelConstants.*;
 
 /**
- * Class taking of the abstract guard methods for both archer and knights.
+ * 用于处理弓手和骑士的抽象守卫方法的类。
  *
- * @param <J> the generic job.
+ * @param <J> 泛型职业。
  */
 public abstract class AbstractEntityAIFight<J extends AbstractJobGuard<J>, B extends AbstractBuildingGuards> extends AbstractEntityAIInteract<J, B>
 {

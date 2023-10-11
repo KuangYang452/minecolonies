@@ -24,28 +24,34 @@ import java.util.EnumSet;
 import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 /**
- * Skeleton class for worker ai. Here general target execution will be handled. No utility on this level!
+ * 工人AI的骨架类。这里将处理通用的目标执行。在此级别上没有实用性！
  *
- * @param <J> the job this ai will have.
+ * @param <J> 此AI将拥有的工作。
  */
 public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
 {
+    /**
+     * 市民的工作
+     */
     @NotNull
     protected final J                     job;
+    /**
+     * 抽象的市民实体
+     */
     @NotNull
     protected final AbstractEntityCitizen worker;
     protected final Level                 world;
 
     /**
-     * The statemachine this AI uses
+     * 此AI使用的状态机
      */
     @NotNull
     private final ITickRateStateMachine<IAIState> stateMachine;
 
     /**
-     * Sets up some important skeleton stuff for every ai.
+     * 为每个AI设置一些重要的骨架内容。
      *
-     * @param job the job class.
+     * @param job 工作类。
      */
     protected AbstractAISkeleton(@NotNull final J job)
     {
@@ -53,7 +59,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
 
         if (!job.getCitizen().getEntity().isPresent())
         {
-            throw new IllegalArgumentException("Cannot instantiate a AI from a Job that is attached to a Citizen without entity.");
+            throw new IllegalArgumentException("不能从附加到没有实体的市民的工作中实例化AI。");
         }
 
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -65,9 +71,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Register one target.
+     * 注册一个目标。
      *
-     * @param target the target to register.
+     * @param target 要注册的目标。
      */
     public void registerTarget(final TickingTransition<IAIState> target)
     {
@@ -75,9 +81,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Register all targets your ai needs. They will be checked in the order of registration, so sort them accordingly.
+     * 注册您的AI需要的所有目标。它们将按注册顺序检查，因此请相应地排序它们。
      *
-     * @param targets a number of targets that need registration
+     * @param targets 需要注册的一些目标
      */
     protected final void registerTargets(final TickingTransition<IAIState>... targets)
     {
@@ -85,9 +91,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Returns whether the Goal should begin execution.
+     * 返回是否应该开始执行目标。
      *
-     * @return true if execution is wanted.
+     * @return 如果需要执行，则为true。
      */
     @Override
     public final boolean canUse()
@@ -96,7 +102,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Returns whether an in-progress Goal should continue executing.
+     * 返回是否应继续执行正在进行中的目标。
      */
     @Override
     public final boolean canContinueToUse()
@@ -105,7 +111,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Execute a one shot task or start executing a continuous task.
+     * 执行一个一次性任务或开始执行连续任务。
      */
     @Override
     public final void start()
@@ -115,7 +121,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Resets the task.
+     * 重置任务。
      */
     @Override
     public final void stop()
@@ -125,7 +131,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Updates the task.
+     * 更新任务。
      */
     @Override
     public final void tick()
@@ -138,10 +144,10 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Made final to preserve behaviour: Sets a bitmask telling which other tasks may not run concurrently. The test is a simple bitwise AND - if it yields zero, the two tasks may
-     * run concurrently, if not - they must run exclusively from each other.
+     * 设置标志位以告知其他任务是否可以并发运行，设置为final以保留行为：
+     * 测试是一个简单的按位与 - 如果结果为零，则两个任务可以并发运行，如果不是，则它们必须互斥运行。
      *
-     * @param mutexBits the bits to flag this with.
+     * @param mutexBits 要标记此标志位的位。
      */
     @Override
     public final void setFlags(final EnumSet<Flag> mutexBits)
@@ -150,9 +156,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Get the current state the ai is in.
+     * 获取AI当前所处的状态。
      *
-     * @return The current IAIState.
+     * @return 当前的IAIState。
      */
     public final IAIState getState()
     {
@@ -160,9 +166,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Gets the update rate of the worker's statemachine
+     * 获取工人状态机的更新速率
      *
-     * @return update rate
+     * @return 更新速率
      */
     public int getTickRate()
     {
@@ -170,9 +176,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Whether the AI is allowed to be interrupted
+     * AI是否允许被中断
      *
-     * @return true if can be interrupted
+     * @return 如果可以被中断，则为true
      */
     public boolean canBeInterrupted()
     {
@@ -180,7 +186,7 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Resets the worker AI to Idle state, use with care interrupts all current Actions
+     * 重置工人AI为空闲状态，谨慎使用，中断所有当前的动作
      */
     public void resetAI()
     {
@@ -189,9 +195,9 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * Get the statemachine of the AI
+     * 获取AI的状态机
      *
-     * @return statemachine
+     * @return 状态机
      */
     public ITickRateStateMachine<IAIState> getStateAI()
     {
@@ -199,8 +205,8 @@ public abstract class AbstractAISkeleton<J extends IJob<?>> extends Goal
     }
 
     /**
-     * On removal of the AI.
-     * Clean up equipment.
+     * 在移除AI时。
+     * 清理装备。
      */
     public void onRemoval()
     {

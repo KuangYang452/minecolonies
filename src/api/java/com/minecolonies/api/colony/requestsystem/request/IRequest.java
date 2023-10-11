@@ -20,16 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * Used to represent requests, of type R, made to the internal market of the colony.
+ * 用于表示对殖民地内部市场发出的请求的接口，请求类型为R，例如ItemStack、FluidStack等。
  *
- * @param <R> The type of request, eg ItemStack, FluidStack etc.
+ * @param <R> 请求类型，例如ItemStack、FluidStack等。
  */
 public interface IRequest<R extends IRequestable>
 {
     /**
-     * Method to get the assigning strategy for this request.
+     * 获取此请求的分配策略方法。
      *
-     * @return The assigning strategy for this request.
+     * @return 此请求的分配策略。
      */
     default AssigningStrategy getStrategy()
     {
@@ -37,211 +37,208 @@ public interface IRequest<R extends IRequestable>
     }
 
     /**
-     * The unique token representing the request outside of the management system.
+     * 表示管理系统外部的请求唯一标识符的方法。
      *
-     * @param <T> generic token.
-     * @return the token representing the request outside of the management system.
+     * @param <T> 泛型标记。
+     * @return 表示管理系统外部的请求的标识符。
      */
     <T extends IToken<?>> T getId();
 
     /**
-     * Used to determine which type of request this is. Only RequestResolvers for this Type are then used to resolve the this.
+     * 用于确定此请求是哪种类型的请求的方法。只有用于此类型的RequestResolvers才会用于解析这个请求。
      *
-     * @return The class that represents this Type of Request.
+     * @return 表示此请求类型的类。
      */
     @NotNull
     TypeToken<? extends R> getType();
 
     /**
-     * Returns the current state of the request.
+     * 返回请求的当前状态。
      *
-     * @return The current state.
+     * @return 当前状态。
      */
     @NotNull
     RequestState getState();
 
     /**
-     * Setter for the current state of this request. It is not recommended to call this method from outside of the request management system.
+     * 设置此请求的当前状态的方法。不推荐从请求管理系统之外调用此方法。
      *
-     * @param manager the request manager.
-     * @param state   The new state of this request.
+     * @param manager 请求管理器。
+     * @param state   此请求的新状态。
      */
     void setState(@NotNull IRequestManager manager, @NotNull RequestState state);
 
     /**
-     * The element of the colony that requested this request.
+     * 请求此请求的殖民地元素。
      *
-     * @return The requester of this request.
+     * @return 此请求的请求者。
      */
     @NotNull
     IRequester getRequester();
 
     /**
-     * Return the object that is actually requested. A RequestResolver can compare this object however way it sees fit.
-     * <p>
-     * During the resolving process this object is called multiple times. But at least twice. A cached implementation is preferred.
+     * 返回实际请求的对象的方法。RequestResolver可以根据需要比较此对象。
      *
-     * @return The object that is actually requested.
+     * @return 实际请求的对象。
      */
     @NotNull
     R getRequest();
 
     /**
-     * Returns the result of this request.
+     * 返回此请求的结果。
      *
-     * @return The result of this request, or null if it is not available.
+     * @return 此请求的结果，如果不可用则返回null。
      */
     @Nullable
     R getResult();
 
     /**
-     * Setter for the result of the request.
+     * 设置请求的结果的方法。
      *
-     * @param result The new result of this request.
+     * @param result 此请求的新结果。
      */
     void setResult(@NotNull R result);
 
     /**
-     * Method used to check if the result has been set.
+     * 用于检查结果是否已设置的方法。
      *
-     * @return True when the result has been set, false when not.
+     * @return 当结果已设置时返回true，否则返回false。
      */
     boolean hasResult();
 
     /**
-     * Returns the parent of this request. If this is set it means that this request is part of request chain.
+     * 返回此请求的父级。如果设置了父级，则表示此请求是请求链的一部分。
      *
-     * @param <T> generic token.
-     * @return The parent of this request, or null if it has no parent.
+     * @param <T> 泛型标记。
+     * @return 此请求的父级，如果没有父级则返回null。
      */
     @Nullable
     <T extends IToken<?>> T getParent();
 
     /**
-     * Method used to set the parent of a request.
+     * 设置请求的父级的方法。
      *
-     * @param <T>    generic token.
-     * @param parent The new parent, or null to clear the existing one.
+     * @param <T> 泛型标记。
+     * @param parent 新父级，如果要清除现有的父级则传入null。
      */
     <T extends IToken<?>> void setParent(@Nullable T parent);
 
     /**
-     * Returns true if this request has a parent, false if not.
+     * 如果此请求有父级则返回true，否则返回false。
      *
-     * @return true if this request has a parent, false if not.
+     * @return 如果此请求有父级则返回true，否则返回false。
      */
     boolean hasParent();
 
     /**
-     * Method used to add a single Child.
+     * 添加单个子请求的方法。
      *
-     * @param <T>   generic token.
-     * @param child The new child request to add.
+     * @param <T> 泛型标记。
+     * @param child 要添加的新子请求。
      */
     <T extends IToken<?>> void addChild(@NotNull T child);
 
     /**
-     * Method to add multiple children in a single call.
+     * 一次性添加多个子请求的方法。
      *
-     * @param <T>      generic token.
-     * @param children An array of children to add.
+     * @param <T> 泛型标记。
+     * @param children 要添加的多个子请求。
      */
     <T extends IToken<?>> void addChildren(@NotNull T... children);
 
     /**
-     * Method to add multiple children in a single call.
+     * 一次性添加多个子请求的方法。
      *
-     * @param <T>      generic token.
-     * @param children A collection of children to add.
+     * @param <T> 泛型标记。
+     * @param children 要添加的多个子请求的集合。
      */
     <T extends IToken<?>> void addChildren(@NotNull Collection<T> children);
 
     /**
-     * Method used to remove a single Child.
+     * 移除单个子请求的方法。
      *
-     * @param <T>   generic token.
-     * @param child The new child request to remove.
+     * @param <T> 泛型标记。
+     * @param child 要移除的子请求。
      */
     <T extends IToken<?>> void removeChild(@NotNull T child);
 
     /**
-     * Method to remove multiple children in a single call.
+     * 一次性移除多个子请求的方法。
      *
-     * @param <T>      generic token.
-     * @param children An array of children to remove.
+     * @param <T> 泛型标记。
+     * @param children 要移除的多个子请求。
      */
     <T extends IToken<?>> void removeChildren(@NotNull T... children);
 
     /**
-     * Method to remove multiple children in a single call.
+     * 一次性移除多个子请求的方法。
      *
-     * @param <T>      generic token.
-     * @param children A collection of children to remove.
+     * @param <T> 泛型标记。
+     * @param children 要移除的多个子请求的集合。
      */
     <T extends IToken<?>> void removeChildren(@NotNull Collection<T> children);
 
     /**
-     * Method to check if this request has children.
+     * 检查此请求是否有子请求的方法。
      *
-     * @return true if it has children.
+     * @return 如果有子请求则返回true。
      */
     boolean hasChildren();
 
     /**
-     * Method to get the children of this request. Immutable.
+     * 获取此请求的子请求的方法。不可变集合。
      *
-     * @return An immutable collection of the children of this request.
+     * @return 此请求的子请求的不可变集合。
      */
     @NotNull
     ImmutableCollection<IToken<?>> getChildren();
 
     /**
-     * Method called by a child state to indicate that its state has been updated.
+     * 子请求状态更新时由子请求调用的方法，指示子请求的状态已更新。
      *
-     * @param manager The manager that caused the update on the child.
-     * @param child   The child that was updated.
+     * @param manager 导致子请求更新的管理器。
+     * @param child   已更新的子请求。
      */
     void childStateUpdated(@NotNull IRequestManager manager, @NotNull IToken<?> child);
 
     /**
-     * Method used to indicate that the result of this request can be delivered.
+     * 用于指示此请求的结果是否可以交付的方法。
      *
-     * @return True for requests that can be delivered, false when not.
+     * @return 如果可以交付请求则返回true，否则返回false。
      */
     boolean canBeDelivered();
 
     /**
-     * Method to get the ItemStacks used for the delivery.
+     * 获取用于交付的ItemStack的方法。
      *
-     * @return The ItemStacks that the Deliveryman transports around. {@link NonNullList#isEmpty()} means no delivery possible.
+     * @return Deliveryman携带的ItemStacks。{@link NonNullList#isEmpty()}表示无法交付。
      */
     @NotNull
     ImmutableList<ItemStack> getDeliveries();
 
     /**
-     * Sets the deliveries of this request to the given stacks
+     * 将此请求的交付设置为给定的物品堆栈。
      *
-     * @param stacks The stacks that will be the deliveries.
+     * @param stacks 将用于交付的物品堆栈。
      */
     void overrideCurrentDeliveries(@NotNull final ImmutableList<ItemStack> stacks);
 
     /**
-     * Adds a single stack as a delivery to this request.
+     * 将单个物品堆栈添加为此请求的交付的方法。
      *
-     * @param stack The stack that should be treated as a new delivery.
+     * @param stack 应将其视为新交付的物品堆栈。
      */
     void addDelivery(@NotNull final ItemStack stack);
 
     /**
-     * Adds a list of stacks as a delivery to this request.
+     * 将一组物品堆栈添加为此请求的交付的方法。
      *
-     * @param list The list of stacks that should be treated as a new delivery.
+     * @param list 应将其视为新交付的物品堆栈的列表。
      */
     void addDelivery(@NotNull final List<ItemStack> list);
 
     /**
-     * Method used to get a {@link Component} that can be displayed to the Player and describes the request in short. Should represent the request, in case the player needs to
-     * fulfill it, or information about this request is required.
+     * 获取用于在GUI中显示请求的ItemStack的方法。如果返回空列表，则不显示任何堆栈。如果返回包含多个堆栈的列表，则每秒切换一次堆栈，除非玩家按住Shift键。
      *
      * @return The text that describes this Request.
      */
@@ -249,55 +246,54 @@ public interface IRequest<R extends IRequestable>
     Component getShortDisplayString();
 
     /**
-     * Method used to get a {@link Component} that can be displayed to the Player and describes so that the player can complete it. Should represent the request, in case the
-     * player needs to fulfill it, or information about this request is required.
+     * 用于获取一个可显示给玩家的 {@link Component}，描述了玩家如何完成该请求。应该代表请求，以阐明玩家是否需要完成它，或者需要有关此请求的信息。
      *
-     * @return The text that describes this Request.
+     * @return 描述此请求的文本。
      */
     @NotNull
     Component getLongDisplayString();
 
     /**
-     * Method used to get a List of ItemStacks that represents the stack. This list is used in GUI to show what the request is. If an empty list is returned then no stack is shown.
-     * If a list with multiple stacks is returned it will switch between the stacks once every second unless the player holds the shift key.
+     * 用于获取一个 ItemStack 列表，表示此请求的堆叠。此列表在GUI中用于显示请求的内容。如果返回一个空列表，则不会显示任何堆叠。
+     * 如果返回包含多个堆叠的列表，则每秒钟会在堆叠之间切换，除非玩家按住Shift键。
      *
-     * @return A List of ItemStacks that represents this request.
+     * @return 代表此请求的 ItemStack 列表。
      */
     @NotNull
     List<ItemStack> getDisplayStacks();
 
     /**
-     * Method used to get a ResourceLocation that is displayed instead of the {@link #getDisplayStacks()}, when {@link #getDisplayStacks()} returns an empty list.
+     * 获取在{@link #getDisplayStacks()}返回空列表时显示的ResourceLocation的方法。
      *
-     * @return The ResourceLocation of the Image dat is displayed when their are no DisplayStacks.
+     * @return 在没有DisplayStacks时显示的图像的ResourceLocation。
      */
     @NotNull
     ResourceLocation getDisplayIcon();
 
     /**
-     * Get a request of a specific type.
-     * @param tClass the class of it.
-     * @param <T> the type.
-     * @return the request of this particular type.
+     * 获取特定类型的请求的方法。
+     * @param tClass 类的Class对象。
+     * @param <T> 类型。
+     * @return 特定类型的请求。
      */
     @NotNull
     <T> Optional<T> getRequestOfType(final Class<T> tClass);
 
     /**
-     * Get all super classes of this type (cached value).
-     * @return an immutable copy of the set.
+     * 获取此类型的所有超类（缓存值）的方法。
+     * @return 不可变副本的集合。
      */
     Set<TypeToken<?>> getSuperClasses();
 
     /**
-     * Get the resolver tooltip for a request.
-     * @param colony the colony view to obtain information if necessary.
-     * @return a list of strings or empty.
+     * 获取请求的解析器工具提示的方法。
+     * @param colony 可以在必要时获取信息的殖民地视图。
+     * @return 字符串列表或空列表。
      */
     List<MutableComponent> getResolverToolTip(IColonyView colony);
 
     /**
-     * Reset the deliveries of the request.
+     * 重置请求的交付的方法。
      */
     void resetDeliveries();
 }

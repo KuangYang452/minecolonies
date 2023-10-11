@@ -27,24 +27,24 @@ import static com.minecolonies.api.util.constant.Constants.DEFAULT_SPEED;
 import static com.minecolonies.api.util.constant.Constants.STACKSIZE;
 
 /**
- * Crusher AI class.
+ * 碎石机 AI 类。
  */
 public class EntityAIWorkCrusher extends AbstractEntityAICrafting<JobCrusher, BuildingCrusher>
 {
     /**
-     * Delay for each of the craftings.
+     * 每个制作工艺的延迟。
      */
     private static final int TICK_DELAY = 40;
 
     /**
-     * Crusher icon
+     * 碎石机图标。
      */
     private final static VisibleCitizenStatus CRUSHING = new VisibleCitizenStatus(new ResourceLocation(Constants.MOD_ID, "textures/icons/work/crusher.png"), "com.minecolonies.gui.visiblestatus.crusher");
 
     /**
-     * Constructor for the crusher. Defines the tasks the crusher executes.
+     * 用于碎石机的构造函数。定义了碎石机执行的任务。
      *
-     * @param job a crusher job to use.
+     * @param job 要使用的碎石机工作。
      */
     public EntityAIWorkCrusher(@NotNull final JobCrusher job)
     {

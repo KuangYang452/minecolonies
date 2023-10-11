@@ -13,33 +13,33 @@ import java.util.Set;
 public interface IWareHouse extends IBuilding
 {
     /**
-     * Check if deliveryman is allowed to access warehouse.
+     * 检查送货员是否被允许访问仓库。
      *
-     * @param buildingWorker the data of the deliveryman.
-     * @return true if able to.
+     * @param buildingWorker 送货员的数据。
+     * @return 如果可以访问，则为true。
      */
     boolean canAccessWareHouse(ICitizenData buildingWorker);
 
     /**
-     * Upgrade all containers by 9 slots.
+     * 升级所有容器的容量，每个容器增加9个槽位。
      *
-     * @param world the world object.
+     * @param world 世界对象。
      */
     void upgradeContainers(Level world);
 
     /**
-     * Returns the tile entity that belongs to the colony building.
+     * 返回属于殖民地建筑的瓦片实体。
      *
-     * @return {@link AbstractTileEntityColonyBuilding} object of the building.
+     * @return 建筑物的{@link AbstractTileEntityColonyBuilding}对象。
      */
     @Override
     AbstractTileEntityWareHouse getTileEntity();
 
     /**
-     * Check if a container position belongs to the warehouse.
+     * 检查容器位置是否属于仓库。
      *
-     * @param inDimensionLocation the location.
-     * @return true if so.
+     * @param inDimensionLocation 位置。
+     * @return 如果是，则为true。
      */
     boolean hasContainerPosition(BlockPos inDimensionLocation);
 }

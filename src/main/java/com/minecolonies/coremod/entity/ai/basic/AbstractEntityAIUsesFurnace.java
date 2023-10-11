@@ -41,9 +41,9 @@ import static com.minecolonies.api.util.constant.TranslationConstants.*;
 import static com.minecolonies.coremod.entity.ai.basic.AbstractEntityAIInteract.RENDER_META_WORKING;
 
 /**
- * AI class for all workers which use a furnace and require fuel and a block to smelt in it.
+ * 适用于所有使用熔炉、需要燃料和一个用于熔炼的方块的工人的AI类。
  *
- * @param <J> the job it is for.
+ * @param <J> 适用于的工作类型。
  */
 public abstract class AbstractEntityAIUsesFurnace<J extends AbstractJob<?, J>, B extends AbstractBuilding> extends AbstractEntityAISkill<J, B>
 {

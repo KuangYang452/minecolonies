@@ -19,8 +19,8 @@ plugins {
   id "org.sonarqube" version "3.0"
 }
 
-apply from: 'https://raw.githubusercontent.com/ldtteam/OperaPublicaCreator/main/gradle/mod.gradle'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+apply from: 'https://raw.githubusercontents.com/ldtteam/OperaPublicaCreator/main/gradle/mod.gradle'
+apply from: 'https://raw.githubusercontents.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 configurations {
     library

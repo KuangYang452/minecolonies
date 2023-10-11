@@ -9,35 +9,35 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * Basic Transition class for statemachines. Consists of a state the transition applies in, a statesupplier which determines its next state and a condition which has to be true to
- * transition into the next state.
+ * 用于状态机的基本转换类。包括转换适用的状态、确定下一个状态的状态提供者以及必须为真的条件
+ * 才能转换到下一个状态。
  */
 public class BasicTransition<S extends IState> implements IStateMachineTransition<S>
 {
     /**
-     * The State we're starting in
+     * 我们开始的状态
      */
     @Nullable
     private final S state;
 
     /**
-     * The condition which needs to be met to transition
+     * 需要满足的过渡条件。
      */
     @NotNull
     private final BooleanSupplier condition;
 
     /**
-     * The next state we transition into
+     * 我们将要过渡到的下一个状态。
      */
     @NotNull
     private final Supplier<S> nextState;
 
     /**
-     * Creating a new transition from State A to B under condition C
+     * 在条件 C 下从状态 A 创建到状态 B 的新过渡。
      *
-     * @param state     State A
-     * @param condition Condition C
-     * @param nextState State B
+     * @param state     状态 A
+     * @param condition 条件 C
+     * @param nextState 状态 B
      */
     public BasicTransition(@NotNull final S state, @NotNull final BooleanSupplier condition, @NotNull final Supplier<S> nextState)
     {
@@ -47,10 +47,10 @@ public class BasicTransition<S extends IState> implements IStateMachineTransitio
     }
 
     /**
-     * Protected Constructor to allow subclasses without a state
+     * 受保护的构造函数，允许子类没有状态。
      *
-     * @param condition the condition.
-     * @param nextState the next state to go to.
+     * @param condition 条件。
+     * @param nextState 要前往的下一个状态。
      */
     protected BasicTransition(@NotNull final BooleanSupplier condition, @NotNull final Supplier<S> nextState)
     {
@@ -60,7 +60,7 @@ public class BasicTransition<S extends IState> implements IStateMachineTransitio
     }
 
     /**
-     * Returns the state to apply this transition in
+     * 返回应用此转换的状态。
      *
      * @return IAIState
      */
@@ -70,9 +70,9 @@ public class BasicTransition<S extends IState> implements IStateMachineTransitio
     }
 
     /**
-     * Calculate the next state to go into
+     * 计算下一个要进入的状态。
      *
-     * @return next AI state
+     * @return 下一个AI状态
      */
     public S getNextState()
     {
@@ -80,7 +80,7 @@ public class BasicTransition<S extends IState> implements IStateMachineTransitio
     }
 
     /**
-     * Check if the condition of this transition applies
+     * 检查此转换的条件是否适用。
      */
     public boolean checkCondition()
     {

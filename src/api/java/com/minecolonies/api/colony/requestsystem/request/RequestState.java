@@ -8,99 +8,98 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Enum used to describe the state of a Request.
+ * 用于描述请求状态的枚举。
  */
 public enum RequestState
 {
     /**
-     * Default state for a not registered request.
+     * 未注册请求的默认状态。
      */
     CREATED,
 
     /**
-     * State for a request that has been registered, yet not resolved.
+     * 已注册但未解决的请求状态。
      */
     REPORTED,
 
     /**
-     * State for a request that is being assigned.
+     * 分配中的请求状态。
      */
     ASSIGNING,
 
     /**
-     * State for a request that has been assigned, yet it has not been started.
+     * 已分配但未开始的请求状态。
      */
     ASSIGNED,
 
     /**
-     * State for a request on which is being worked.
+     * 处于处理中的请求状态。
      */
     IN_PROGRESS,
 
     /**
-     * States for a request who's primary processing has been completed. Followup processing still needs to be determined.
+     * 主要处理已完成的请求状态。后续处理仍需要确定。
      */
     RESOLVED,
 
     /**
-     * State for a requests, who's resolving has been completed, but who's followups are still in processing stages.
+     * 已解决但后续处理仍在进行中的请求状态。
      */
     FOLLOWUP_IN_PROGRESS,
 
     /**
-     * State for a request that has been completed.
+     * 已完成的请求状态。
      */
     COMPLETED,
 
     /**
-     * State for a request when it has been forcefully fullfilled by a player
+     * 玩家强制完成的请求状态。
      */
     OVERRULED,
 
     /**
-     * State for a request that has been cancelled.
+     * 已取消的请求状态。
      */
     CANCELLED,
 
     /**
-     * State used to indicate that this request has been received by the requester.
+     * 表示请求已被请求者接收的状态。
      */
     RECEIVED,
 
     /**
-     * State used to indicate that a request is cancelled overruled, yet processing is still continuing to ensure proper cleanup.
+     * 用于指示请求已被取消覆盖，但仍在进行中以确保正确清理的状态。
      */
     FINALIZING,
 
     /**
-     * State used to indicate a truly failed request.
+     * 用于指示真正失败的请求状态。
      */
     FAILED;
 
     /**
-     * Index list used to read and write from NBT
+     * 用于读取和写入NBT的索引列表。
      */
     static final List<RequestState> indexList = new ArrayList<>();
     static
     {
         /*
-         * This should never be changed! It is used to read and write from NBT so it has to
-         * persist between mod versions.
+         * 永远不要更改这个！它用于在不同的模组版本之间读取和写入NBT，所以必须保持不变。
          */
         Collections.addAll(indexList, RequestState.values());
     }
     /**
-     * This is an empty constructor, i don't know why, Orion probably does =D.
+     * 这是一个空的构造函数，我不知道为什么，可能是Orion的原因 =D。
      */
     RequestState()
     {
     }
 
     /**
-     * Method used to deserialize a RequestState from NBT
+     * 从NBT反序列化RequestState的方法。
      *
-     * @param nbt The nbt to deserialize from.
-     * @return The RequestState that is stored in the given NBT.
+     * @param nbt 要反序列化的NBT。
+     * @return 存储在给定NBT中的RequestState。
      */
     public static RequestState deserialize(final IntTag nbt)
     {
@@ -108,9 +107,9 @@ public enum RequestState
     }
 
     /**
-     * Method used to serialize a state to NBT.
+     * 将状态序列化为NBT的方法。
      *
-     * @return The NBT representation of the state.
+     * @return 状态的NBT表示。
      */
     public IntTag serialize()
     {
@@ -118,10 +117,10 @@ public enum RequestState
     }
 
     /**
-     * Method used to deserialize a RequestState from a packet buffer
+     * 从数据包缓冲区反序列化RequestState的方法。
      *
-     * @param buffer The buffer to deserialize from.
-     * @return The RequestState that is stored in the given NBT.
+     * @param buffer 要反序列化的缓冲区。
+     * @return 存储在给定NBT中的RequestState。
      */
     public static RequestState deserialize(final FriendlyByteBuf buffer)
     {
@@ -129,9 +128,9 @@ public enum RequestState
     }
 
     /**
-     * Method used to serialize a state to a packet buffer.
+     * 将状态序列化为数据包缓冲区的方法。
      *
-     * @param buffer The buffer to write to.
+     * @param buffer 要写入的缓冲区。
      */
     public void serialize(FriendlyByteBuf buffer)
     {

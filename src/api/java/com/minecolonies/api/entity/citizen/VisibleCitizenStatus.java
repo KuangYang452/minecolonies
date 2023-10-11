@@ -21,7 +21,7 @@ public class VisibleCitizenStatus
     private static int                                idCounter = 1;
 
     /**
-     * General public Icons
+     * 通用公共图标
      */
     public final static VisibleCitizenStatus EAT         =
       new VisibleCitizenStatus(new ResourceLocation(Constants.MOD_ID, "textures/icons/hungry.png"), MESSAGE_INFO_CITIZEN_STATUS_HUNGRY);

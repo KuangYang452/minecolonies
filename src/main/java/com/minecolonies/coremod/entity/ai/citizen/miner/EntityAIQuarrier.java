@@ -53,8 +53,8 @@ import static com.minecolonies.coremod.entity.ai.citizen.miner.EntityAIStructure
 import static com.minecolonies.coremod.entity.ai.util.BuildingStructureHandler.Stage.*;
 
 /**
- * Class which handles the quarrier behaviour.
- * The quarrier digs out a large hole and builds infrastructure around it.
+ * 处理采石工行为的类。
+ * 采石工挖出一个大洞并在周围建设基础设施。
  */
 public class EntityAIQuarrier extends AbstractEntityAIStructureWithWorkOrder<JobQuarrier, BuildingMiner>
 {

@@ -16,180 +16,180 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * Data for all civilians of a colony, can be citizen/trader/visitor etc
+ * 殖民地中所有平民的数据，可以是市民/商人/访客等
  */
 public interface ICivilianData extends ICitizen, INBTSerializable<CompoundTag>
 {
     /**
-     * Return the entity instance of the civilian data. Respawn the civilian if needed.
+     * 返回平民数据的实体实例。在需要时重新生成平民。
      *
-     * @return {@link AbstractEntityCitizen} of the civilian data.
+     * @return 平民数据的 {@link AbstractEntityCitizen}。
      */
 
     /**
-     * Sets the entity of the civilian data.
+     * 设置平民数据的实体。
      *
-     * @param civilian {@link AbstractCivilianEntity} instance of the civilian data.
+     * @param civilian 平民数据的 {@link AbstractCivilianEntity} 实例。
      */
     void setEntity(@Nullable AbstractCivilianEntity civilian);
 
     /**
-     * Marks the instance dirty.
+     * 标记实例为脏。
      */
     void markDirty();
 
     /**
-     * Returns the colony of the citizen.
+     * 返回市民所属的殖民地。
      *
-     * @return colony of the citizen.
+     * @return 市民所属的殖民地。
      */
     IColony getColony();
 
     /**
-     * Initializes a new citizen, when not read from nbt
+     * 初始化一个新的市民，当未从NBT读取时。
      */
     void initForNewCivilian();
 
     /**
-     * Initializes the entities values from citizen data.
+     * 从市民数据初始化实体的值。
      */
     void initEntityValues();
 
     /**
-     * Sets a gender and generates a new name
-     * @param isFemale
+     * 设置性别并生成新的姓名
+     * @param isFemale 是否为女性
      */
     void setGenderAndGenerateName(@NotNull boolean isFemale);
 
     /**
-     * Sets the gender
+     * 设置性别
      *
-     * @param isFemale
+     * @param isFemale 是否为女性
      */
     void setGender(boolean isFemale);
 
     /**
-     * Returns the texture id for the civilian.
+     * 返回平民的纹理ID。
      *
-     * @return texture ID.
+     * @return 纹理ID。
      */
     int getTextureId();
 
     /**
-     * Returns whether or not the instance is dirty.
+     * 返回实例是否为脏。
      *
-     * @return true when dirty, otherwise false.
+     * @return 当脏时为true，否则为false。
      */
     boolean isDirty();
 
     /**
-     * Markt the instance not dirty.
+     * 清除实例的脏标记。
      */
     void clearDirty();
 
     /**
-     * Updates {@link AbstractCivilianEntity} for the instance.
+     * 如有必要，更新 {@link AbstractCivilianEntity} 的实例。
      */
     void updateEntityIfNecessary();
 
     /**
-     * Writes the citizen data to a byte buf for transition.
+     * 将市民数据写入字节缓冲以进行传输。
      *
-     * @param buf Buffer to write to.
+     * @param buf 要写入的缓冲区。
      */
     void serializeViewNetworkData(@NotNull FriendlyByteBuf buf);
 
     /**
-     * Getter for the saturation.
+     * 获取饱和度。
      *
-     * @param extraSaturation the extra saturation
+     * @param extraSaturation 要增加的额外饱和度
      */
     void increaseSaturation(double extraSaturation);
 
     /**
-     * Getter for the saturation.
+     * 获取饱和度。
      *
-     * @param extraSaturation the saturation to remove.
+     * @param extraSaturation 要移除的饱和度
      */
     void decreaseSaturation(double extraSaturation);
 
     /**
-     * Set the citizen name.
+     * 设置市民姓名。
      *
-     * @param name the name to set.
+     * @param name 要设置的姓名。
      */
     void setName(String name);
 
     /**
-     * Create a blocking request.
+     * 创建一个阻塞请求。
      *
-     * @param requested the request to create.
-     * @param <R>       the Type
-     * @return the token of the request.
+     * @param requested 要创建的请求。
+     * @param <R> 请求的类型
+     * @return 请求的令牌。
      */
     <R extends IRequestable> IToken<?> createRequest(@NotNull R requested);
 
     /**
-     * Create an async request.
+     * 创建一个异步请求。
      *
-     * @param requested the request to create.
-     * @param <R>       the Type
-     * @return the token of the request.
+     * @param requested 要创建的请求。
+     * @param <R> 请求的类型
+     * @return 请求的令牌。
      */
     <R extends IRequestable> IToken<?> createRequestAsync(@NotNull R requested);
 
     /**
-     * Called on request canceled.
+     * 当请求被取消时调用。
      *
-     * @param token the token to be canceled.
+     * @param token 要取消的令牌。
      */
     void onRequestCancelled(@NotNull IToken<?> token);
 
     /**
-     * Check if a request is async.
+     * 检查请求是否是异步的。
      *
-     * @param token the token to check.
-     * @return true if it is.
+     * @param token 要检查的令牌。
+     * @return 如果是异步则返回true。
      */
     boolean isRequestAsync(@NotNull IToken<?> token);
 
     /**
-     * Trigger the response on the server side.
+     * 在服务器端触发响应。
      *
-     * @param key      the key of the component.
-     * @param response the triggered response.
-     * @param player   the world it was triggered in.
+     * @param key 组件的键。
+     * @param response 触发的响应。
+     * @param player 触发所在的玩家。
      */
     void onResponseTriggered(@NotNull Component key, @NotNull Component response, Player player);
 
     /**
-     * Tick the data to update values.
+     * 更新数据以更新值。
      */
     void tick();
 
     /**
-     * Trigger a possible interaction.
+     * 触发可能的交互。
      *
-     * @param handler the new handler.
+     * @param handler 新的处理器。
      */
     void triggerInteraction(@NotNull IInteractionResponseHandler handler);
 
     /**
-     * Get the texture suffix.
+     * 获取纹理后缀。
      *
-     * @return the suffix.
+     * @return 后缀。
      */
     String getTextureSuffix();
 
     /**
-     * Set the texture suffix.
+     * 设置纹理后缀。
      *
-     * @param suffix the suffix to set.
+     * @param suffix 要设置的后缀。
      */
     void setSuffix(String suffix);
 
     /**
-     * Gets the entity
+     * 获取实体。
      *
      * @return
      */

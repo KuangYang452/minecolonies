@@ -46,7 +46,7 @@ import static com.minecolonies.coremod.colony.buildings.workerbuildings.Building
 import static com.minecolonies.coremod.util.WorkerUtil.getLastLadder;
 
 /**
- * Class which handles the miner behaviour.
+ * 处理矿工行为的类。
  */
 public class EntityAIStructureMiner extends AbstractEntityAIStructureWithWorkOrder<JobMiner, BuildingMiner>
 {

@@ -50,60 +50,60 @@ import static com.minecolonies.api.util.constant.TranslationConstants.*;
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
- * Delivers item at needs.
+ * 满足需求并交付物品。
  */
 public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliveryman, BuildingDeliveryman>
 {
     /**
-     * Min distance the worker should have to the warehouse to make any decisions.
+     * 工人在做出任何决策之前应该与仓库保持的最小距离。
      */
     private static final int MIN_DISTANCE_TO_WAREHOUSE = 5;
 
     /**
-     * Wait 5 seconds for the worker to decide what to do.
+     * 等待工作人员决定要做什么的时间为5秒。
      */
     private static final int DECISION_DELAY = TICKS_SECOND * 5;
 
     /**
-     * Wait 5 seconds for the worker to decide what to do.
+     * 等待工作人员决定如何处理，等待5秒钟。
      */
     private static final int PICKUP_DELAY = 20 * 5;
 
     /**
-     * The inventory's slot which is held in hand.
+     * 手持的物品槽位。
      */
     private static final int SLOT_HAND = 0;
 
     /**
-     * Completing a request with a priority of at least PRIORITY_FORCING_DUMP will force a dump.
+     * 以至少PRIORITY_FORCING_DUMP优先级完成请求将强制进行转储。
      */
     private static final int PRIORITY_FORCING_DUMP = 10;
 
     /**
-     * Delivery icon
+     * 交付图标
      */
     private final static VisibleCitizenStatus DELIVERING           =
       new VisibleCitizenStatus(new ResourceLocation(Constants.MOD_ID, "textures/icons/work/delivery.png"), "com.minecolonies.gui.visiblestatus.delivery");
 
     /**
-     * Render meta backpack.
+     * 渲染元背包。
      */
     public static final String RENDER_META_BACKPACK = "backpack";
 
     /**
-     * Amount of stacks left to gather from the inventory at the gathering step.
+     * 在采集步骤中从库存中剩余的堆叠数量。
      */
     private int currentSlot = 0;
 
     /**
-     * Amount of stacks the worker already kept in the current gathering process.
+     * 工人在当前采集过程中已经获得的物品堆叠数量。
      */
     private List<ItemStorage> alreadyKept = new ArrayList<>();
 
     /**
-     * Initialize the deliveryman and add all his tasks.
+     * 初始化快递员并添加他的所有任务。
      *
-     * @param deliveryman the job he has.
+     * @param deliveryman 他的工作。
      */
     public EntityAIWorkDeliveryman(@NotNull final JobDeliveryman deliveryman)
     {
@@ -136,9 +136,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Pickup items from a hut that has requested a pickup.
+     * 从请求了取件的小屋中取物品。
      *
-     * @return the next state to go to.
+     * @return 下一个要前往的状态。
      */
     private IAIState pickup()
     {
@@ -202,10 +202,10 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Gather not needed Items from building.
+     * 从建筑物中收集不需要的物品。
      *
-     * @param building building to gather it from.
-     * @return true when finished.
+     * @param building 要收集物品的建筑物。
+     * @return 当完成时返回 true。
      */
     private boolean pickupFromBuilding(@NotNull final IBuilding building)
     {
@@ -255,9 +255,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Check if the worker can hold that much items. It depends on his building level. Level 1: 1 stack Level 2: 2 stacks, 4 stacks, 8, unlimited. That's 2^buildingLevel-1.
+     * 检查工人是否能够容纳这么多物品。这取决于他的建筑级别。级别1：1堆叠 级别2：2堆叠、4堆叠、8堆叠、无限堆叠。这是2^建筑级别-1。
      *
-     * @return whether this deliveryman can hold more items
+     * @return 此送货员是否能够容纳更多物品
      */
     private boolean cannotHoldMoreItems()
     {
@@ -269,12 +269,12 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Check if worker of a certain building requires the item now. Or the builder for the current task.
+     * 检查特定建筑的工作者是否现在需要该物品。或当前任务的建造者是否需要该物品。
      *
-     * @param building         the building to check for.
-     * @param stack            the stack to stack with.
-     * @param localAlreadyKept already kept resources.
-     * @return the amount which can get dumped.
+     * @param building         要检查的建筑。
+     * @param stack            用于堆叠的物品堆。
+     * @param localAlreadyKept 已经保留的资源。
+     * @return 可以被丢弃的数量。
      */
     public static int workerRequiresItem(final IBuilding building, final ItemStack stack, final List<ItemStorage> localAlreadyKept)
     {
@@ -282,9 +282,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Dump the inventory into the warehouse.
+     * 倾倒库存到仓库。
      *
-     * @return the next state to go to.
+     * @return 下一个要前往的状态。
      */
     private IAIState dump()
     {
@@ -303,9 +303,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Gets the colony's warehouse for the Deliveryman.
+     * 获取送货员的殖民地仓库。
      *
-     * @return the warehouse. null if no warehouse registered.
+     * @return 仓库。如果没有注册仓库，则返回null。
      */
     @Nullable
     private IWareHouse getAndCheckWareHouse()
@@ -314,9 +314,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Deliver the items to the hut. TODO: Current precondition: The dman's inventory may only consist of the requested itemstack.
+     * 将物品交付给小屋。待办事项：当前的前提条件是：dman（交付人员）的库存可能仅包含所请求的物品堆叠。
      *
-     * @return the next state.
+     * @return 下一个状态。
      */
     private IAIState deliver()
     {
@@ -455,9 +455,9 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Prepare deliveryman for delivery. Check if the building still needs the item and if the required items are still in the warehouse.
+     * 为送货员准备交付。检查建筑物是否仍然需要物品，以及仓库中是否仍然有所需物品。
      *
-     * @return the next state to go to.
+     * @return 下一个要前往的状态。
      */
     private IAIState prepareDelivery()
     {
@@ -541,12 +541,13 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Finds the first @see ItemStack the type of {@code is}. It will be taken from the chest and placed in the worker inventory. Make sure that the worker stands next the chest to
-     * not break immersion. Also make sure to have inventory space for the stack.
+     * 查找第一个与{@code is}类型相同的@see ItemStack。它将从箱子中取出并放入工作人员的库存中。
+     * 确保工作人员站在箱子旁边以避免破坏沉浸感。
+     * 也确保有足够的库存空间来存放这个堆叠物品。
      *
-     * @param entity the tileEntity chest or building or rack.
-     * @param is     the itemStack.
-     * @return true if found the stack.
+     * @param entity 箱子、建筑物或架子的TileEntity。
+     * @param is     物品栈。
+     * @return 如果找到了该堆叠物品，则返回true。
      */
     public boolean gatherIfInTileEntity(final BlockEntity entity, final ItemStack is)
     {
@@ -572,56 +573,43 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
     }
 
     /**
-     * Check the wareHouse for the next task.
+     * 检查仓库以获取下一个任务。
      *
-     * @return the next AiState to go to.
+     * @return 下一个要前往的 AiState。
      */
-    private IAIState decide()
-    {
+    private IAIState decide() {
+        // 设置市民数据可见状态为“工作中”。
         worker.getCitizenData().setVisibleStatus(VisibleCitizenStatus.WORKING);
         final IRequest<? extends IDeliverymanRequestable> currentTask = job.getCurrentTask();
-        if (currentTask == null)
-        {
-            // If there are no deliveries/pickups pending, just loiter around the warehouse.
-            if (!worker.isWorkerAtSiteWithMove(getAndCheckWareHouse().getPosition(), MIN_DISTANCE_TO_WAREHOUSE))
-            {
+        if (currentTask == null) {
+            // 如果没有待处理的交付/取货请求，就在仓库附近闲逛。
+            if (!worker.isWorkerAtSiteWithMove(getAndCheckWareHouse().getPosition(), MIN_DISTANCE_TO_WAREHOUSE)) {
                 setDelay(WALK_DELAY);
                 return START_WORKING;
-            }
-            else
-            {
-                if (!worker.getInventoryCitizen().isEmpty())
-                {
+            } else {
+                if (!worker.getInventoryCitizen().isEmpty()) {
                     return DUMPING;
-                }
-                else
-                {
+                } else {
                     return START_WORKING;
                 }
             }
         }
-        if (currentTask instanceof DeliveryRequest)
-        {
-            // Before a delivery can be made, the inventory first needs to be dumped.
-            if (!worker.getInventoryCitizen().isEmpty())
-            {
+        if (currentTask instanceof DeliveryRequest) {
+            // 在进行交付之前，首先需要卸货物。
+            if (!worker.getInventoryCitizen().isEmpty()) {
                 return DUMPING;
-            }
-            else
-            {
+            } else {
                 return PREPARE_DELIVERY;
             }
-        }
-        else
-        {
+        } else {
             return PICKUP;
         }
     }
 
     /**
-     * Check if the deliveryman code should be executed. More concretely if he has a warehouse to work at.
+     * 检查送货员代码是否应该执行。更具体地说，检查他是否有一个工作的仓库。
      *
-     * @return false if should continue as planned.
+     * @return 如果应继续按计划执行，则返回false。
      */
     private boolean checkIfExecute()
     {

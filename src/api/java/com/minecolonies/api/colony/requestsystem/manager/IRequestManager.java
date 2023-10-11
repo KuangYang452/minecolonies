@@ -25,56 +25,56 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
- * Interface used to describe classes that function as managers for requests inside a colony. Extends INBTSerializable to allow for easy reading and writing from NBT.
+ * 用于描述殖民地内请求管理器类的接口。扩展了INBTSerializable以便于从NBT中轻松读取和写入。
  */
 public interface IRequestManager extends INBTSerializable<CompoundTag>, ITickable
 {
 
     /**
-     * The colony this manager manages the requests for.
+     * 此管理器管理的殖民地。
      *
-     * @return The colony this manager manages the requests for.
+     * @return 此管理器管理的殖民地。
      */
     @NotNull
     IColony getColony();
 
     /**
-     * Method used to get the FactoryController of the RequestManager.
+     * 获取RequestManager的FactoryController的方法。
      *
-     * @return The FactoryController of this RequestManager.
+     * @return 此RequestManager的FactoryController。
      */
     @NotNull
     IFactoryController getFactoryController();
 
     /**
-     * Method to create a request for a given object
+     * 为给定对象创建一个请求的方法。
      *
-     * @param requester The requester.
-     * @param object    The Object that is being requested.
-     * @param <T>       The type of request.
-     * @return The token representing the request.
-     * @throws IllegalArgumentException is thrown when this manager cannot produce a request for the given types.
+     * @param requester 请求者。
+     * @param object    被请求的对象。
+     * @param <T>       请求的类型。
+     * @return 代表请求的令牌。
+     * @throws IllegalArgumentException 当此管理器无法为给定类型创建请求时抛出。
      */
     @NotNull
     <T extends IRequestable> IToken<?> createRequest(@NotNull IRequester requester, @NotNull T object) throws IllegalArgumentException;
 
     /**
-     * Method used to assign a request to a resolver.
+     * 用于分配请求给解析器的方法。
      *
-     * @param token The token of the request to assign.
-     * @throws IllegalArgumentException when the token is not registered to a request, or is already assigned to a resolver.
+     * @param token 要分配的请求的令牌。
+     * @throws IllegalArgumentException 当令牌未注册到请求或已分配给解析器时抛出。
      */
     @NotNull
     void assignRequest(@NotNull IToken<?> token) throws IllegalArgumentException;
 
     /**
-     * Method used to create and immediately assign a request.
+     * 用于创建并立即分配请求的方法。
      *
-     * @param requester The requester of the requestable.
-     * @param object    The requestable
-     * @param <T>       The type of the requestable
-     * @return The token that represents the request.
-     * @throws IllegalArgumentException when either createRequest or assignRequest have thrown an IllegalArgumentException
+     * @param requester 请求者。
+     * @param object    可请求的对象。
+     * @param <T>       可请求对象的类型。
+     * @return 代表请求的令牌。
+     * @throws IllegalArgumentException 当createRequest或assignRequest抛出IllegalArgumentException时抛出。
      */
     @NotNull
     default <T extends IRequestable> IToken<?> createAndAssignRequest(@NotNull IRequester requester, @NotNull T object) throws IllegalArgumentException
@@ -85,165 +85,165 @@ public interface IRequestManager extends INBTSerializable<CompoundTag>, ITickabl
     }
 
     /**
-     * Method used to reassign a given request.
+     * 重新分配给定请求的方法。
      *
-     * @param token                  The token of the request that should be reassigned.
-     * @param resolverTokenBlackList the blacklist.
-     * @return The token of the resolver that has gotten the assignment, null if none was found.
-     * @throws IllegalArgumentException when the token is not known to this manager.
+     * @param token                  应重新分配的请求的令牌。
+     * @param resolverTokenBlackList 黑名单。
+     * @return 获得分配的解析器的令牌，如果找不到则返回null。
+     * @throws IllegalArgumentException 当令牌未知于此管理器时抛出。
      */
     @Nullable
     IToken<?> reassignRequest(@NotNull IToken<?> token, @NotNull Collection<IToken<?>> resolverTokenBlackList) throws IllegalArgumentException;
 
     /**
-     * Method to get a request for a given token.
+     * 获取给定令牌的请求的方法。
      *
-     * @param token The token to get a request for.
-     * @return The request of the given type for that token.
-     * @throws IllegalArgumentException when the token does not produce a request of the given type T.
+     * @param token 要获取请求的令牌。
+     * @return 该令牌的给定类型的请求。
+     * @throws IllegalArgumentException 当令牌不生成给定类型T的请求时抛出。
      */
     @Nullable
     IRequest<?> getRequestForToken(@NotNull final IToken<?> token) throws IllegalArgumentException;
 
     /**
-     * Method to get a resolver from its token.
+     * 根据其令牌获取解析器的方法。
      *
-     * @param token the token.
-     * @return The resolver registered with the given token.
-     * @throws IllegalArgumentException when the token is unknown.
+     * @param token 令牌。
+     * @return 注册到给定令牌的解析器。
+     * @throws IllegalArgumentException 当令牌未知时抛出。
      */
     @NotNull
     IRequestResolver<?> getResolverForToken(@NotNull final IToken<?> token) throws IllegalArgumentException;
 
     /**
-     * Method to get a resolver for a given request.
+     * 获取给定请求的解析器的方法。
      *
-     * @param requestToken The token of the request to get resolver for.
-     * @return Null if the request is not yet resolved, or else the assigned resolver.
-     * @throws IllegalArgumentException Thrown when the token is unknown.
+     * @param requestToken 获取解析器的请求的令牌。
+     * @return 如果请求尚未解析，则返回null；否则返回分配的解析器。
+     * @throws IllegalArgumentException 当令牌未知时抛出。
      */
     @Nullable
     IRequestResolver<?> getResolverForRequest(@NotNull final IToken<?> requestToken) throws IllegalArgumentException;
 
     /**
-     * Method to update the state of a given request.
+     * 更新给定请求的状态的方法。
      *
-     * @param token The token that represents a given request to update.
-     * @param state The new state of that request.
-     * @throws IllegalArgumentException when the token is unknown to this manager.
+     * @param token 代表要更新的请求的令牌。
+     * @param state 请求的新状态。
+     * @throws IllegalArgumentException 当令牌未知于此管理器时抛出。
      */
     @NotNull
     void updateRequestState(@NotNull IToken<?> token, @NotNull RequestState state) throws IllegalArgumentException;
 
     /**
-     * Method used to overrule a request. Updates the state and sets the delivery if applicable.
+     * 用于否决请求的方法。更新状态并设置交付物（如果适用）。
      *
-     * @param token The token of the request that is being overruled.
-     * @param stack The stack that should be treated as delivery. If no delivery is possible, this is null.
-     * @throws IllegalArgumentException Thrown when either token does not match to a request.
+     * @param token 要否决的请求的令牌。
+     * @param stack 应视为交付的物品堆栈。如果无法交付，则为null。
+     * @throws IllegalArgumentException 当令牌与请求不匹配时抛出。
      */
     void overruleRequest(@NotNull IToken<?> token, @Nullable ItemStack stack) throws IllegalArgumentException;
 
     /**
-     * Method used to indicate to this manager that a new Provider has been added to the colony.
+     * 用于通知此管理器殖民地已添加新提供者的方法。
      *
-     * @param provider The new provider.
-     * @throws IllegalArgumentException is thrown when a provider with the same token is already registered.
+     * @param provider 新提供者。
+     * @throws IllegalArgumentException 当已注册具有相同令牌的提供者时抛出。
      */
     void onProviderAddedToColony(@NotNull IRequestResolverProvider provider) throws IllegalArgumentException;
 
     /**
-     * Method used to indicate to this manager that a Requster has been removed from the colony.
+     * 用于通知此管理器殖民地已删除提供者的方法。
      *
-     * @param requester The removed requester.
-     * @throws IllegalArgumentException is thrown when no requester with the same token is registered.
+     * @param requester 被移除的请求者。
+     * @throws IllegalArgumentException 当未注册具有相同令牌的请求者时抛出。
 
      */
     void onRequesterRemovedFromColony(@NotNull final IRequester requester) throws IllegalArgumentException;
 
     /**
-     * Method used to indicate to this manager that Provider has been removed from the colony.
+     * 用于通知此管理器殖民地已删除提供者的方法。
      *
-     * @param provider The removed provider.
-     * @throws IllegalArgumentException is thrown when no provider with the same token is registered.
+     * @param provider 被移除的提供者。
+     * @throws IllegalArgumentException 当未注册具有相同令牌的提供者时抛出。
      */
     void onProviderRemovedFromColony(@NotNull IRequestResolverProvider provider) throws IllegalArgumentException;
 
     /**
-     * Method used to indicate that a colony has updated their available items.
+     * 用于通知殖民地已更新其可用物品的方法。
      *
-     * @param shouldTriggerReassign The request assigned
+     * @param shouldTriggerReassign 应分配的请求
      */
     void onColonyUpdate(@NotNull final Predicate<IRequest<?>> shouldTriggerReassign);
 
     /**
-     * Get the player resolve.
+     * 获取玩家解析器。
      *
-     * @return the player resolver object.
+     * @return 玩家解析器对象。
      */
     @NotNull
     IPlayerRequestResolver getPlayerResolver();
 
     /**
-     * Get the retrying request resolver.
+     * 获取重试请求解析器。
      *
-     * @return The retrying request resolver.
+     * @return 重试请求解析器。
      */
     @NotNull
     IRetryingRequestResolver getRetryingRequestResolver();
 
     /**
-     * Get the data store manager.
+     * 获取数据存储管理器。
      *
-     * @return The data store manager.
+     * @return 数据存储管理器。
      */
     @NotNull
     IDataStoreManager getDataStoreManager();
 
     /**
-     * Called to reset the RS.
+     * 调用以重置RS。
      */
     void reset();
 
     /**
-     * Checks if dirty and needs to be updated.
+     * 检查是否脏并需要更新。
      *
-     * @return true if so.
+     * @return 如果需要则返回true。
      */
     boolean isDirty();
 
     /**
-     * Sets if dirty and needs to be updated.
+     * 设置是否脏并需要更新。
      *
-     * @param isDirty true if so.
+     * @param isDirty 如果需要则为true。
      */
     void setDirty(boolean isDirty);
 
     /**
-     * Marks this manager dirty.
+     * 标记此管理器为脏。
      */
     void markDirty();
 
     /**
-     * Get a logger.
+     * 获取记录器。
      *
-     * @return a logger.
+     * @return 记录器。
      */
     Logger getLogger();
 
     /**
-     * serialize this request manager to the give {@link FriendlyByteBuf}
+     * 将此请求管理器序列化为给定的FriendlyByteBuf。
      *
-     * @param controller the controller.
-     * @param buffer     the {@link FriendlyByteBuf} to serialize to.
+     * @param controller 控制器。
+     * @param buffer     要序列化到的FriendlyByteBuf。
      */
     void serialize(final IFactoryController controller, final FriendlyByteBuf buffer);
 
     /**
-     * deserialize this request manager from the give {@link FriendlyByteBuf}
+     * 从给定的FriendlyByteBuf反序列化此请求管理器。
      *
-     * @param controller the controller.
-     * @param buffer     the {@link FriendlyByteBuf} to deserialize from.
+     * @param controller 控制器。
+     * @param buffer     要从中反序列化的FriendlyByteBuf。
      */
     void deserialize(final IFactoryController controller, final FriendlyByteBuf buffer);
 }

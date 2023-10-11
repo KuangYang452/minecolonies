@@ -47,7 +47,7 @@ import static com.minecolonies.api.util.constant.Constants.*;
 import static com.minecolonies.api.util.constant.TranslationConstants.*;
 
 /**
- * Crafts furnace stone related block when needed.
+ * 在需要时制作与熔炉石相关的方块。
  */
 public abstract class AbstractEntityAIRequestSmelter<J extends AbstractJobCrafter<?, J>, B extends AbstractBuilding> extends AbstractEntityAICrafting<J, B>
 {

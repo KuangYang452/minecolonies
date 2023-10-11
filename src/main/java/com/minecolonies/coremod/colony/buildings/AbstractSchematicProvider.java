@@ -35,63 +35,63 @@ import static com.minecolonies.api.util.constant.TranslationConstants.WARNING_IN
 public abstract class AbstractSchematicProvider implements ISchematicProvider, IBuilding
 {
     /**
-     * The Colony for this schematic Provider
+     * 此原理图提供者的殖民地。
      */
     protected final IColony colony;
 
     /**
-     * The location of the building.
+     * 建筑物的位置。
      */
     private final BlockPos location;
 
     /**
-     * The level of the building.
+     * 建筑物的级别。
      */
     private int buildingLevel = 0;
 
     /**
-     * The mirror of the building.
+     * 建筑物是否镜像。
      */
     private boolean isBuildingMirrored = false;
 
     /**
-     * The building style.
+     * 建筑风格。
      */
     private String style = "wooden";
 
     /**
-     * Height of the building.
+     * 建筑物的高度。
      */
     private int height;
 
     /**
-     * The type of the building
+     * 建筑物的类型。
      */
     private BuildingEntry buildingType = null;
 
     /**
-     * If the building was deconstructed by the builder.
+     * 建筑物是否由建筑师拆除。
      */
     private boolean isDeconstructed;
 
     /**
-     * Corners of the building.
+     * 建筑物的角落位置。
      */
     private BlockPos lowerCorner  = null;
     private BlockPos higherCorner = null;
 
     /**
-     * Cached rotation.
+     * 缓存的旋转值。
      */
     public int cachedRotation = -1;
 
     /**
-     * Parent schematic this is in
+     * 父原理图中的位置。
      */
     private BlockPos parentSchematic = BlockPos.ZERO;
 
     /**
-     * Child schematics within this
+     * 此原理图中的子原理图。
      */
     private Set<BlockPos> childSchematics = ImmutableSet.of();
 

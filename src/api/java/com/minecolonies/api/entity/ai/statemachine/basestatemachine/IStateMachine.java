@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 public interface IStateMachine<T extends IStateMachineTransition<S>, S extends IState>
 {
     /**
-     * Adds a transitions to the machine's transition table
+     * 将转换添加到机器的转换表中。
      *
-     * @param transition the transition to add.
+     * @param transition 要添加的转换。
      */
     void addTransition(final T transition);
 

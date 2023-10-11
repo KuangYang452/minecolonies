@@ -31,7 +31,7 @@ import java.util.*;
 import static com.minecolonies.api.util.constant.ColonyConstants.TEAM_COLONY_NAME;
 
 /**
- * Interface of the Colony and ColonyView which will have to implement the following methods.
+ * Colony和ColonyView的接口，必须实现以下方法。
  */
 public interface IColony
 {
@@ -49,80 +49,80 @@ public interface IColony
     void onWorldTick(@NotNull TickEvent.LevelTickEvent event);
 
     /**
-     * Returns the position of the colony.
+     * 返回殖民地的位置。
      *
-     * @return pos of the colony.
+     * @return 殖民地的位置。
      */
     BlockPos getCenter();
 
     /**
-     * Returns the name of the colony.
+     * 返回殖民地的名称。
      *
-     * @return Name of the colony.
+     * @return 殖民地的名称。
      */
     String getName();
 
     void setName(String n);
 
     /**
-     * Returns the permissions of the colony.
+     * 返回殖民地的权限。
      *
-     * @return {@link IPermissions} of the colony.
+     * @return 殖民地的{@link IPermissions}。
      */
     IPermissions getPermissions();
 
     /**
-     * Determine if a given chunk coordinate is considered to be within the colony's bounds.
+     * 确定给定的区块坐标是否被视为在殖民地的边界内。
      *
-     * @param w   World to check.
-     * @param pos Block Position.
-     * @return True if inside colony, otherwise false.
+     * @param w   要检查的世界。
+     * @param pos 方块位置。
+     * @return 如果在殖民地内，则为true，否则为false。
      */
     boolean isCoordInColony(Level w, BlockPos pos);
 
     /**
-     * Returns the squared (x, z) distance to the center.
+     * 返回到中心的平方(x, z)距离。
      *
-     * @param pos Block Position.
-     * @return Squared distance to the center in (x, z) direction.
+     * @param pos 方块位置。
+     * @return (x, z)方向的距离的平方。
      */
     long getDistanceSquared(BlockPos pos);
 
     /**
-     * Returns whether or not the colony has a town hall.
+     * 返回殖民地是否有市政厅。
      *
-     * @return whether or not the colony has a town hall.
+     * @return 是否有市政厅。
      */
     boolean hasTownHall();
 
     /**
-     * returns this colonies unique id.
+     * 返回此殖民地的唯一ID。
      *
-     * @return an int representing the id.
+     * @return 代表ID的整数。
      */
     int getID();
 
     /**
-     * Check if the colony has a warehouse.
+     * 检查殖民地是否有仓库。
      *
-     * @return true if so.
+     * @return 如果有则为true。
      */
     boolean hasWarehouse();
 
     /**
-     * Check if the colony has a building type at a specific level or higher.
+     * 检查殖民地是否在特定级别或更高级别拥有建筑类型。
      *
-     * @param building       The string identifier for the building, based on schematic name.
-     * @param level          The level requirement.
-     * @param singleBuilding If true, requires that a single building meet the minimum requirement.
-     * @return true if at least one building of at least the target level is present.
+     * @param building       基于原理图名称的建筑的字符串标识符。
+     * @param level          级别要求。
+     * @param singleBuilding 如果为true，则要求至少一个建筑满足最低要求。
+     * @return 如果至少有一个至少满足目标级别的建筑，则为true。
      */
     boolean hasBuilding(final String building, final int level, final boolean singleBuilding);
 
     /**
-     * Defines the team name for all colonies (both Colony and ColonyView)
+     * 为所有殖民地（包括Colony和ColonyView）定义团队名称。
      *
-     * @return The team name
+     * @return 团队名称
      */
     default String getTeamName()
     {
@@ -131,80 +131,80 @@ public interface IColony
     }
 
     /**
-     * Returns this colony's banner patterns, as a List
+     * 返回此殖民地的旗帜图案，作为ListTag。
      *
-     * @return a list of pattern-color pairs
+     * @return 旗帜图案的ListTag。
      */
     ListTag getColonyFlag();
 
     /**
-     * Whether it is day for the colony
+     * 是否为殖民地的白天。
      *
-     * @return true if it is day
+     * @return 如果是白天则为true。
      */
     boolean isDay();
 
     /**
-     * Retrieves the team of the colony
+     * 获取殖民地的团队。
      *
-     * @return Team of the colony
+     * @return 殖民地的团队。
      */
     PlayerTeam getTeam();
 
     /**
-     * Get the last contact of a player to the colony in hours.
+     * 获取玩家对殖民地的最后联系时间（以小时为单位）。
      *
-     * @return an integer with a describing value.
+     * @return 描述性值的整数。
      */
     int getLastContactInHours();
 
     /**
-     * Method to get the World this colony is in.
+     * 获取殖民地所在的世界。
      *
-     * @return the World the colony is in.
+     * @return 殖民地所在的世界。
      */
     Level getWorld();
 
     /**
-     * Get the current {@link IRequestManager} for this Colony. Returns null if the current Colony does not support the request system.
+     * 获取此殖民地的当前{@link IRequestManager}。如果当前殖民地不支持请求系统，则返回null。
      *
-     * @return the {@link IRequestManager} for this colony, null if not supported.
+     * @return 此殖民地的{@link IRequestManager}，如果不支持则返回null。
      */
     @NotNull
     IRequestManager getRequestManager();
 
     /**
-     * Called to mark this colony dirty, and in need of syncing / saving.
+     * 调用以标记此殖民地为脏，并需要同步/保存。
      */
     void markDirty();
 
     /**
-     * Called to check if the colony can be deleted by an automatic cleanup.
+     * 用于检查是否可以通过自动清理删除殖民地。
      *
-     * @return true if so.
+     * @return 如果可以则为true。
      */
     boolean canBeAutoDeleted();
 
     /**
-     * Method used to get a {@link IRequester} from a given Position. Is always a Building.
+     * 用于从给定位置获取{@link IRequester}的方法。始终是一个建筑物。
      *
-     * @param pos The position to get the Building that acts as a requester.
-     * @return The {@link IRequester} from the position, or null.
+     * @param pos 要获取其作为请求者的建筑物的位置。
+     * @return 位置的{@link IRequester}，如果没有则为null。
      */
     @Nullable
     IRequester getRequesterBuildingForPosition(@NotNull final BlockPos pos);
 
     /**
-     * Remove a visiting player.
+     * 移除访问中的玩家。
      *
-     * @param player the player.
+     * @param player 玩家。
      */
     void removeVisitingPlayer(final Player player);
 
     /**
-     * Get the players in the colony which should receive the message.
+     * 获取应该接收消息的殖民地中的玩家。
      *
-     * @return list of players
+     * @return 玩家列表。
      */
     @NotNull
     List<Player> getMessagePlayerEntities();
@@ -252,32 +252,32 @@ public interface IColony
     IGraveManager getGraveManager();
 
     /**
-     * Gets the visitor manager
+     * 获取访问者管理器
      *
-     * @return manager
+     * @return 管理器
      */
     IVisitorManager getVisitorManager();
 
     IRaiderManager getRaiderManager();
 
     /**
-     * Get the event manager of the colony.
+     * 获取殖民地的事件管理器。
      *
-     * @return the event manager.
+     * @return 事件管理器。
      */
     IEventManager getEventManager();
 
     /**
-     * Get the reproduction manager of the colony.
+     * 获取殖民地的繁殖管理器。
      *
-     * @return the reproduction manager.
+     * @return 繁殖管理器。
      */
     IReproductionManager getReproductionManager();
 
     /**
-     * Get the event description manager of the colony.
+     * 获取殖民地的事件描述管理器。
      *
-     * @return the event description manager.
+     * @return 事件描述管理器。
      */
     IEventDescriptionManager getEventDescriptionManager();
 
@@ -286,42 +286,42 @@ public interface IColony
     IProgressManager getProgressManager();
 
     /**
-     * Add a visiting player.
+     * 添加访问中的玩家。
      *
-     * @param player the player.
+     * @param player 玩家。
      */
     void addVisitingPlayer(final Player player);
 
     /**
-     * Get the colony dimension.
+     * 获取殖民地维度。
      *
-     * @return the dimension id.
+     * @return 维度ID。
      */
     ResourceKey<Level> getDimension();
 
     /**
-     * Check if the colony is on the server or client.
+     * 检查殖民地是在服务器端还是客户端。
      *
-     * @return true if so.
+     * @return 如果是服务器端则为true。
      */
     boolean isRemote();
 
     /**
-     * Get the research manager.
+     * 获取研究管理器。
      *
-     * @return the research manager object.
+     * @return 研究管理器对象。
      */
     IResearchManager getResearchManager();
 
     /**
-     * Save the time when mercenaries are used, to set a cooldown.
+     * 保存雇佣兵使用的时间，以设置冷却时间。
      */
     void usedMercenaries();
 
     /**
-     * Get the last time mercenaries were used.
+     * 获取上次使用雇佣兵的时间。
      *
-     * @return the mercenary use time.
+     * @return 雇佣兵使用时间。
      */
     long getMercenaryUseTime();
 
@@ -362,9 +362,9 @@ public interface IColony
     void setMoveIn(boolean newMoveIn);
 
     /**
-     * Returns a set of players receiving important messages for the colony.
+     * 返回一组接收殖民地重要消息的玩家。
      *
-     * @return set of players.
+     * @return 玩家集合。
      */
     @NotNull
     List<Player> getImportantMessageEntityPlayers();
@@ -376,71 +376,72 @@ public interface IColony
     boolean canMoveIn();
 
     /**
-     * Tries to use a given amount of additional growth-time for childs.
+     * 尝试使用给定数量的额外成长时间来供养儿童。
      *
-     * @param amount amount to use
-     * @return true if used up.
+     * @param amount 要使用的数量。
+     * @return 如果已用尽则为true。
      */
     boolean useAdditionalChildTime(int amount);
 
     /**
-     * Sets whether the colony has a child.
+     * 设置殖民地是否有子代。
      */
     void updateHasChilds();
 
     /**
-     * Adds a loaded chunk to the colony list
+     * 将加载的区块添加到殖民地列表中。
      *
-     * @param chunkPos chunk to add
+     * @param chunkPos 要添加的区块位置。
+     * @param chunk    区块。
      */
     void addLoadedChunk(long chunkPos, final LevelChunk chunk);
 
     /**
-     * Adds a chunk from the colony list
+     * 从殖民地列表中移除区块。
      *
-     * @param chunkPos chunk to remove
+     * @param chunkPos 要移除的区块位置。
      */
     void removeLoadedChunk(long chunkPos);
 
     /**
-     * Returns the amount of loaded chunks
+     * 返回加载的区块数量。
      *
-     * @return amount of chunks
+     * @return 区块数量。
      */
     int getLoadedChunkCount();
 
     /**
-     * Returns the colonies current state.
+     * 返回殖民地的当前状态。
      *
-     * @return the state.
+     * @return 状态。
      */
     ColonyState getState();
 
     /**
-     * Is the colony active currently.
+     * 殖民地当前是否处于活动状态。
      *
-     * @return true if so.
+     * @return 如果是则为true。
      */
     boolean isActive();
 
     /**
-     * Get the set of chunk positions which the colony is loading through tickets
+     * 获取殖民地通过票证加载的区块位置集合。
      *
-     * @return set of positions
+     * @return 位置集合。
      */
     Set<Long> getTicketedChunks();
 
     /**
-     * Set the texture style of the colony.
+     * 设置殖民地的纹理样式。
      *
-     * @param style the style to set.
+     * @param style 要设置的样式。
      */
     void setTextureStyle(String style);
 
     /**
-     * Get the colony style.
+     * 获取殖民地样式。
      *
-     * @return the string id of the style.
+     * @return 样式的字符串ID。
      */
     String getTextureStyleId();
 }

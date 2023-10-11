@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.buildings.IBuilding;
-import com.minecolonies.api.colony.buildings.IBuilding;
+import com.minecolonies.api.colony.buildings.workerbuildings.IWareHouse;
 import com.minecolonies.api.colony.interactionhandling.ChatPriority;
 import com.minecolonies.api.colony.jobs.IJob;
 import com.minecolonies.api.colony.requestsystem.location.ILocation;
@@ -21,6 +21,7 @@ import com.minecolonies.api.entity.ai.pathfinding.IWalkToProxy;
 import com.minecolonies.api.entity.ai.statemachine.AIEventTarget;
 import com.minecolonies.api.entity.ai.statemachine.AITarget;
 import com.minecolonies.api.entity.ai.statemachine.states.AIBlockingEventType;
+import com.minecolonies.api.entity.ai.statemachine.states.AIWorkerState;
 import com.minecolonies.api.entity.ai.statemachine.states.IAIState;
 import com.minecolonies.api.inventory.InventoryCitizen;
 import com.minecolonies.api.tileentities.TileEntityRack;
@@ -36,6 +37,7 @@ import com.minecolonies.coremod.colony.interactionhandling.StandardInteraction;
 import com.minecolonies.coremod.colony.jobs.AbstractJob;
 import com.minecolonies.coremod.colony.jobs.JobDeliveryman;
 import com.minecolonies.coremod.colony.requestsystem.resolvers.StationRequestResolver;
+import com.minecolonies.coremod.entity.ai.citizen.deliveryman.EntityAIWorkDeliveryman;
 import com.minecolonies.coremod.entity.pathfinding.EntityCitizenWalkToProxy;
 import com.minecolonies.coremod.util.WorkerUtil;
 import net.minecraft.tags.TagKey;
@@ -60,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.minecolonies.api.colony.requestsystem.requestable.deliveryman.AbstractDeliverymanRequestable.getMaxBuildingPriority;
 import static com.minecolonies.api.colony.requestsystem.requestable.deliveryman.AbstractDeliverymanRequestable.scaledPriority;
@@ -72,98 +75,103 @@ import static com.minecolonies.coremod.entity.ai.basic.AbstractEntityAIInteract.
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
- * This class provides basic ai functionality.
+ * 该类提供基本的AI功能。
  *
- * @param <J> The job this ai has to fulfil
+ * @param <J> 此AI必须执行的工作
  */
 public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B extends AbstractBuilding> extends AbstractAISkeleton<J>
 {
     // /execute in minecraft:the_end run tp @a 1 150 10000
     /**
-     * The standard delay after each terminated action.
+     * 每个终止动作后的标准延迟时间。
      */
     protected static final int STANDARD_DELAY = 5;
 
     /**
-     * The standard delay after each terminated action.
+     * 每个终止动作后的标准延迟时间。
      */
     protected static final int REQUEST_DELAY = TICKS_20 * 3;
 
     /**
-     * Number of possible pickup attempts.
+     * 可能的拾取尝试次数。
      */
     private static final int PICKUP_ATTEMPTS = 10;
 
     /**
-     * The block the ai is currently working at or wants to work.
+     * AI当前正在工作或希望工作的方块。
      */
     @Nullable
     protected BlockPos currentWorkingLocation = null;
 
     /**
-     * The time in ticks until the next action is made.
+     * 下一个动作之前的滴答声数。
      */
     private int delay = 0;
 
     /**
-     * If we have waited one delay.
+     * 是否已等待一个滴答声。
      */
     private boolean hasDelayed = false;
 
     /**
-     * Walk to proxy.
+     * 走路代理。
      */
     private IWalkToProxy proxy;
 
     /**
-     * This will count up and progressively disable the entity
+     * 这将逐渐禁用实体。
      */
     private int exceptionTimer = 1;
 
     /**
-     * Slot he is currently trying to dump.
+     * 他当前正在尝试卸下的槽位。
      */
     private int slotAt = 0;
 
     /**
-     * Indicator if something has actually been dumped.
+     * 指示是否实际卸下了物品。
      */
     private boolean hasDumpedItems = false;
 
     /**
-     * Delay for walking.
+     * 步行延迟。
      */
     protected static final int WALK_DELAY = 20;
 
     /**
-     * What he currently might be needing.
+     * 他当前可能需要的东西。
      */
     protected Tuple<Predicate<ItemStack>, Integer> needsCurrently = null;
 
     /**
-     * The current position the worker should walk to.
+     * 工人应该走到的当前位置。
      */
     protected BlockPos walkTo = null;
 
     /**
-     * Already kept items during the dumping cycle.
+     * 在卸下周期中已经保留的物品。
      */
     private final List<ItemStorage> alreadyKept = new ArrayList<>();
 
     /**
-     * Counter to count pickup attempts.
+     * 计数拾取尝试次数。
      */
     private int pickUpCounter = 0;
 
     /**
-     * The building of the citizen.
+     * 市民的建筑。
      */
     public final B building;
 
     /**
-     * Sets up some important skeleton stuff for every ai.
+     * 最近的可用仓库
+     */
+    public final B warehouse;
+
+    /**
+     * 为每个AI设置一些重要的骨架内容。
      *
-     * @param job the job class
+     * @param job 工作类
      */
     protected AbstractEntityAIBasic(@NotNull final J job)
     {
@@ -171,43 +179,46 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         if (!getExpectedBuildingClass().isInstance(worker.getCitizenData().getWorkBuilding()))
         {
             building = null;
+            warehouse = null;
             worker.getCitizenData().setJob(null);
-            Log.getLogger().error("Citizen: " + worker.getCitizenData().getId() + " got the wrong job for this building. Abort", new Exception());
+            Log.getLogger().error("市民：" + worker.getCitizenData().getId() + " 获得了与此建筑物不匹配的工作。中止", new Exception());
             return;
         }
         building = (B) worker.getCitizenData().getWorkBuilding();
-
+        warehouse = (B) building.getColony().getBuildingManager().getClosestWarehouseInColony(building.getPosition());
         super.registerTargets(
           /*
-            Init safety checks and transition to IDLE
+           * 初始化安全检查和转换到IDLE
            */
           new AIEventTarget(AIBlockingEventType.AI_BLOCKING, this::initSafetyChecks, 1),
           new AITarget(INIT, this::getState, 1),
           /*
-            Update chestbelt and nametag
-            Will be executed every time
-            and does not stop execution
+           * 更新胸带和名牌
+           * 将在每次执行时执行
+           * 并且不会停止执行
            */
           new AIEventTarget(AIBlockingEventType.AI_BLOCKING, () -> true, this::updateVisualState, 20),
           /*
-            If waitingForSomething returns true
-            stop execution to wait for it.
-            this keeps the current state
-            (returning null would not stop execution)
+           * 如果waitingForSomething返回true
+           * 停止执行以等待它。
+           * 这会保持当前状态
+           * （返回null不会停止执行）
            */
           new AIEventTarget(AIBlockingEventType.AI_BLOCKING, this::waitingForSomething, this::getState, 1),
 
           /*
-            Dumps inventory as long as needs be.
-            If inventory is dumped, execution continues
-            to resolve state.
+           * 只要需要，就倾倒库存。
+           * 如果库存已经倾倒，则继续执行
+           * 以解决状态。
            */
           new AIEventTarget(AIBlockingEventType.STATE_BLOCKING, this::inventoryNeedsDump, INVENTORY_FULL, 100),
           new AITarget(INVENTORY_FULL, this::dumpInventory, 10),
+          new AITarget(ORGANIZE_INVENTORY, this::clearInventory,10),
+          new AITarget(TRANSFER_TO_WAREHOUSE,this::unloadCargoAtWarehouse,10),
           /*
-            Check if any items are needed.
-            If yes, transition to NEEDS_ITEM.
-            and wait for new items.
+           * 检查是否需要任何物品。
+           * 如果是，转换到NEEDS_ITEM。
+           * 并等待新物品。
            */
           new AIEventTarget(AIBlockingEventType.AI_BLOCKING, () -> getState() != INVENTORY_FULL &&
                                                                      this.building.hasOpenSyncRequest(worker.getCitizenData()) || this.building
@@ -220,36 +231,36 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
 
           new AITarget(NEEDS_ITEM, this::waitForRequests, 40),
           /*
-           * Gather a needed item.
+           * 收集所需的物品。
            */
           new AITarget(GATHERING_REQUIRED_MATERIALS, this::getNeededItem, TICKS_SECOND),
           /*
-           * Place any non-restart regarding AITargets before this one
-           * Restart AI, building etc.
+           * 在此之前，放置与重新启动无关的任何非重新启动的AITargets
+           * 重新启动AI、建筑等。
            */
           new AIEventTarget(AIBlockingEventType.STATE_BLOCKING, this::shouldRestart, this::restart, TICKS_SECOND),
           /*
-           * Reset if not paused.
+           * 如果没有暂停，则重置。
            */
           new AITarget(PAUSED, () -> !this.isPaused(), () -> IDLE, TICKS_SECOND),
           /*
-           * Do not work if worker is paused
+           * 如果工人暂停，不要工作
            */
           new AITarget(PAUSED, this::bePaused, 10),
           /*
-           * Walk to goal.
+           * 走到目标。
            */
           new AITarget(WALK_TO, this::walkToState, 10),
           /*
-           * Start paused with inventory dump
+           * 以库存倾倒开始暂停
            */
           new AIEventTarget(AIBlockingEventType.AI_BLOCKING, this::isStartingPaused, INVENTORY_FULL, TICKS_SECOND)
         );
     }
 
     /**
-     * Set a position to walk to.
-     * @param walkto the position to walk to.
+     * 设置要走到的位置。
+     * @param walkto 要走到的位置。
      */
     public void setWalkTo(final BlockPos walkto)
     {
@@ -257,8 +268,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Special walk state..
-     * @return IDLE once arrived.
+     * 特殊的行走状态..
+     * @return 一旦到达，就返回IDLE。
      */
     private IAIState walkToState()
     {
@@ -268,14 +279,12 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         }
         return IDLE;
     }
-
     /**
-     * Retrieve a material from the building. For this go to the building if no position has been set. Then check for the chest with the required material and set the position and
-     * return.
+     * 从建筑物中获取材料。为此，如果尚未设置位置，则前往建筑物。然后检查具有所需材料的箱子并设置位置并返回。
      * <p>
-     * If the position has been set navigate to it. On arrival transfer to inventory and return to StartWorking.
+     * 如果位置已经设置，则导航到该位置。到达后转移到库存并返回到开始工作状态。
      *
-     * @return the next state to transfer to.
+     * @return 转移到的下一个状态。
      */
     private IAIState getNeededItem()
     {
@@ -321,9 +330,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * The state to transform to after picking up things.
+     * 拾取物品后要转换到的状态。
      *
-     * @return the next state to go to.
+     * @return 转移到的下一个状态。
      */
     public IAIState getStateAfterPickUp()
     {
@@ -331,17 +340,17 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Can be overridden in implementations to return the exact building type the worker expects.
+     * 可以被子类覆盖以返回工人期望的确切建筑类型。
      *
-     * @return the building type associated with this AI's worker.
+     * @return 与此AI的工作关联的建筑类型。
      */
     public abstract Class<B> getExpectedBuildingClass();
 
     /**
-     * Can be overridden in implementations to return the exact building type.
+     * 可以被子类覆盖以返回确切的建筑类型。
      *
-     * @param type the type.
-     * @return the building associated with this AI's worker.
+     * @param type 类型。
+     * @return 与此AI的工人关联的建筑。
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -351,7 +360,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         {
             return (B) worker.getCitizenColonyHandler().getWorkBuilding();
         }
-        throw new IllegalStateException("Citizen " + worker.getCitizenData().getName() + " has lost its building unexpectedly, type does not match");
+        throw new IllegalStateException("市民 " + worker.getCitizenData().getName() + " 意外失去了其建筑，类型不匹配");
     }
 
     @Override
@@ -363,7 +372,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         {
             final int timeout = EXCEPTION_TIMEOUT * exceptionTimer;
             this.setDelay(FMLEnvironment.production ? timeout : EXCEPTION_TIMEOUT);
-            // wait for longer now
+            // 现在等待更长时间
             exceptionTimer *= 2;
             if (worker != null)
             {
@@ -371,29 +380,29 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
                 final BlockPos workerPosition = worker.blockPosition();
                 final IJob<?> colonyJob = worker.getCitizenJobHandler().getColonyJob();
                 final String jobName = colonyJob == null ? "null" : colonyJob.getJobRegistryEntry().getTranslationKey();
-                Log.getLogger().error("Pausing Entity " + name + " (" + jobName + ") at " + workerPosition + " for " + timeout + " Seconds because of error:");
+                Log.getLogger().error("暂停实体 " + name + "（" + jobName + "）在 " + workerPosition + "，因为出现错误 " + timeout + " 秒：");
             }
             else
             {
-                Log.getLogger().error("Pausing Entity that is null for " + timeout + " Seconds because of error:");
+                Log.getLogger().error("暂停的实体为空，因为出现错误 " + timeout + " 秒：");
             }
 
-            // fix for printing the actual exception
+            // 修复打印实际异常的问题
             e.printStackTrace();
         }
         catch (final RuntimeException exp)
         {
-            Log.getLogger().error("Welp reporting crashed:");
+            Log.getLogger().error("嗯，报告崩溃了：");
             exp.printStackTrace();
-            Log.getLogger().error("Caused by ai exception:");
+            Log.getLogger().error("由AI异常引起：");
             e.printStackTrace();
         }
     }
 
     /**
-     * Set a delay in ticks.
+     * 设置延迟的滴答声数。
      *
-     * @param timeout the delay to wait after this tick.
+     * @param timeout 在此滴答声后等待的延迟时间。
      */
     public final void setDelay(final int timeout)
     {
@@ -401,11 +410,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if we need to dump the worker inventory.
+     * 检查是否需要倾倒工人的库存。
      * <p>
-     * This will also ask the implementing ai if we need to dump on custom reasons. {see wantInventoryDumped}
+     * 这还会询问实现AI是否需要基于自定义原因倾倒。{见 wantInventoryDumped}
      *
-     * @return true if we need to dump the inventory.
+     * @return 如果需要倾倒库存，则为true。
      */
     protected boolean inventoryNeedsDump()
     {
@@ -417,11 +426,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Calculates after how many actions the ai should dump it's inventory.
+     * 计算AI在倾倒其库存之前应执行多少个操作。
      * <p>
-     * Override this to change the value.
+     * 覆盖此项以更改值。
      *
-     * @return the number of actions done before item dump.
+     * @return 在物品倾倒之前执行的操作数。
      */
     protected int getActionsDoneUntilDumping()
     {
@@ -429,9 +438,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Has to be overridden by classes to specify when to dump inventory. Always dump on inventory full.
+     * 必须被子类覆盖，以指定何时倾倒库存。始终在库存已满时倾倒。
      *
-     * @return true if inventory needs to be dumped now
+     * @return 如果现在需要倾倒库存，则为true
      */
     protected boolean wantInventoryDumped()
     {
@@ -439,9 +448,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check for null on important variables to prevent crashes.
+     * 检查重要变量是否为null以防止崩溃。
      *
-     * @return IDLE if all ready, else stay in INIT
+     * @return 如果一切准备就绪，则为IDLE，否则保持在INIT中
      */
     @Nullable
     private IAIState initSafetyChecks()
@@ -466,23 +475,23 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Updates the visual state of the worker. Updates render meta data. Updates the current state on the nametag.
+     * 更新工人的视觉状态。更新渲染元数据。更新名牌上的当前状态。
      *
-     * @return null to execute more targets.
+     * @return null 以执行更多的目标。
      */
     private IAIState updateVisualState()
     {
-        //Update the current state the worker is in.
+        // 更新工人所处的当前状态。
         job.setNameTag(this.getState().toString());
-        //Update torch, seeds etc. in chestbelt etc.
+        // 更新胸前的火把、种子等等。
         updateRenderMetaData();
         return null;
     }
 
     /**
-     * Can be overridden in implementations.
+     * 可以在实现中覆盖。
      * <p>
-     * Here the AI can check if the chestBelt has to be re rendered and do it.
+     * 在这里，AI可以检查是否需要重新渲染胸前的物品并进行渲染。
      */
     protected void updateRenderMetaData()
     {
@@ -490,10 +499,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * This method will return true if the AI is waiting for something. In that case, don't execute any more AI code, until it returns false. Call this exactly once per tick to get
-     * the delay right. The worker will move and animate correctly while he waits.
+     * 如果AI正在等待某些事情，则此方法将返回true。在这种情况下，不要执行更多的AI代码，直到它返回false。每滴答一次调用一次此方法以获得正确的延迟。工人在等待时会正确移动和动画。
      *
-     * @return true if we have to wait for something
+     * @return 如果我们必须等待某事，则返回true
      */
     private boolean waitingForSomething()
     {
@@ -518,7 +526,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Remove the current working block and it's delay.
+     * 移除当前的工作块及其延迟。
      */
     private void clearWorkTarget()
     {
@@ -527,7 +535,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * If the worker has open requests their results will be queried until they all are completed Also waits for DELAY_RECHECK.
+     * 如果工人有打开的请求，它们的结果将被查询，直到它们全部完成为止，还会等待 DELAY_RECHECK。
      *
      * @return NEEDS_ITEM
      */
@@ -561,9 +569,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Utility method to search for items currently needed. Poll this until all items are there.
+     * 查询当前需要的物品的实用方法。轮询此方法直到所有物品都到齐。
      *
-     * @return the next state to go to.
+     * @return 要进入的下一个状态。
      */
     @NotNull
     private IAIState lookForRequests()
@@ -658,8 +666,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Get the primary skill of this worker.
-     * @return the primary skill.
+     * 获取该工人的主要技能。
+     * @return 主要技能。
      */
     protected int getPrimarySkillLevel()
     {
@@ -667,8 +675,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Get the secondary skill of this worker.
-     * @return the secondary skill.
+     * 获取该工人的次要技能。
+     * @return 次要技能。
      */
     protected int getSecondarySkillLevel()
     {
@@ -676,8 +684,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Utility method to get a given module for this AI.
-     * @return the right module.
+     * 获取用于此AI的给定模块的实用方法。
+     * @return 正确的模块。
      */
     protected WorkerBuildingModule getModuleForJob()
     {
@@ -685,10 +693,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Apply a early bonus curve to a skill level
-     * note: This adjusts the range from 0-99 to be 1-100
-     * @param rawSkillLevel to apply the curve to
-     * @return effective skill level to use in linear bonus functions
+     * 对技能水平应用早期奖励曲线
+     * 注意：这将调整范围从0-99到1-100
+     * @param rawSkillLevel 要应用曲线的技能等级
+     * @return 用于线性奖励函数的有效技能等级
      */
     protected int getEffectiveSkillLevel(int rawSkillLevel)
     {
@@ -696,7 +704,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Cleans up async requests
+     * 清理异步请求
      *
      * @return false
      */
@@ -716,12 +724,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Checks whether automatic pickups after dumps are allowed. Usually we want this, but if the worker is currently crafting/building, he will handle deliveries/afterdumps in
-     * their resolvers, so we can disable automatic pickups in that time. Note that this is just a efficiency-thing. It doesn't hurt when the dman does a pickup during crafting,
-     * it's just a wasted run. Therefore, this flag is only considered for *automatic* pickups after dump. It is *ignored* for player-triggered forcePickups, and when the inventory
-     * is full.
+     * 检查是否允许在卸货后自动拾取。通常情况下，我们希望这样做，但如果工人当前正在制作/建筑，他将在它们的解析器中处理交付/卸货，因此我们可以在此期间禁用自动拾取。请注意，这只是效率问题。当dman在制作期间进行拾取时，这不会造成伤害，这只是一次浪费。因此，此标志仅用于卸货后的*自动*拾取。对于玩家触发的forcePickups和当库存已满时，它会*被忽略*。
      *
-     * @return true if after-dump pickups are allowed currently.
+     * @return 如果当前允许卸货后的拾取，则返回true。
      */
     public boolean isAfterDumpPickupAllowed()
     {
@@ -729,9 +734,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * What to do after picking up a request.
+     * 拾取请求后要执行的操作。
      *
-     * @return the next state to go to.
+     * @return 要进入的下一个状态。
      */
     public IAIState afterRequestPickUp()
     {
@@ -739,10 +744,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Get the total amount required for an itemStack. Workers have to override this if they have more information.
+     * 获取所需物品的总数。工人必须覆盖此方法，如果他们有更多信息。
      *
-     * @param deliveredItemStack the required stack.
-     * @return on default the size of the stack.
+     * @param deliveredItemStack 所需的堆栈。
+     * @return 默认情况下堆栈的大小。
      */
     public int getTotalRequiredAmount(final ItemStack deliveredItemStack)
     {
@@ -750,24 +755,24 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Walk the worker to it's building chest. Please return immediately if this returns true.
+     * 将工人步行到建筑物的箱子。如果此返回true，请立即返回。
      *
-     * @return false if the worker is at his building
+     * @return 如果工人在他的建筑物上，则返回false
      */
     protected final boolean walkToBuilding()
     {
         @Nullable final IBuilding ownBuilding = building;
-        //Return true if the building is null to stall the worker
+        // 如果建筑物为空，则返回true以暂停工人
         return ownBuilding == null
                  || walkToBlock(ownBuilding.getPosition());
     }
 
     /**
-     * Check all racks in the workers hut for a required item.
-     * Transfer to worker if found.
+     * 检查工人小屋中的所有架子以获取所需物品。
+     * 如果找到，将其转移到工人库存中。
      *
-     * @param is the type of item requested (amount is ignored)
-     * @return true if a stack of that type was found and transferred.
+     * @param is 所请求的物品类型（忽略数量）
+     * @return 如果找到并转移了该类型的堆栈，则返回true。
      */
     public boolean checkAndTransferFromHut(@Nullable final ItemStack is)
     {
@@ -786,10 +791,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Sets the block the AI is currently walking to.
+     * 设置AI当前正在行走的方块。
      *
-     * @param stand where to walk to
-     * @return true while walking to the block
+     * @param stand 要行走的位置
+     * @return 在行走到方块时返回true
      */
     protected final boolean walkToBlock(@NotNull final BlockPos stand)
     {
@@ -797,11 +802,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Sets the block the AI is currently walking to.
+     * 设置AI当前正在行走的方块。
      *
-     * @param stand where to walk to
-     * @param range how close we need to be
-     * @return true while walking to the block
+     * @param stand 要行走的位置
+     * @param range 我们需要多接近
+     * @return 在行走到方块时返回true
      */
     protected final boolean walkToBlock(@NotNull final BlockPos stand, final int range)
     {
@@ -818,10 +823,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Sets the block the AI is currently working on. This block will receive animation hits on delay.
+     * 设置AI当前正在工作的方块。此方块将在延迟时接收动画击中。
      *
-     * @param target  the block that will be hit
-     * @param timeout the time in ticks to hit the block
+     * @param target  将被击中的方块
+     * @param timeout 击打方块的时间（以滴答为单位）
      */
     private void workOnBlock(@Nullable final BlockPos target, final int timeout)
     {
@@ -829,14 +834,14 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Finds the first @see ItemStack the type of {@code is}. It will be taken from the chest and placed in the worker inventory. Make sure that the worker stands next the chest to
-     * not break immersion. Also make sure to have inventory space for the stack.
+     * 查找@see ItemStack的工具栏架子。
+     * 如果找到，将从中获取工具。请确保工人站在箱子旁边，以不破坏沉浸感。此外，确保为堆栈有库存空间。
      *
-     * @param entity   the tileEntity chest or building.
-     * @param toolType the type of tool.
-     * @param minLevel the min tool level.
-     * @param maxLevel the max tool level.
-     * @return true if found the tool.
+     * @param entity    箱子或建筑物的tileEntity。
+     * @param toolType  工具的类型。
+     * @param minLevel  最低工具等级。
+     * @param maxLevel  最高工具等级。
+     * @return 如果找到工具，则返回true。
      */
     public boolean retrieveToolInTileEntity(final BlockEntity entity, final IToolType toolType, final int minLevel, final int maxLevel)
     {
@@ -852,11 +857,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Takes whatever is in that slot of the worker chest and puts it in his inventory. If the inventory is full, only the fitting part will be moved. Beware this method shouldn't
-     * be private, because the generic access won't work within a lambda won't work else.
+     * 从工人箱子的指定槽中取出物品并放入其库存中。如果库存已满，只会移动适合的部分。请注意，这个方法不应该是私有的，因为通常情况下，泛型访问在lambda中无法使用。
      *
-     * @param provider  The provider to take from.
-     * @param slotIndex The slot to take.
+     * @param provider  要取出物品的提供者。
+     * @param slotIndex 要取出的槽位。
      */
     public void takeItemStackFromProvider(@NotNull final ICapabilityProvider provider, final int slotIndex)
     {
@@ -864,10 +868,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Ensures that we have a appropriate tool available. Will set {@code needsTool} accordingly.
+     * 确保我们有一个合适的工具可用。将根据需要设置{@code needsTool}。
      *
-     * @param toolType type of tool we check for.
-     * @return false if we have the tool
+     * @param toolType 要检查的工具类型。
+     * @return 如果有工具则返回false
      */
     public boolean checkForToolOrWeapon(@NotNull final IToolType toolType)
     {
@@ -904,11 +908,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Ensures that we have a appropriate tool available. ASync call on the tool.
+     * 确保我们有一个合适的工具可用。对工具进行ASync调用。
      *
-     * @param toolType     Tool type that is requested
-     * @param minimalLevel min. level of the tool
-     * @param maximalLevel min. level of the tool
+     * @param toolType     要请求的工具类型
+     * @param minimalLevel 工具的最低等级
+     * @param maximalLevel 工具的最高等级
      */
     protected void checkForToolorWeaponASync(@NotNull final IToolType toolType, final int minimalLevel, final int maximalLevel)
     {
@@ -931,9 +935,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Cancel all requests for a certain armor type for a certain citizen.
+     * 取消特定市民某种装甲类型的所有请求。
      *
-     * @param armorType the armor type.
+     * @param armorType 装甲类型。
      */
     protected void cancelAsynchRequestForArmor(final IToolType armorType)
     {
@@ -946,10 +950,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if there is an open request for a certain tooltype.
+     * 检查是否存在特定工具类型的未处理请求。
      *
-     * @param key the tooltype.
-     * @return true if so.
+     * @param key 工具类型。
+     * @return 如果存在，则返回 true。
      */
     private boolean hasOpenToolRequest(final IToolType key)
     {
@@ -958,13 +962,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if we need a tool.
+     * 检查是否需要一种工具。
      * <p>
-     * Do not use it to find a pickaxe as it need a minimum level.
+     * 不要用于查找镐，因为它需要达到最低级别。
      *
-     * @param toolType     tool required for block.
-     * @param minimalLevel the minimal level.
-     * @return true if we need a tool.
+     * @param toolType     方块所需的工具。
+     * @param minimalLevel 最低级别要求。
+     * @return 如果需要工具，则返回 true。
      */
     private boolean checkForNeededTool(@NotNull final IToolType toolType, final int minimalLevel)
     {
@@ -980,11 +984,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check all chests in the workers hut for a required tool.
+     * 检查工人小屋中的所有储物箱，寻找所需的工具。
      *
-     * @param toolType     the type of tool requested (amount is ignored)
-     * @param minimalLevel the minimal level the tool should have.
-     * @return true if a stack of that type was found
+     * @param toolType     请求的工具类型（数量不受关注）
+     * @param minimalLevel 工具应具备的最低级别。
+     * @return 如果找到该类型的一叠工具，则返回 true。
      */
     public boolean retrieveToolInHut(final IToolType toolType, final int minimalLevel)
     {
@@ -1023,8 +1027,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Get the building to dump the inventory into.
-     * @return its own building by default.
+     * 获取用于存放库存的建筑物。
+     * @return 默认情况下返回自身的建筑物。
      */
     protected IBuilding getBuildingToDump()
     {
@@ -1032,9 +1036,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Walk to building and dump inventory. If inventory is dumped, continue execution so that the state can be resolved.
+     * 走向建筑物并卸载库存。如果库存已卸载，则继续执行以便可以解决状态。
      *
-     * @return INVENTORY_FULL | IDLE
+     * @return INVENTORY_FULL（库存已满） | IDLE（空闲）
      */
     @NotNull
     private IAIState dumpInventory()
@@ -1042,9 +1046,15 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         final IBuilding building = getBuildingToDump();
         if (building == null)
         {
-            // Uh oh, that shouldn't happen. Restart AI.
+            // 哎呀，这不应该发生。重新启动 AI。
             return afterDump();
         }
+        List<ICitizenData> deliveryman = building.getColony()
+                .getCitizenManager()
+                .getCitizens()
+                .stream()
+                .filter(citizen -> citizen.getJob() instanceof JobDeliveryman && citizen.isIdleAtJob())
+                .collect(Collectors.toList());
 
         if (!worker.isWorkerAtSiteWithMove(building.getPosition(), DEFAULT_RANGE_FOR_DELAY))
         {
@@ -1061,9 +1071,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
                   .triggerInteraction(new StandardInteraction(Component.translatable(COM_MINECOLONIES_COREMOD_ENTITY_WORKER_INVENTORYFULLCHEST),
                     ChatPriority.IMPORTANT));
             }
-
-            // In this case, pickup during crafting is ok, since cleaning a full inventory is very important.
-            // Note that this will not create a pickup request when another request is already in progress.
+            if(deliveryman.isEmpty())return ORGANIZE_INVENTORY;
+            // 在这种情况下，在制作过程中捡起物品是可以的，因为清理满的库存非常重要。
+            // 请注意，当另一个请求已经在进行中时，这不会创建一个捡起请求。
             if (building.getPickUpPriority() > 0)
             {
                 building.createPickupRequest(getMaxBuildingPriority(true));
@@ -1085,8 +1095,8 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
 
         if (isAfterDumpPickupAllowed() && building.getPickUpPriority() > 0 && hasDumpedItems)
         {
-            // Worker is not currently crafting, pickup is allowed.
-            // Note that this will not create a pickup request when another request is already in progress.
+            // 工人目前未在制作物品，可以拾取。
+            // 请注意，当另一个请求已经在进行中时，这不会创建拾取请求。
             building.createPickupRequest(scaledPriority(building.getPickUpPriority()));
             hasDumpedItems = false;
         }
@@ -1094,15 +1104,15 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * State to go to after dumping.
+     * 倒掉后要进入的状态。
      *
-     * @return the next state.
+     * @return 下一个状态。
      */
     public IAIState afterDump()
     {
         if (isPaused())
         {
-            // perform a cleanUp before going to PAUSED
+            // 在进入暂停状态之前执行清理操作
             this.building.onCleanUp(worker.getCitizenData());
             return PAUSED;
         }
@@ -1110,9 +1120,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Dumps one inventory slot into the building chest.
+     * 倾倒一个库存槽的物品到建筑箱子中。
      *
-     * @return true if is has to dump more.
+     * @return 如果需要继续倾倒更多则返回true。
      */
     @SuppressWarnings("PMD.PrematureDeclaration")
     private boolean dumpOneMoreSlot()
@@ -1170,10 +1180,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Can be overridden by implementations to specify items useful for the worker. When the worker inventory is full, he will try to keep these items. ItemStack amounts are
-     * ignored, the first stack found will be taken.
+     * 可以被实现重写，用于指定对工人有用的物品。当工人的库存已满时，他将尝试保留这些物品。 ItemStack 数量将被忽略，将取第一个找到的堆叠。
      *
-     * @return a list with items nice to have for the worker
+     * @return 一个包含对工人有用的物品的列表
      */
     @NotNull
     protected List<ItemStack> itemsNiceToHave()
@@ -1182,7 +1191,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Clear the actions done counter. Call this when dumping into the chest.
+     * 清除已完成动作计数器。将其用于倾倒物品到箱子时调用。
      */
     private void clearActionsDone()
     {
@@ -1190,9 +1199,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Calculate the citizens inventory.
+     * 计算市民的库存。
      *
-     * @return A InventoryCitizen matching this ai's citizen.
+     * @return 与此AI的市民匹配的InventoryCitizen。
      */
     @NotNull
     protected InventoryCitizen getInventory()
@@ -1201,13 +1210,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check and ensure that we hold the most efficient tool for the job.
+     * 检查并确保我们拥有最适合的工具来执行任务。
      * <p>
-     * If we have no tool for the job, we will request on, return immediately.
+     * 如果我们没有适合的工具，将会发出请求并立即返回。
      *
-     * @param target the BlockState to mine
-     * @param pos    the pos to mine
-     * @return true if we have a tool for the job
+     * @param target 要挖掘的 BlockState
+     * @param pos    要挖掘的位置
+     * @return 如果我们有适合的工具则返回 true
      */
     public final boolean holdEfficientTool(@NotNull final BlockState target, final BlockPos pos)
     {
@@ -1223,10 +1232,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Request the appropriate tool for this block.
+     * 请求适用于此方块的合适工具。
      *
-     * @param target the blockstate to mine
-     * @param pos    the pos to mine
+     * @param target 要采矿的方块状态
+     * @param pos    要采矿的位置
      */
     private void requestTool(@NotNull final BlockState target, final BlockPos pos)
     {
@@ -1244,10 +1253,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Checks if said tool of said level is usable. if not, it updates the needsTool flag for said tool.
+     * 检查指定工具的指定级别是否可用。如果不可用，更新该工具的 needsTool 标志。
      *
-     * @param toolType the tool needed
-     * @param required the level needed (for pickaxe only)
+     * @param toolType 所需工具
+     * @param required 所需级别（仅适用于镐）
      */
     private void updateToolFlag(@NotNull final IToolType toolType, final int required)
     {
@@ -1262,11 +1271,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Calculates the most efficient tool to use on that block.
+     * 计算对该方块使用最有效的工具。
      *
-     * @param target the BlockState to mine
-     * @param pos    the pos it is at.
-     * @return the slot with the best tool
+     * @param target 要挖掘的方块状态
+     * @param pos    方块所在的位置。
+     * @return 拥有最佳工具的槽位
      */
     protected int getMostEfficientTool(@NotNull final BlockState target, final BlockPos pos)
     {
@@ -1300,10 +1309,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Will delay one time and pass through the second time. Use for convenience instead of SetDelay
+     * 会延迟一次，然后第二次通过。用于方便而不是SetDelay。
      *
-     * @param time the time to wait
-     * @return true if you should wait
+     * @param time 等待的时间
+     * @return 如果需要等待则返回true
      */
     protected final boolean hasNotDelayed(final int time)
     {
@@ -1318,13 +1327,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Tell the ai that you have done one more action.
+     * 通知AI你执行了一项额外的动作。
      * <p>
-     * if the actions exceed a certain number, the ai will dump it's inventory. this also triggers the AI to get hungry.
+     * 如果动作数量超过一定值，AI将卸下其物品。这也会触发AI感到饥饿。
      * <p>
-     * For example:
+     * 例如：
      * <p>
-     * After x blocks, bring everything back.
+     * 在执行x个动作后，将所有物品带回。
      */
     public final void incrementActionsDoneAndDecSaturation()
     {
@@ -1333,13 +1342,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Tell the ai that you have done one more action.
+     * 通知AI您已执行了一项额外操作。
      * <p>
-     * if the actions exceed a certain number, the ai will dump it's inventory.
+     * 如果操作次数超过一定数量，AI将清空其物品库存。
      * <p>
-     * For example:
+     * 例如：
      * <p>
-     * After x blocks, bring everything back.
+     * 在执行 x 次操作后，将所有物品带回来。
      *
      * @see #incrementActionsDone(int)
      */
@@ -1349,7 +1358,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Reset the done actions of the AI.
+     * 重置AI完成的动作。
      *
      * @see #incrementActionsDone(int)
      */
@@ -1359,15 +1368,15 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Tell the ai that you have done numberOfActions more actions.
+     * 通知AI你已经执行了numberOfActions更多的动作。
      * <p>
-     * if the actions exceed a certain number, the ai will dump it's inventory.
+     * 如果动作超过一定数量，AI将会清空其库存。
      * <p>
-     * For example:
+     * 例如：
      * <p>
-     * After x blocks, bring everything back.
+     * 在执行x个动作后，将所有物品带回来。
      *
-     * @param numberOfActions number of actions to be added at once.
+     * @param numberOfActions 一次添加的动作数量。
      * @see #incrementActionsDone()
      */
     protected final void incrementActionsDone(final int numberOfActions)
@@ -1376,13 +1385,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Calculates the working position.
+     * 计算工作位置。
      * <p>
-     * Takes the position where the worker would like to work on and return the most appropriate position for it.
+     * 获取工人想要工作的位置，并返回最适合的工作位置。
      * <p>
      *
-     * @param targetPosition the position to work at.
-     * @return BlockPos most appropiate position to work from.
+     * @param targetPosition 想要工作的位置。
+     * @return BlockPos 最适合工作的位置。
      */
     public BlockPos getWorkingPosition(final BlockPos targetPosition)
     {
@@ -1390,16 +1399,16 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Calculates the working position.
+     * 计算工作位置。
      * <p>
-     * Takes a min distance from width and length.
+     * 从宽度和长度中取一个最小距离。
      * <p>
-     * Then finds the floor level at that distance and then check if it does contain two air levels.
+     * 然后在该距离处找到地板水平，然后检查是否包含两个空气层。
      *
-     * @param distance  the extra distance to apply away from the building.
-     * @param targetPos the target position which needs to be worked.
-     * @param offset    an additional offset
-     * @return BlockPos position to work from.
+     * @param distance  需要离建筑物远离的额外距离。
+     * @param targetPos 需要进行工作的目标位置。
+     * @param offset    附加偏移量
+     * @return BlockPos 可以工作的位置。
      */
     public BlockPos getWorkingPosition(final int distance, final BlockPos targetPos, final int offset)
     {
@@ -1426,12 +1435,12 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Gets a floorPosition in a particular direction.
+     * 获取特定方向上的一个地板位置。
      *
-     * @param facing    the direction.
-     * @param distance  the distance.
-     * @param targetPos the position to work at.
-     * @return a BlockPos position.
+     * @param facing    方向。
+     * @param distance  距离。
+     * @param targetPos 要操作的位置。
+     * @return 一个 BlockPos 位置。
      */
     @NotNull
     private BlockPos getPositionInDirection(final Direction facing, final int distance, final BlockPos targetPos)
@@ -1440,10 +1449,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Requests a list of itemstacks.
+     * 请求一个物品堆列表。
      *
-     * @param stacks the stacks.
-     * @return true if they're in the inventory.
+     * @param stacks 物品堆。
+     * @return 如果它们在库存中则返回true。
      */
     public boolean checkIfRequestForItemExistOrCreate(@NotNull final ItemStack... stacks)
     {
@@ -1451,10 +1460,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if any of the stacks is in the inventory.
+     * 检查库存中是否有任何一个物品堆叠。
      *
-     * @param stacks the list of stacks.
-     * @return true if so.
+     * @param stacks 物品堆叠列表。
+     * @return 如果有则返回 true。
      */
     public boolean checkIfRequestForItemExistOrCreate(@NotNull final Collection<ItemStack> stacks)
     {
@@ -1462,10 +1471,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a stack has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查一个堆叠（stack）是否已经被请求或在库存中。如果不在库存中且尚未被请求，创建请求。
      *
-     * @param stack the requested stack.
-     * @return true if in the inventory, else false.
+     * @param stack 被请求的堆叠。
+     * @return 如果在库存中，则返回 true，否则返回 false。
      */
     public boolean checkIfRequestForItemExistOrCreate(@NotNull final ItemStack stack)
     {
@@ -1473,12 +1482,12 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a stack has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查是否已经请求了一个堆叠或者在库存中。如果不在库存中且尚未被请求，创建请求。
      *
-     * @param stack the requested stack.
-     * @param count count to request.
-     * @param minCount the min count to fulfill.
-     * @return true if in the inventory, else false.
+     * @param stack 请求的堆叠。
+     * @param count 请求的数量。
+     * @param minCount 达到的最小数量。
+     * @return 如果在库存中则返回true，否则返回false。
      */
     public boolean checkIfRequestForItemExistOrCreate(@NotNull final ItemStack stack, final int count, final int minCount)
     {
@@ -1501,10 +1510,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Requests a list of itemstacks.
+     * 请求一个物品堆列表。
      *
-     * @param stacks the stacks.
-     * @return true if they're in the inventory.
+     * @param stacks 物品堆列表。
+     * @return 如果它们在库存中，则返回true。
      */
     public boolean checkIfRequestForItemExistOrCreateAsync(@NotNull final ItemStack... stacks)
     {
@@ -1512,10 +1521,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if any of the stacks is in the inventory.
+     * 检查库存中是否存在任何一个堆叠项。
      *
-     * @param stacks the list of stacks.
-     * @return true if so.
+     * @param stacks 堆叠项列表。
+     * @return 如果存在则返回 true。
      */
     public boolean checkIfRequestForItemExistOrCreateAsync(@NotNull final Collection<ItemStack> stacks)
     {
@@ -1523,10 +1532,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a stack has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查堆栈是否已经被请求或已在库存中。如果不在库存中且尚未请求，则创建请求。
      *
-     * @param stack the requested stack.
-     * @return true if in the inventory, else false.
+     * @param stack 请求的堆栈。
+     * @return 如果在库存中则返回 true，否则返回 false。
      */
     public boolean checkIfRequestForItemExistOrCreateAsync(@NotNull final ItemStack stack)
     {
@@ -1534,12 +1543,12 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a stack has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查是否已经请求了一堆物品或者是否已经在库存中。如果不在库存中且未被请求过，创建请求。
      *
-     * @param stack the requested stack.
-     * @param count the count.
-     * @param minCount the min count.
-     * @return true if in the inventory, else false.
+     * @param stack 请求的物品堆栈。
+     * @param count 数量。
+     * @param minCount 最小数量。
+     * @return 如果在库存中则为true，否则为false。
      */
     public boolean checkIfRequestForItemExistOrCreateAsync(@NotNull final ItemStack stack, final int count, final int minCount)
     {
@@ -1547,13 +1556,13 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a stack has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查堆叠是否已被请求或已存在于库存中。如果不在库存中且未被请求过，则创建请求。
      *
-     * @param stack    the requested stack.
-     * @param count    the total count.
-     * @param minCount the minimum count.
-     * @param matchNBT if nbt has to be matched.
-     * @return true if in the inventory, else false.
+     * @param stack    请求的堆叠。
+     * @param count    总计数。
+     * @param minCount 最小计数。
+     * @param matchNBT 是否需要匹配 NBT。
+     * @return 如果在库存中则返回 true，否则返回 false。
      */
     public boolean checkIfRequestForItemExistOrCreateAsync(@NotNull final ItemStack stack, final int count, final int minCount, final boolean matchNBT)
     {
@@ -1592,9 +1601,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a request exists for a given deliverable.
-     * @param deliverable the deliverable to check of request.
-     * @return true if available or transfered.
+     * 检查是否存在某个可交付物的请求。
+     *
+     * @param deliverable 要检查请求的可交付物。
+     * @return 如果可用或已转移，则为true。
      */
     public boolean checkIfRequestForItemExistOrCreate(@NotNull final IDeliverable deliverable)
     {
@@ -1628,10 +1638,10 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Check if a tag has been requested already or is in the inventory. If not in the inventory and not requested already, create request
+     * 检查标签是否已经被请求或者在库存中。如果不在库存中且未被请求，创建请求。
      *
-     * @param tag the requested tag.
-     * @return true if in the inventory, else false.
+     * @param tag 请求的标签。
+     * @return 如果在库存中则返回 true，否则返回 false。
      */
     public boolean checkIfRequestForTagExistOrCreateAsync(@NotNull final TagKey<Item> tag, final int count)
     {
@@ -1663,11 +1673,11 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Try to transfer a item matching a predicate from a position to the cook.
+     * 尝试从一个位置将符合条件的物品转移到厨师那里。
      *
-     * @param pos       the position to transfer it from.
-     * @param predicate the predicate to evaluate.
-     * @return true if cancelling state.
+     * @param pos       要转移的位置。
+     * @param predicate 要评估的条件。
+     * @return 如果取消状态为true。
      */
 
     private boolean tryTransferFromPosToWorkerIfNeeded(final BlockPos pos, @NotNull final Tuple<Predicate<ItemStack>, Integer> predicate)
@@ -1696,9 +1706,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Is worker paused?
+     * 工人是否暂停？
      *
-     * @return true if paused
+     * @return 如果暂停则返回 true
      */
     private boolean isPaused()
     {
@@ -1706,9 +1716,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Is worker starting paused
+     * 工作器是否在启动时处于暂停状态
      *
-     * @return true if starting paused
+     * @return 如果在启动时处于暂停状态则返回true
      */
     private boolean isStartingPaused()
     {
@@ -1716,9 +1726,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Paused activity
+     * 暂停活动。
      *
-     * @return next state
+     * @return 下一个状态
      */
     private IAIState bePaused()
     {
@@ -1742,9 +1752,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Is worker paused but not walking.
+     * 工人是否处于暂停状态但未行走。
      *
-     * @return true if restart is scheduled
+     * @return 如果已安排重新启动，则返回true。
      */
     private boolean shouldRestart()
     {
@@ -1752,7 +1762,7 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * Restart AI, building etc.
+     * 重新启动AI、建筑等。
      *
      * @return <code>State.INIT</code>
      */
@@ -1766,12 +1776,153 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
     }
 
     /**
-     * The current exception timer
+     * 重新启动AI、建筑等。
      *
-     * @return the timer.
+     * @return <code>State.INIT</code>
      */
     public int getExceptionTimer()
     {
         return exceptionTimer;
+    }
+
+    /**
+     * 走向建筑物并整理库存，将所有多余的物品送至仓库
+     *
+     * @return TRANSFER_TO_WAREHOUSE(完成)|ORGANIZE_INVENTORY(未完成)
+     */
+    public IAIState clearInventory()
+    {
+        final IBuilding building = getBuildingToDump();
+        if (building == null)
+        {
+            // 哎呀，这不应该发生。重新启动 AI。
+            return afterDump();
+        }
+        if (!worker.isWorkerAtSiteWithMove(building.getPosition(), DEFAULT_RANGE_FOR_DELAY))    //去小屋整理
+        {
+            setDelay(WALK_DELAY);
+            return ORGANIZE_INVENTORY;
+        }
+        if(!clearBackpack())return ORGANIZE_INVENTORY;
+        if(pickupFromBuilding())return TRANSFER_TO_WAREHOUSE;
+        else return ORGANIZE_INVENTORY;
+    }
+
+
+    int currentSlot = 0;
+    /**
+     * 从建筑物中收集不需要的物品。
+     *
+     * @return 当完成时返回 true。
+     */
+    private boolean pickupFromBuilding()
+    {
+        final IBuilding building = getBuildingToDump();
+        if (InventoryUtils.openSlotCount(worker.getInventoryCitizen()) <= 0)
+        {
+            return false;
+        }   //背包已满,返回false
+
+        final IItemHandler handler = building.getCapability(ITEM_HANDLER_CAPABILITY, null).orElse(null);
+        if (handler == null)
+        {
+            return false;
+        }   //容器不存在,返回false
+
+        if (currentSlot >= handler.getSlots())
+        {
+            currentSlot = 0;
+            return true;
+        }   //指针超过最大容量,返回true
+
+        final ItemStack stack = handler.getStackInSlot(currentSlot);
+
+        if (stack.isEmpty())
+        {
+            return false;
+        }   //指向物品格为空,返回false
+
+        final int amount = building.buildingRequiresCertainAmountOfItem(stack, alreadyKept, false);
+        if (amount <= 0)
+        {
+            return false;
+        }   //指向物品需全部保留,返回false
+
+        if (ItemStackUtils.isEmpty(handler.getStackInSlot(currentSlot)))
+        {
+            return false;
+        }   //指向物品格为空,返回false 重复检查,意义不明
+            //检查结束,取出物品放入背包,标记建筑需要更新,消耗饱食度
+        final ItemStack activeStack = handler.extractItem(currentSlot, amount, false);
+        InventoryUtils.transferItemStackIntoNextBestSlotInItemHandler(activeStack, worker.getInventoryCitizen());
+        building.markDirty();
+        worker.decreaseSaturationForContinuousAction();
+        return false;
+    }
+    int currentSlot2 = 0;
+    /**
+     * 从身上卸下需要保管的物品。
+     *
+     * @return 当完成时返回 true。
+     */
+    private boolean clearBackpack() {
+        final IBuilding building = getBuildingToDump();
+        final IItemHandler handler = building.getCapability(ITEM_HANDLER_CAPABILITY, null).orElse(null);
+        if (handler == null) {
+            return false;
+        }   //容器不存在,返回false
+        if (InventoryUtils.openSlotCount(handler) <= 0) {
+            return false;
+        }   //建筑库存已满,返回false
+        if (currentSlot2 >= worker.getInventoryCitizen().getSlots()) {
+            currentSlot2 = 0;
+            return true;
+        }   //指针超过最大容量,返回true
+        final ItemStack stack = worker.getInventoryCitizen().getStackInSlot(currentSlot2);
+        if (stack.isEmpty()) {
+            return false;
+        }   //指向物品格为空,返回false
+        List<ItemStack> reservedItems = itemsNiceToHave();
+        ItemStack itemStack = worker.getInventoryCitizen().getStackInSlot(currentSlot2);
+        for (ItemStack item : reservedItems) {
+            if (item == itemStack) {
+                //检查结束,取出物品放入仓库,标记建筑需要更新,消耗饱食度
+                final ItemStack activeStack = worker.getInventoryCitizen().extractItem(currentSlot2, 64, false);
+                InventoryUtils.transferItemStackIntoNextBestSlotInItemHandler(activeStack, handler);
+                building.markDirty();
+                worker.decreaseSaturationForContinuousAction();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 前往仓库卸货
+     *
+     * @return IDLE(完成)|TRANSFER_TO_WAREHOUSE(未完成)
+     */
+    private IAIState unloadCargoAtWarehouse(){
+        IBuilding building = getBuildingToDump();
+        if (building == null)
+        {
+            // 哎呀，这不应该发生。重新启动 AI。
+            return afterDump();
+        }
+        IWareHouse warehouse = building.getColony().getBuildingManager().getClosestWarehouseInColony(building.getPosition());
+        if(warehouse == null){
+            return IDLE;
+        }
+        worker.getCitizenStatusHandler().setLatestStatus(Component.translatable("com.minecolonies.coremod.status.dumping"));
+
+        if (!worker.isWorkerAtSiteWithMove(warehouse.getPosition(), DEFAULT_RANGE_FOR_DELAY))
+        {
+            setDelay(WALK_DELAY);
+            return TRANSFER_TO_WAREHOUSE;
+        }
+
+        warehouse.getTileEntity().dumpInventoryIntoWareHouse(worker.getInventoryCitizen());
+        worker.getCitizenItemHandler().setHeldItem(InteractionHand.MAIN_HAND, 0);
+        return IDLE;
     }
 }

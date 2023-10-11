@@ -70,6 +70,7 @@ public final class ModBlocks
     public static AbstractBlockHut<? extends AbstractBlockHut<?>> blockMediumQuarry;
     //public static AbstractBlockHut<? extends AbstractBlockHut<?>> blockLargeQuarry;
     public static AbstractBlockHut<? extends AbstractBlockHut<?>> blockHutAlchemist;
+    public static AbstractBlockHut<? extends AbstractBlockHut<?>> blockHutPlanner;
 
     /**
      * Utility blocks.
@@ -149,6 +150,7 @@ public final class ModBlocks
           blockHutAlchemist,
           blockSimpleQuarry,
           blockMediumQuarry,
+          blockHutPlanner,
           //blockLargeQuarry
           };
     }

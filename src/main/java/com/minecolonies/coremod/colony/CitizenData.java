@@ -62,219 +62,219 @@ import static com.minecolonies.api.util.constant.NbtTagConstants.*;
 import static com.minecolonies.api.util.constant.TranslationConstants.*;
 
 /**
- * Extra data for Citizens.
+ * 公民的额外数据。
  */
 @SuppressWarnings({Suppression.BIG_CLASS, "PMD.ExcessiveClassLength"})
 public class CitizenData implements ICitizenData
 {
     /**
-     * The max health.
+     * 最大生命值。
      */
     private static final float MAX_HEALTH = 20.0F;
 
     /**
-     * Max levels of an attribute a citizen may initially have.
+     * 公民可能最初拥有的属性的最大等级。
      */
     private static final int LETTERS_IN_THE_ALPHABET = 26;
 
     /**
-     * Minimum saturation of a citizen.
+     * 公民的最小饱和度。
      */
     private static final int MIN_SATURATION = 0;
 
     /**
-     * Possible texture suffixes.
+     * 可能的纹理后缀。
      */
     public static final List<String> SUFFIXES = Arrays.asList("_b", "_d", "_a", "_w");
 
     /**
-     * The unique citizen id.
+     * 唯一的公民ID。
      */
     private final int id;
 
     /**
-     * The colony the citizen belongs to.
+     * 公民所属的殖民地。
      */
     private final IColony colony;
 
     /**
-     * Inventory of the citizen.
+     * 公民的库存。
      */
     protected InventoryCitizen inventory;
 
     /**
-     * The name of the citizen.
+     * 公民的姓名。
      */
     private String name;
 
     /**
-     * Boolean gender, true = female, false = male.
+     * 布尔值性别，true = 女性，false = 男性。
      */
     private boolean female;
 
     /**
-     * Whether the citizen is still a child
+     * 公民是否仍然是儿童。
      */
     private boolean isChild = false;
 
     /**
-     * Boolean paused, true = paused, false = working.
+     * 布尔值暂停，true = 暂停，false = 工作中。
      */
     private boolean paused;
 
     /**
-     * If restart is scheduled.
+     * 是否计划重新启动。
      */
     private boolean restartScheduled;
 
     /**
-     * Report end message to:
+     * 向以下玩家报告结束消息：
      */
     private ServerPlayer originPlayerRestart;
 
     /**
-     * The id of the citizens texture.
+     * 公民纹理的ID。
      */
     private int textureId;
 
     /**
-     * If the citizen is asleep right now.
+     * 公民当前是否正在睡觉。
      */
     private boolean isAsleep;
 
     /**
-     * The citizens current bedBos.
+     * 公民当前的床位。
      */
     private BlockPos bedPos = BlockPos.ZERO;
 
     /**
-     * The home building of the citizen.
+     * 公民的家庭建筑。
      */
     @Nullable
     private IBuilding homeBuilding;
 
     /**
-     * The work building of the citizen.
+     * 公民的工作建筑。
      */
     @Nullable
     private IBuilding workBuilding;
 
     /**
-     * The job of the citizen.
+     * 公民的工作。
      */
     private IJob<?> job;
 
     /**
-     * If the citizen is dirty (Has to be updated on client side).
+     * 公民是否脏了（必须在客户端更新）。
      */
     private boolean dirty;
 
     /**
-     * Its entitity.
+     * 它的实体。
      */
     @NotNull
     private WeakReference<AbstractEntityCitizen> entity = new WeakReference<>(null);
 
     /**
-     * The citizens saturation at the current moment.
+     * 公民当前的饱和度。
      */
     private double saturation;
 
     /**
-     * Variable indicating if a citizen just ate.
+     * 表示公民刚刚进食的变量。
      */
     private boolean justAte;
 
     /**
-     * The last position of the citizen.
+     * 公民的上一个位置。
      */
     private BlockPos lastPosition = new BlockPos(0, 0, 0);
 
     /**
-     * The citizen happiness handler.
+     * 公民的幸福度处理器。
      */
     private final CitizenHappinessHandler citizenHappinessHandler;
 
     /**
-     * The citizen happiness handler.
+     * 公民的哀悼处理器。
      */
     private final CitizenMournHandler citizenMournHandler;
 
     /**
-     * The citizen skill handler.
+     * 公民的技能处理器。
      */
     private final CitizenSkillHandler citizenSkillHandler;
 
     /**
-     * The citizen chat options on the server side.
+     * 服务器端的公民聊天选项。
      */
     protected final Map<Component, IInteractionResponseHandler> citizenChatOptions = new HashMap<>();
 
     /**
-     * If idle at job.
+     * 是否在工作时处于空闲状态。
      */
     private boolean idle;
 
     /**
-     * The texture suffix.
+     * 纹理后缀。
      */
     private String textureSuffix;
 
     /**
-     * The status icon to display
+     * 要显示的状态图标。
      */
     private VisibleCitizenStatus status;
 
     /**
-     * The citizen data random.
+     * 公民数据的随机数生成器。
      */
     private Random random = new Random();
 
     /**
-     * Chance to complain for having no guard nearby
+     * 抱怨没有附近的卫兵的机会。
      */
     private static final int NO_GUARD_COMPLAIN_CHANCE = 10;
 
     /**
-     * Consumed position to determine the next position to respawn at.
+     * 用于确定重新生成的下一个位置的占用位置。
      */
     private BlockPos nextRespawnPos = null;
 
     /**
-     * Parents of the citizen.
+     * 公民的父母。
      */
     private Tuple<String, String> parents = new Tuple<>("", "");
 
     /**
-     * Alive children of the citizen
+     * 公民的活着的子女。
      */
     private Set<Integer> children = new HashSet<>();
 
     /**
-     * Alive siblings of the citizen.
+     * 公民的活着的兄弟姐妹。
      */
     private Set<Integer> siblings = new HashSet<>();
 
     /**
-     * Alive partner of the citizen.
+     * 公民的活着的伴侣。
      */
     private Integer partner = 0;
 
     /**
-     * If the job is currently active.
+     * 工作是否当前处于活动状态。
      */
     private boolean isWorking = false;
 
     /**
-     * The inactivity timer in seconds.
+     * 闲置计时器（以秒为单位）。
      */
     private int inactivityTimer = DISABLED;
 
     /**
-     * Create a CitizenData given an ID. Used as a super-constructor or during loading.
+     * 创建给定ID的CitizenData。用作超级构造函数或在加载期间使用。
      *
-     * @param id     ID of the Citizen.
-     * @param colony Colony the Citizen belongs to.
+     * @param id     公民的ID。
+     * @param colony 公民所属的殖民地。
      */
     public CitizenData(final int id, final IColony colony)
     {

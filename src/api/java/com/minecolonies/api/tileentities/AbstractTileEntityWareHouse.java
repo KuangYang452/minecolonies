@@ -19,59 +19,59 @@ public abstract class AbstractTileEntityWareHouse extends TileEntityColonyBuildi
     }
 
     /**
-     * Method to get the first matching ItemStack in the Warehouse.
+     * 从仓库中获取第一个匹配的ItemStack的方法。
      *
-     * @param itemStackSelectionPredicate The predicate to select the ItemStack with.
-     * @return The first matching ItemStack.
+     * @param itemStackSelectionPredicate 用于选择ItemStack的谓词。
+     * @return 第一个匹配的ItemStack。
      */
     public abstract boolean hasMatchingItemStackInWarehouse(@NotNull Predicate<ItemStack> itemStackSelectionPredicate, int count);
 
     /**
-     * Method used to check if this warehouse holds any of the requested itemstacks.
+     * 用于检查此仓库是否包含所请求的任何itemstacks的方法。
      *
-     * @param itemStack The stack to check with to check with.
-     * @param count the min count.
-     * @param ignoreNBT if the nbt value should be ignored.
-     * @return True when the warehouse holds a stack, false when not.
+     * @param itemStack 用于检查的堆栈。
+     * @param count 最小计数。
+     * @param ignoreNBT 是否应忽略nbt值。
+     * @return 仓库是否包含堆栈时为true，否则为false。
      */
     public abstract boolean hasMatchingItemStackInWarehouse(@NotNull final ItemStack itemStack, final int count, final boolean ignoreNBT);
 
     /**
-     * Method used to check if this warehouse holds any of the requested itemstacks.
+     * 用于检查此仓库是否包含所请求的任何itemstacks的方法。
      *
-     * @param itemStack The stack to check with to check with.
-     * @param count the min count.
-     * @param ignoreNBT if the nbt value should be ignored.
-     * @param leftOver the leftover to keep at the warehouse at all times.
-     * @return True when the warehouse holds a stack, false when not.
+     * @param itemStack 用于检查的堆栈。
+     * @param count 最小计数。
+     * @param ignoreNBT 是否应忽略nbt值。
+     * @param leftOver 保留在仓库中的剩余物品。
+     * @return 仓库是否包含堆栈时为true，否则为false。
      */
     public abstract boolean hasMatchingItemStackInWarehouse(@NotNull final ItemStack itemStack, final int count, final boolean ignoreNBT, final int leftOver);
 
     /**
-     * Method used to check if this warehouse holds any of the requested itemstacks.
+     * 用于检查此仓库是否包含所请求的任何itemstacks的方法。
      *
-     * @param itemStack The stack to check with to check with.
-     * @param count the min count.
-     * @param ignoreNBT if the nbt value should be ignored.
-     * @param ignoreDamage the ignore damage.
-     * @param leftOver the leftover to keep at the warehouse at all times.
-     * @return True when the warehouse holds a stack, false when not.
+     * @param itemStack 用于检查的堆栈。
+     * @param count 最小计数。
+     * @param ignoreNBT 是否应忽略nbt值。
+     * @param ignoreDamage 是否忽略伤害。
+     * @param leftOver 保留在仓库中的剩余物品。
+     * @return 仓库是否包含堆栈时为true，否则为false。
      */
     public abstract boolean hasMatchingItemStackInWarehouse(@NotNull final ItemStack itemStack, final int count, final boolean ignoreNBT, final boolean ignoreDamage, final int leftOver);
 
     /**
-     * Method used to check if this warehouse holds any of the requested itemstacks.
+     * 用于检查此仓库是否包含所请求的任何itemstacks的方法。
      *
-     * @param itemStackSelectionPredicate The predicate to check with.
-     * @return True when the warehouse holds a stack, false when not.
+     * @param itemStackSelectionPredicate 用于检查的谓词。
+     * @return 仓库是否包含堆栈时为true，否则为false。
      */
     @NotNull
     public abstract List<Tuple<ItemStack, BlockPos>> getMatchingItemStacksInWarehouse(@NotNull Predicate<ItemStack> itemStackSelectionPredicate);
 
     /**
-     * Dump the inventory of a citizen into the warehouse. Go through all items and search the right chest to dump it in.
+     * 将市民的库存倒入仓库的方法。遍历所有物品并搜索适当的箱子进行倒入。
      *
-     * @param inventoryCitizen the inventory of the citizen
+     * @param inventoryCitizen 市民的库存
      */
     public abstract void dumpInventoryIntoWareHouse(@NotNull InventoryCitizen inventoryCitizen);
 }

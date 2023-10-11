@@ -32,36 +32,36 @@ import static com.minecolonies.api.entity.ai.statemachine.states.AIWorkerState.*
 import static com.minecolonies.api.util.constant.TranslationConstants.*;
 
 /**
- * AI class for the builder. Manages building and repairing buildings.
+ * 用于建造者的AI类。管理建造和修复建筑物。
  */
 public class EntityAIStructureBuilder extends AbstractEntityAIStructureWithWorkOrder<JobBuilder, BuildingBuilder>
 {
     /**
-     * Speed buff at 0 depth level.
+     * 0级深度的速度增益。
      */
     private static final double SPEED_BUFF_0 = 0.5;
 
     /**
-     * After how many actions should the builder dump his inventory.
+     * 多少个动作后建造者应该倾倒其物品。
      */
     private static final int ACTIONS_UNTIL_DUMP = 4096;
 
     /**
-     * Building level to purge mobs at the build site.
+     * 净化建筑工地上的怪物的建筑级别。
      */
     private static final int LEVEL_TO_PURGE_MOBS = 4;
 
     /**
-     * Initialize the builder and add all his tasks.
+     * 初始化建造者并添加他的所有任务。
      *
-     * @param job the job he has.
+     * @param job 他拥有的工作。
      */
     public EntityAIStructureBuilder(@NotNull final JobBuilder job)
     {
         super(job);
         super.registerTargets(
-          new AITarget(IDLE, START_WORKING, 100),
-          new AITarget(START_WORKING, this::checkForWorkOrder, this::startWorkingAtOwnBuilding, 100)
+                new AITarget(IDLE, START_WORKING, 100),
+                new AITarget(START_WORKING, this::checkForWorkOrder, this::startWorkingAtOwnBuilding, 100)
         );
         worker.setCanPickUpLoot(true);
     }
@@ -85,9 +85,9 @@ public class EntityAIStructureBuilder extends AbstractEntityAIStructureWithWorkO
     }
 
     /**
-     * Checks if we got a valid workorder.
+     * 检查是否有有效的工作订单。
      *
-     * @return true if we got a workorder to work with
+     * @return 如果有工作订单可以处理则返回true
      */
     private boolean checkForWorkOrder()
     {
@@ -145,7 +145,7 @@ public class EntityAIStructureBuilder extends AbstractEntityAIStructureWithWorkO
     }
 
     /**
-     * Kill all mobs at the building site.
+     * 杀死建筑工地上的所有怪物。
      */
     private void killMobs()
     {
@@ -233,9 +233,9 @@ public class EntityAIStructureBuilder extends AbstractEntityAIStructureWithWorkO
     }
 
     /**
-     * Calculates after how many actions the AI should dump its inventory.
+     * 计算AI在倾倒物品前完成多少次动作。
      *
-     * @return the number of actions done before item dump.
+     * @return 物品倾倒前完成的动作次数。
      */
     @Override
     protected int getActionsDoneUntilDumping()
@@ -267,11 +267,11 @@ public class EntityAIStructureBuilder extends AbstractEntityAIStructureWithWorkO
         {
             case REPAIR:
                 message = Component.translatable(
-                  COM_MINECOLONIES_COREMOD_ENTITY_BUILDER_REPAIRING_COMPLETE,
-                  wo.getDisplayName(),
-                  position.getX(),
-                  position.getY(),
-                  position.getZ());
+                        COM_MINECOLONIES_COREMOD_ENTITY_BUILDER_REPAIRING_COMPLETE,
+                        wo.getDisplayName(),
+                        position.getX(),
+                        position.getY(),
+                        position.getZ());
                 break;
             case REMOVE:
                 message = Component.translatable(

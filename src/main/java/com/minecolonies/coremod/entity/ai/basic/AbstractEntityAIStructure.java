@@ -69,13 +69,13 @@ import static com.minecolonies.coremod.entity.ai.basic.AbstractEntityAIStructure
 import static com.minecolonies.coremod.entity.ai.util.BuildingStructureHandler.Stage.*;
 
 /**
- * This base ai class is used by ai's who need to build entire structures. These structures have to be supplied as schematics files.
+ * 这个基础AI类用于需要建造整个结构的AI。这些结构必须作为示意图文件提供。
  * <p>
- * Once an ai starts building a structure, control over it is only given back once that is done.
+ * 一旦AI开始建造一个结构，只有在完成后才会恢复对其的控制权。
  * <p>
- * If the ai resets, the structure is gone, so just restart building and no progress will be reset.
+ * 如果AI重置，结构就会消失，因此只需重新开始建造，不会重置任何进度。
  *
- * @param <J> the job type this AI has to do.
+ * @param <J> 此AI需要执行的工作类型。
  */
 public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?, J>, B extends AbstractBuildingStructureBuilder> extends AbstractEntityAIInteract<J, B>
 {
@@ -128,11 +128,11 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     private int pickUpCount = 0;
 
     /**
-     * Creates this ai base class and set's up important things.
+     * 创建此 AI 基类并设置重要事项。
      * <p>
-     * Always use this constructor!
+     * 请始终使用此构造函数！
      *
-     * @param job the job class of the ai using this base class.
+     * @param job 使用此基类的 AI 的工作类。
      */
     protected AbstractEntityAIStructure(@NotNull final J job)
     {
@@ -140,35 +140,35 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
         this.registerTargets(
 
           /*
-           * Pick up stuff which might've been
+           * 拾取可能被丢弃的物品
            */
           new AITarget(PICK_UP_RESIDUALS, this::pickUpResiduals, TICKS_SECOND),
           /*
-           * Check if tasks should be executed.
+           * 检查是否应该执行任务
            */
           new AIEventTarget(AIBlockingEventType.STATE_BLOCKING, this::checkIfCanceled, IDLE, 1),
           /*
-           * Select the appropriate State to do next.
+           * 选择适当的状态来执行下一步
            */
           new AITarget(LOAD_STRUCTURE, this::loadRequirements, 5),
           /*
-           * Select the appropriate State to do next.
+           * 选择适当的状态来执行下一步
            */
           new AITarget(START_BUILDING, this::startBuilding, 1),
           /*
-           * Select the appropriate State to do next.
+           * 选择适当的状态来执行下一步
            */
           new AITarget(MINE_BLOCK, this::doMining, 10),
           /*
-           * Check if we have to build something.
+           * 检查是否需要建造某物
            */
           new AITarget(IDLE, this::isThereAStructureToBuild, () -> START_BUILDING, 100),
           /*
-           * Build the structure and foundation of the building.
+           * 建造建筑的结构和基础
            */
           new AITarget(BUILDING_STEP, this::structureStep, STANDARD_DELAY),
           /*
-           * Finalize the building and give back control to the ai.
+           * 完成建筑并将控制权交还给 AI
            */
           new AITarget(COMPLETE_BUILD, this::completeBuild, STANDARD_DELAY),
           new AITarget(PICK_UP, this::pickUpMaterial, 5)

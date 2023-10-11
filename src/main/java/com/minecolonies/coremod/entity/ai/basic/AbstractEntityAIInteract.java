@@ -30,83 +30,85 @@ import java.util.stream.Collectors;
 import static com.minecolonies.api.research.util.ResearchConstants.BLOCK_BREAK_SPEED;
 
 /**
- * This is the base class of all worker AIs. Every AI implements this class with it's job type. There are some utilities within the class: - The AI will clear a full inventory at
- * the building chest. - The AI will animate mining a block (with delay) - The AI will request items and tools automatically (and collect them from the building chest)
+ * 这是所有工人 AI 的基类。每个 AI 都会实现此类，并附带其工作类型。类中包含一些实用工具：
+ * - AI 将在建筑箱中清空完整的库存。
+ * - AI 将以延迟方式模拟挖掘方块。
+ * - AI 将自动请求物品和工具（并从建筑箱中收集它们）。
  *
- * @param <J> the job type this AI has to do.
+ * @param <J> 此 AI 必须执行的工作类型。
  */
 public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B extends AbstractBuilding> extends AbstractEntityAISkill<J, B>
 {
     /**
-     * Working render meta.
+     * 工作中的渲染元数据。
      */
     public static final String RENDER_META_WORKING = "working";
 
     /**
-     * The amount of xp the entity gains per block mined.
+     * 实体每挖掘一个方块所获得的经验值数量。
      */
     public static final double XP_PER_BLOCK = 0.05D;
 
     /**
-     * The percentage of time needed if we are one level higher.
+     * 如果我们高一级所需时间的百分比。
      */
     private static final double LEVEL_MODIFIER = 0.85D;
 
     /**
-     * The minimum range the builder has to reach in order to construct or clear.
+     * 建造者必须达到的最小范围，以便进行建造或清除操作。
      */
     private static final int MIN_WORKING_RANGE = 12;
 
     /**
-     * Range around the worker to pickup items.
+     * 用于捡起物品的工人周围范围。
      */
     private static final int ITEM_PICKUP_RANGE = 3;
 
     /**
-     * Ticks to wait until discovering that is stuck.
+     * 等待的时钟滴答声，直到发现卡住。
      */
     private static final int STUCK_WAIT_TICKS = 20;
 
     /**
-     * Horizontal range in which the worker picks up items.
+     * 工人拾取物品的水平范围。
      */
     public static final float RANGE_HORIZONTAL_PICKUP = 45.0F;
 
     /**
-     * Vertical range in which the worker picks up items.
+     * 工人捡取物品的垂直范围。
      */
     public static final float RANGE_VERTICAL_PICKUP = 3.0F;
 
     /**
-     * Number of ticks the worker is standing still.
+     * 工作者静止不动的滴答数。
      */
     private int stillTicks = 0;
 
     /**
-     * Used to store the path index to check if the worker is still walking.
+     * 用于存储路径索引，以检查工人是否仍在行走。
      */
     private int previousIndex = 0;
 
     /**
-     * Positions of all items that have to be collected.
+     * 所有需要收集的物品的位置。
      */
     @Nullable
     private List<BlockPos> items;
 
     /**
-     * The current path to the random position
+     * 当前随机位置的路径。
      */
     private PathResult pathResult;
 
     /**
-     * The backup factor of the path.
+     * 路径的备份因子。
      */
     protected int pathBackupFactor = 1;
 
     /**
-     * Creates the abstract part of the AI. Always use this constructor!
+     * 创建AI的抽象部分。始终使用此构造函数！
      *
-     * @param job the job to fulfill
+     * @param job 要执行的工作
      */
     public AbstractEntityAIInteract(@NotNull final J job)
     {
@@ -117,11 +119,10 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Will simulate mining a block with particles ItemDrop etc. Attention: Because it simulates delay, it has to be called 2 times. So make sure the code path up to this function
-     * is reachable a second time. And make sure to immediately exit the update function when this returns false.
+     * 模拟挖掘方块并产生粒子、物品掉落等效果。注意：由于模拟了延迟，必须调用两次。因此，请确保在此函数之前的代码路径可达第二次调用。同时，确保在返回 false 时立即退出更新函数。
      *
-     * @param blockToMine the block that should be mined
-     * @return true once we're done
+     * @param blockToMine 应该被挖掘的方块
+     * @return 当完成时返回 true
      */
     protected final boolean mineBlock(@NotNull final BlockPos blockToMine)
     {
@@ -129,12 +130,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Will simulate mining a block with particles ItemDrop etc. Attention: Because it simulates delay, it has to be called 2 times. So make sure the code path up to this function
-     * is reachable a second time. And make sure to immediately exit the update function when this returns false.
+     * 模拟挖掘方块并生成粒子、物品掉落等效果。注意：由于它模拟了延迟，必须调用两次。因此，请确保在调用此函数之前的代码路径可以再次执行。并且确保在此返回 false 时立即退出更新函数。
      *
-     * @param blockToMine the block that should be mined
-     * @param safeStand   the block we want to stand on to do that
-     * @return true once we're done
+     * @param blockToMine 要挖掘的方块
+     * @param safeStand 我们要站立以执行挖掘的方块
+     * @return 一旦完成，返回 true
      */
     protected boolean mineBlock(@NotNull final BlockPos blockToMine, @NotNull final BlockPos safeStand)
     {
@@ -142,15 +142,15 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Will simulate mining a block with particles ItemDrop etc. Attention: Because it simulates delay, it has to be called 2 times. So make sure the code path up to this function
-     * is reachable a second time. And make sure to immediately exit the update function when this returns false.
+     * 模拟采矿过程，包括粒子、物品掉落等。注意：因为它模拟了延迟，必须调用两次。
+     * 因此，请确保调用此函数之前的代码路径可达第二次，并确保在此返回 false 后立即退出更新函数。
      *
-     * @param blockToMine      the block that should be mined
-     * @param safeStand        the block we want to stand on to do that
-     * @param damageTool       boolean wether we want to damage the tool used
-     * @param getDrops         boolean wether we want to get Drops
-     * @param blockBreakAction Runnable that is used instead of the default block break action, can be null
-     * @return true once we're done
+     * @param blockToMine      要采矿的方块
+     * @param safeStand        我们要站在上面进行采矿的方块
+     * @param damageTool       是否要损坏使用的工具
+     * @param getDrops         是否要获取掉落物品
+     * @param blockBreakAction 用于替代默认方块破坏操作的可运行对象，可以为 null
+     * @return 一旦完成采矿，返回 true
      */
     protected final boolean mineBlock(
       @NotNull final BlockPos blockToMine,
@@ -233,9 +233,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Check if this specific block should be picked up via silk touch.
-     * @param curBlockState the state to check.
-     * @return true if so.
+     * 检查是否应该使用丝触探针采集此特定方块。
+     * @param curBlockState 要检查的方块状态。
+     * @return 如果是，则返回true。
      */
     public boolean shouldSilkTouchBlock(final BlockState curBlockState)
     {
@@ -243,10 +243,10 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Potentially increase the blockdrops. To be overriden by the worker.
+     * 可能增加方块掉落物品。将由工作者重写。
      *
-     * @param drops the drops.
-     * @return the list of additional drops.
+     * @param drops 掉落物品列表。
+     * @return 附加掉落物品列表。
      */
     protected List<ItemStack> increaseBlockDrops(final List<ItemStack> drops)
     {
@@ -254,9 +254,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Trigger for miners if they want to do something specific per mined block.
+     * 如果矿工希望针对每个被挖掘的方块执行特定操作，触发器。
      *
-     * @param blockToMine the mined block.
+     * @param blockToMine 被挖掘的方块。
      */
     protected void triggerMinedBlock(@NotNull final BlockState blockToMine)
     {
@@ -264,11 +264,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Checks for the right tools and waits for an appropriate delay.
+     * 检查正确的工具并等待适当的延迟。
      *
-     * @param blockToMine the block to mine eventually
-     * @param safeStand   a safe stand to mine from (empty Block!)
-     * @return true if you should wait
+     * @param blockToMine 最终要挖掘的方块
+     * @param safeStand   安全的站立位置（空方块！）
+     * @return 如果应该等待，则返回 true
      */
     private boolean checkMiningLocation(@NotNull final BlockPos blockToMine, @NotNull final BlockPos safeStand)
     {
@@ -290,11 +290,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Calculate how long it takes to mine this block.
+     * 计算挖掘这个方块所需的时间。
      *
-     * @param state the blockstate
-     * @param pos   coordinate
-     * @return the delay in ticks
+     * @param state 方块状态
+     * @param pos   坐标
+     * @return 以游戏刻为单位的延迟
      */
     public int getBlockMiningDelay(@NotNull final BlockState state, @NotNull final BlockPos pos)
     {
@@ -309,11 +309,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Calculate the worker mining delay for a block at a pos.
+     * 计算在特定位置的方块的工作者挖掘延迟。
      *
-     * @param state the blockstate.
-     * @param pos   the pos.
-     * @return the mining delay of the worker.
+     * @param state 方块状态。
+     * @param pos   位置。
+     * @return 工作者的挖掘延迟。
      */
     private int calculateWorkerMiningDelay(@NotNull final BlockState state, @NotNull final BlockPos pos)
     {
@@ -327,8 +327,8 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Get the level that affects the break speed.
-     * @return the level.
+     * 获取影响破坏速度的等级。
+     * @return 等级。
      */
     public int getBreakSpeedLevel()
     {
@@ -336,7 +336,7 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Fill the list of the item positions to gather.
+     * 填充要收集的物品位置列表。
      */
     public void fillItemsList()
     {
@@ -346,9 +346,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Search for all items around the worker. and store them in the items list.
+     * 搜索工人周围的所有物品，并将它们存储在物品列表中。
      *
-     * @param boundingBox the area to search.
+     * @param boundingBox 搜索的区域。
      */
     public void searchForItems(final AABB boundingBox)
     {
@@ -361,7 +361,7 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Collect one item by walking to it.
+     * 通过步行到达一个物品来收集它。
      */
     public void gatherItems()
     {
@@ -396,9 +396,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Find the closest item and remove it from the list.
+     * 寻找最接近的物品并从列表中移除它。
      *
-     * @return the closest item
+     * @return 最接近的物品
      */
     private BlockPos getAndRemoveClosestItemPosition()
     {
@@ -419,9 +419,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Search for a random position to go to, anchored around the citizen.
-     * @param range the max range
-     * @return null until position was found.
+     * 在市民周围搜索一个随机位置，以市民为锚点。
+     * @param range 最大范围
+     * @return 在找到位置之前返回 null。
      */
     protected BlockPos findRandomPositionToWalkTo(final int range)
     {
@@ -429,10 +429,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Search for a random position to go to.
-     * @param range the max range
-     * @param pos position we want to find a random position around in the given range
-     * @return null until position was found.
+     * 寻找一个随机位置进行移动。
+     *
+     * @param range 最大范围
+     * @param pos 我们想在给定范围内找到周围随机位置的位置
+     * @return 直到找到位置前返回null。
      */
     protected BlockPos findRandomPositionToWalkTo(final int range, final BlockPos pos)
     {
@@ -470,10 +471,11 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Get a navigator to find a certain position.
-     * @param range the max range.
-     * @param pos the position to
-     * @return the navigator.
+     * 获取一个用于查找特定位置的导航器。
+     *
+     * @param range 最大范围。
+     * @param pos 要查找的位置
+     * @return 导航器。
      */
     protected PathResult getRandomNavigationPath(final int range, final BlockPos pos)
     {
@@ -488,7 +490,7 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Reset the gathering items to null.
+     * 重置收集物品为null。
      */
     public void resetGatheringItems()
     {
@@ -496,9 +498,9 @@ public abstract class AbstractEntityAIInteract<J extends AbstractJob<?, J>, B ex
     }
 
     /**
-     * Get the items to gather list.
+     * 获取要采集的物品列表。
      *
-     * @return a copy of it.
+     * @return 其副本。
      */
     @Nullable
     public List<BlockPos> getItemsForPickUp()

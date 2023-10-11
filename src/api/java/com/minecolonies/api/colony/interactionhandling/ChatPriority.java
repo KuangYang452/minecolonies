@@ -1,7 +1,7 @@
 package com.minecolonies.api.colony.interactionhandling;
 
 /**
- * Different priority types of the interactions.
+ * 交互的不同优先级类型。
  */
 public enum ChatPriority implements IChatPriority
 {

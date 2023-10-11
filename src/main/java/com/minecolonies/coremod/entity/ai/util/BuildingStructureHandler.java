@@ -292,6 +292,7 @@ public class BuildingStructureHandler<J extends AbstractJobStructure<?, J>, B ex
         return structureAI.getWorker().getMainHandItem();
     }
 
+    @SuppressWarnings("removal")
     @Override
     public BlockState getSolidBlockForPos(final BlockPos blockPos)
     {

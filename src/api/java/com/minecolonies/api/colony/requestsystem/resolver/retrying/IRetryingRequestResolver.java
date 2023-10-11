@@ -10,37 +10,37 @@ import org.jetbrains.annotations.Nullable;
 public interface IRetryingRequestResolver extends IQueuedRequestResolver<IRetryable>, ITickable
 {
     /**
-     * Update the associated manager data that links this resolver to a manager.
+     * 更新与此解决程序关联的管理器数据，将其与一个管理器关联起来。
      *
-     * @param manager the new associated manager.
+     * @param manager 新的关联管理器。
      */
     void updateManager(IRequestManager manager);
 
     /**
-     * Method to get the maximal amount of tries that is resolver attempts.
+     * 获取解析程序尝试的最大尝试次数的方法。
      *
-     * @return The maximal amount of tries.
+     * @return 最大尝试次数。
      */
     int getMaximalTries();
 
     /**
-     * Method to get the maximal ticks between retries.
+     * 获取重试之间的最大刻数。
      *
-     * @return The maximal amount of ticks between retries.
+     * @return 重试之间的最大刻数。
      */
     int getMaximalDelayBetweenRetriesInTicks();
 
     /**
-     * The current attempt to be reassigned.
+     * 当前尝试重新分配的方法。
      *
-     * @return The current attempt of reassignment. -1 if none is undertaken.
+     * @return 当前重新分配尝试。如果没有进行重新分配，则返回-1。
      */
     int getCurrentReassignmentAttempt();
 
     /**
-     * Method to get an indication of reassignment.
+     * 获取重新分配的指示的方法。
      *
-     * @return an indication of reassignment.
+     * @return 重新分配的指示。
      */
     default boolean isReassigning()
     {
@@ -48,9 +48,9 @@ public interface IRetryingRequestResolver extends IQueuedRequestResolver<IRetrya
     }
 
     /**
-     * Method to get the token of the request that is currently being reassigned
+     * 获取当前正在重新分配的请求的令牌的方法。
      *
-     * @return The token of the quest that is being reassigned, null if no reassignment is being performed.
+     * @return 当前正在重新分配的请求的令牌，如果未执行重新分配则返回null。
      */
     @Nullable
     IToken<?> getCurrentlyBeingReassignedRequest();

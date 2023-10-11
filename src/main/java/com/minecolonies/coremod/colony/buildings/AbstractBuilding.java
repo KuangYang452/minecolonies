@@ -92,23 +92,21 @@ import static com.minecolonies.api.util.constant.Suppression.GENERIC_WILDCARD;
 import static com.minecolonies.api.util.constant.Suppression.UNCHECKED;
 import static com.minecolonies.api.util.constant.TranslationConstants.*;
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-
 /**
- * Base building class, has all the foundation for what a building stores and does.
+ * 基础建筑类，包含了建筑物存储和功能的所有基础信息。
  * <p>
- * We suppress the warning which warns you about referencing child classes in the parent because that's how we register the instances of the childClasses to their views and
- * blocks.
+ * 我们抑制了警告，该警告会提示你在父类中引用子类，因为这是我们将子类的实例注册到它们的视图和块的方式。
  */
 @SuppressWarnings({"squid:S2390", "PMD.ExcessiveClassLength"})
 public abstract class AbstractBuilding extends AbstractBuildingContainer
 {
     /**
-     * Breeding setting.
+     * 繁殖设置。
      */
     public static final ISettingKey<BoolSetting> BREEDING = new SettingKey<>(BoolSetting.class, new ResourceLocation(MOD_ID, "breeding"));
 
     /**
-     * Feeding setting.
+     * 喂养设置。
      */
     public static final ISettingKey<BoolSetting> FEEDING = new SettingKey<>(BoolSetting.class, new ResourceLocation(MOD_ID, "feeding"));
 
@@ -118,50 +116,50 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     public static final int MIN_BUILD_HEIGHT = 1;
 
     /**
-     * The data store id for request system related data.
+     * 用于请求系统相关数据的数据存储ID。
      */
     private IToken<?> rsDataStoreToken;
 
     /**
-     * The ID of the building. Needed in the request system to identify it.
+     * 建筑物的ID。在请求系统中需要它来识别它。
      */
     private IRequester requester;
 
     /**
-     * If the building has been built already.
+     * 如果建筑已经建造完成。
      */
     private boolean isBuilt = false;
 
     /**
-     * The custom name of the building, empty by default.
+     * 建筑的自定义名称，默认为空。
      */
     private String customName = "";
 
     /**
-     * Whether a guard building is near
+     * 附近是否有警卫建筑。
      */
     private boolean guardBuildingNear = false;
 
     /**
-     * Whether we need to recheck if a guard building is near
+     * 是否需要重新检查附近是否有警卫建筑。
      */
     private boolean recheckGuardBuildingNear = true;
 
     /**
-     * Made to check if the building has to update the server/client.
+     * 用于检查建筑是否需要更新服务器/客户端的标志。
      */
     private boolean dirty = false;
 
     /**
-     * Set of building modules this building has.
+     * 此建筑物拥有的建筑模块集合。
      */
     protected List<IBuildingModule> modules = new ArrayList<>();
 
     /**
-     * Constructor for a AbstractBuilding.
+     * AbstractBuilding的构造函数。
      *
-     * @param colony Colony the building belongs to.
-     * @param pos    Location of the building (it's Hut Block).
+     * @param colony 建筑所属的殖民地。
+     * @param pos    建筑的位置（它的Hut Block）。
      */
     protected AbstractBuilding(@NotNull final IColony colony, final BlockPos pos)
     {
@@ -196,7 +194,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
             }
         }
 
-        throw new IllegalStateException("The module of class: " + clazz.toString() + "should never be null!");
+        throw new IllegalStateException("类：" + clazz.toString() + "的模块不应该为null！");
     }
 
     @NotNull
@@ -224,7 +222,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
                 return (T) module;
             }
         }
-        throw new IllegalArgumentException("no matching module");
+        throw new IllegalArgumentException("没有匹配的模块");
     }
 
     @NotNull
@@ -244,9 +242,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Getter for the custom name of a building.
+     * 获取建筑的自定义名称。
      *
-     * @return the custom name.
+     * @return 自定义名称。
      */
     @Override
     @NotNull
@@ -256,10 +254,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Getter for the custom name of a building.
-     * Returns either the custom name (if any) or the translation key.
+     * 获取建筑的自定义名称。
+     * 返回自定义名称（如果有）或翻译键。
      *
-     * @return the custom name or the schematic name.
+     * @return 自定义名称或示意名称。
      */
     @Override
     @NotNull
@@ -273,7 +271,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Executed when a new day start.
+     * 新的一天开始时执行。
      */
     @Override
     public void onWakeUp()
@@ -282,26 +280,26 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Executed every time when citizen finish inventory cleanup called after citizen got paused. Use for cleaning a state only.
+     * 在市民完成清理物品时每次执行，调用在市民暂停后。仅用于清理状态。
      */
     @Override
     public void onCleanUp(final ICitizenData citizen)
     {
         /*
-         * Buildings override this if required.
+         * 如果需要，建筑物将覆盖此方法。
          */
     }
 
     /**
-     * Executed when RestartCitizenMessage is called and worker is paused. Use for reseting, onCleanUp is called before this
+     * 在调用RestartCitizenMessage并且工人被暂停时执行。用于重置，在此之前会调用onCleanUp。
      */
     @Override
     public void onRestart(final ICitizenData citizen)
     {
-        // Unpause citizen
+        // 取消市民暂停状态
         citizen.setPaused(false);
         /*
-         * Buildings override this if required.
+         * 如果需要，建筑物将覆盖此方法。
          */
     }
 
@@ -326,7 +324,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * On setting down the building.
+     * 在放置建筑时执行。
      */
     @Override
     public void onPlacement()
@@ -335,10 +333,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Checks if a block matches the current object.
+     * 检查一个方块是否匹配当前对象。
      *
-     * @param block Block you want to know whether it matches this class or not.
-     * @return True if the block matches this class, otherwise false.
+     * @param block 你想知道是否与这个类匹配的方块。
+     * @return 如果方块匹配这个类，返回true，否则返回false。
      */
     @Override
     public boolean isMatchingBlock(@NotNull final Block block)
@@ -387,7 +385,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Destroys the block. Calls {@link #onDestroyed()}.
+     * 销毁方块。调用{@link #onDestroyed()}。
      */
     @Override
     public final void destroy()
@@ -430,10 +428,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Adds work orders to the {@link Colony#getWorkManager()}.
+     * 向{@link Colony#getWorkManager()}添加工作订单。
      *
-     * @param type    what to do with the work order
-     * @param builder the assigned builder.
+     * @param type    工作订单的类型
+     * @param builder 分配的建筑工人。
      */
     protected void requestWorkOrder(WorkOrderType type, final BlockPos builder)
     {
@@ -511,9 +509,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Check if this particular building can be deconstructed.
+     * 检查此特定建筑是否可以被拆除。
      *
-     * @return true if so.
+     * @return 如果可以，返回true。
      */
     public boolean canDeconstruct()
     {
@@ -521,9 +519,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Method to define if a builder can build this although the builder is not level 1 yet.
+     * 用于定义建筑是否可以由建筑工人建造，即使建筑工人还不是等级1。
      *
-     * @return true if so.
+     * @return 如果可以，返回true。
      */
     @Override
     public boolean canBeBuiltByBuilder(final int newLevel)
@@ -569,11 +567,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     {
         // Do nothing.
     }
-
     /**
-     * Checks if this building have a work order.
+     * 检查此建筑是否有工作订单。
      *
-     * @return true if the building is building, upgrading or repairing.
+     * @return 如果建筑正在建造、升级或修理，则返回true。
      */
     @Override
     public boolean hasWorkOrder()
@@ -582,9 +579,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Get the current level of the work order.
+     * 获取工作订单的当前级别。
      *
-     * @return NO_WORK_ORDER if not current work otherwise the level requested.
+     * @return 如果没有当前工作，则返回NO_WORK_ORDER，否则返回请求的级别。
      */
     private int getCurrentWorkOrderLevel()
     {
@@ -597,9 +594,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Remove the work order for the building.
+     * 移除建筑的工作订单。
      * <p>
-     * Remove either the upgrade or repair work order
+     * 移除升级或修理工作订单。
      */
     @Override
     public void removeWorkOrder()
@@ -640,10 +637,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Method to calculate the radius to be claimed by this building depending on the level.
+     * 计算根据级别要求的建筑要求的占地半径。
      *
-     * @param newLevel the new level of the building.
-     * @return the radius.
+     * @param newLevel 建筑的新级别。
+     * @return 半径。
      */
     @Override
     public int getClaimRadius(final int newLevel)
@@ -663,9 +660,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Serializes to view.
+     * 序列化为视图。
      *
-     * @param buf FriendlyByteBuf to write to.
+     * @param buf 要写入的FriendlyByteBuf。
      */
     @Override
     public void serializeToView(@NotNull final FriendlyByteBuf buf)
@@ -707,8 +704,8 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Regularly tick this building and check if we  got the minimum stock(like once a minute is still fine) - If not: Check if there is a request for this already. -- If not:
-     * Create a request. - If so: Check if there is a request for this still. -- If so: cancel it.
+     * 定期检查此建筑并检查是否已获得最低库存（例如，每分钟检查一次仍然可以）。如果没有：检查是否已经有请求了。--如果没有：
+     * 创建一个请求。--如果有：检查是否仍然有此请求。--如果有：取消它。
      */
     @Override
     public void onColonyTick(final IColony colony)
@@ -717,10 +714,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * If an incoming request is a minimum stock request.
+     * 如果传入请求是最低库存请求。
      *
-     * @param request the request to check.
-     * @return true if so.
+     * @param request 要检查的请求。
+     * @return 如果是，则返回true。
      */
     public boolean isMinimumStockRequest(final IRequest<? extends IDeliverable> request)
     {
@@ -735,9 +732,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Set the custom building name of the building.
+     * 设置建筑的自定义名称。
      *
-     * @param name the name to set.
+     * @param name 要设置的名称。
      */
     @Override
     public void setCustomBuildingName(final String name)
@@ -760,9 +757,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Check if the building should be gathered by the dman.
+     * 检查建筑是否可以被搜集。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     @Override
     public boolean canBeGathered()
@@ -771,10 +768,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Requests an upgrade for the current building.
+     * 请求当前建筑的升级。
      *
-     * @param player  the requesting player.
-     * @param builder the assigned builder.
+     * @param player  请求的玩家。
+     * @param builder 分配的建筑工。
      */
     @Override
     public void requestUpgrade(final Player player, final BlockPos builder)
@@ -849,9 +846,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Requests a repair for the current building.
+     * 请求当前建筑的修复。
      *
-     * @param builder the assigned builder.
+     * @param builder 分配的建筑工。
      */
     @Override
     public void requestRepair(final BlockPos builder)
@@ -863,9 +860,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Check if the building was built already.
+     * 检查建筑是否已建造。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     @Override
     public boolean isBuilt()
@@ -874,7 +871,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Deconstruct the building on destroyed.
+     * 拆除建筑时的反序列化。
      */
     @Override
     public void deconstruct()
@@ -1061,10 +1058,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Override this method if you want to keep an amount of items in inventory. When the inventory is full, everything get's dumped into the building chest. But you can use this
-     * method to hold some stacks back.
+     * 如果您想要在库存中保留一定数量的物品，则覆盖此方法。当库存已满时，所有物品都会被放入建筑物的储物箱中。但您可以使用此方法来保留一些物品堆栈。
      *
-     * @return a list of objects which should be kept.
+     * @return 应该保留的对象列表。
      */
     @Override
     public Map<Predicate<ItemStack>, Tuple<Integer, Boolean>> getRequiredItemsAndAmount()
@@ -1097,7 +1093,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
             }
         }
         toKeep.putAll(requiredItems.entrySet().stream()
-          .collect(Collectors.toMap(key -> (stack -> ItemStackUtils.compareItemStacksIgnoreStackSize(stack, key.getKey().getItemStack())), Map.Entry::getValue)));
+                .collect(Collectors.toMap(key -> (stack -> ItemStackUtils.compareItemStacksIgnoreStackSize(stack, key.getKey().getItemStack())), Map.Entry::getValue)));
 
         if (keepFood())
         {
@@ -1111,6 +1107,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
         getModules(IAltersRequiredItems.class).forEach(module -> module.alterItemsToBeKept((stack, qty, inv) -> toKeep.put(stack, new Tuple<>(qty, inv))));
         return toKeep;
     }
+
 
     @Override
     public boolean canEat(final ItemStack stack)
@@ -1163,10 +1160,10 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Get the right module for the recipe.
+     * 获取适用于制作菜谱的正确模块。
      *
-     * @param token the recipe trying to be fulfilled.
-     * @return the matching module.
+     * @param token 尝试满足的菜谱。
+     * @return 匹配的模块。
      */
     public ICraftingBuildingModule getCraftingModuleForRecipe(final IToken<?> token)
     {
@@ -1181,9 +1178,9 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * If the worker should keep some food in the inventory/building.
+     * 判断工人是否应该在库存/建筑物中保留一些食物。
      *
-     * @return true if so.
+     * @return 如果是，则返回 true。
      */
     protected boolean keepFood()
     {
@@ -1191,11 +1188,11 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Try to transfer a stack to one of the inventories of the building and force the transfer.
+     * 尝试将堆叠物品传输到建筑物的一个库存中并强制传输。
      *
-     * @param stack the stack to transfer.
-     * @param world the world to do it in.
-     * @return the itemStack which has been replaced or the itemStack which could not be transfered
+     * @param stack 要传输的堆叠物品。
+     * @param world 执行操作的世界。
+     * @return 被替换的物品堆叠或无法传输的物品堆叠。
      */
     @Override
     @Nullable
@@ -1324,13 +1321,13 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Create a request for a citizen.
+     * 为市民创建一个请求。
      *
-     * @param citizenData the data of the citizen.
-     * @param requested   the request to create.
-     * @param async       if async or not.
-     * @param <R>         the type of the request.
-     * @return the Token of the request.
+     * @param citizenData 市民的数据。
+     * @param requested   要创建的请求。
+     * @param async       是否异步。
+     * @param <R>         请求的类型。
+     * @return 请求的令牌。
      */
     @Override
     public <R extends IRequestable> IToken<?> createRequest(@NotNull final ICitizenData citizenData, @NotNull final R requested, final boolean async)
@@ -1360,12 +1357,12 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Create a request for the building.
+     * 创建一个建筑物的请求。
      *
-     * @param requested the request to create.
-     * @param async     if async or not.
-     * @param <R>       the type of the request.
-     * @return the Token of the request.
+     * @param requested 要创建的请求。
+     * @param async     是否为异步请求。
+     * @param <R>       请求的类型。
+     * @return 请求的令牌。
      */
     @Override
     public <R extends IRequestable> IToken<?> createRequest(@NotNull final R requested, final boolean async)
@@ -1388,11 +1385,11 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * Internal method used to register a new Request to the request maps. Helper method.
+     * 用于注册新请求到请求映射的内部方法。辅助方法。
      *
-     * @param citizenId    The id of the citizen.
-     * @param requestToken The {@link IToken} that is used to represent the request.
-     * @param requested    The class of the type that has been requested eg. {@code ItemStack.class}
+     * @param citizenId    市民的ID。
+     * @param requestToken 用于表示请求的 {@link IToken}。
+     * @param requested    被请求的类型的类，例如 {@code ItemStack.class}
      */
     private void addRequestToMaps(final int citizenId, @NotNull final IToken<?> requestToken, @NotNull final TypeToken<?> requested)
     {

@@ -13,15 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 /**
- * Basic statemachine class, can be used for any Transition typed which extends the transition interface. It contains the current state and a hashmap for events and transitions,
- * which are the minimal requirements to have a working statemachine.
+ * 基本的状态机类，可用于任何扩展了过渡接口的Transition类型。它包含当前状态和事件与过渡的哈希映射，这是使状态机工作所需的最小要求。
  */
 public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends IState> implements IStateMachine<T, S>
 {
     /**
-     * The lists of transitions and events
+     * 过渡和事件的列表
      */
     @NotNull
     protected final Map<S, List<T>>               transitionMap;
@@ -29,33 +27,33 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     protected final Map<IStateEventType, List<T>> eventTransitionMap;
 
     /**
-     * The current states list of transitions
+     * 当前状态的过渡列表
      */
     protected List<T> currentStateTransitions;
 
     /**
-     * The current state we're in
+     * 我们所处的当前状态
      */
     @NotNull
     private S state;
 
     /**
-     * The state we started in
+     * 我们开始的状态
      */
     @NotNull
     private final S initState;
 
     /**
-     * The exception handler
+     * 异常处理程序
      */
     @NotNull
     private final Consumer<RuntimeException> exceptionHandler;
 
     /**
-     * Construct a new StateMachine
+     * 构造一个新的状态机
      *
-     * @param initialState     the initial state.
-     * @param exceptionHandler the exception handler.
+     * @param initialState     初始状态。
+     * @param exceptionHandler 异常处理程序。
      */
     protected BasicStateMachine(@NotNull final S initialState, @NotNull final Consumer<RuntimeException> exceptionHandler)
     {
@@ -69,9 +67,9 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Add one transition
+     * 添加一个过渡
      *
-     * @param transition the transition to add
+     * @param transition 要添加的过渡
      */
     public void addTransition(final T transition)
     {
@@ -86,7 +84,7 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Unregisters a transition
+     * 注销一个过渡
      */
     public void removeTransition(final T transition)
     {
@@ -101,7 +99,7 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Updates the statemachine.
+     * 更新状态机。
      */
     public void tick()
     {
@@ -126,10 +124,10 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Check the condition for a transition
+     * 检查过渡的条件
      *
-     * @param transition the target to check
-     * @return true if this target worked and we should stop executing this tick
+     * @param transition 要检查的目标
+     * @return 如果这个目标有效且我们应该停止执行此刻则返回true
      */
     public boolean checkTransition(@NotNull final T transition)
     {
@@ -142,7 +140,7 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
         }
         catch (final RuntimeException e)
         {
-            Log.getLogger().warn("Condition check for transition " + transition + " threw an exception:", e);
+            Log.getLogger().warn("过渡 " + transition + " 的条件检查引发了异常:", e);
             this.onException(e);
             return false;
         }
@@ -150,10 +148,10 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Continuation of checkTransition. applies the transition and changes the state. if the state is null, execute more transitions and don't change state.
+     * 进行转换检查。应用过渡并更改状态。如果状态为null，执行更多的过渡并不改变状态。
      *
-     * @param transition the transitions we're looking at
-     * @return true if did transition to a new state
+     * @param transition 我们正在查看的过渡
+     * @return 如果转到新状态则返回true
      */
     public boolean transitionToNext(@NotNull final T transition)
     {
@@ -164,7 +162,7 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
         }
         catch (final RuntimeException e)
         {
-            Log.getLogger().warn("Statemachine for transition " + transition + " threw an exception:", e);
+            Log.getLogger().warn("过渡 " + transition + " 的状态机引发了异常:", e);
             this.onException(e);
             return false;
         }
@@ -182,8 +180,8 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
 
                 if (currentStateTransitions == null || currentStateTransitions.isEmpty())
                 {
-                    // Reached Trap/Sink state we cannot leave.
-                    onException(new RuntimeException("Missing AI transition for state: " + newState));
+                    // 到达Trap/Sink状态，无法离开。
+                    onException(new RuntimeException("缺少状态 " + newState + " 的AI过渡"));
                     reset();
                     return true;
                 }
@@ -196,9 +194,9 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Handle an exception higher up.
+     * 处理上层的异常。
      *
-     * @param e The exception to be handled.
+     * @param e 要处理的异常。
      */
     protected void onException(final RuntimeException e)
     {
@@ -206,9 +204,9 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Get the current state of the statemachine
+     * 获取状态机的当前状态
      *
-     * @return The current IAIState.
+     * @return 当前的IAIState。
      */
     public final S getState()
     {
@@ -216,7 +214,7 @@ public class BasicStateMachine<T extends IStateMachineTransition<S>, S extends I
     }
 
     /**
-     * Resets the statemachine
+     * 重置状态机
      */
     public void reset()
     {

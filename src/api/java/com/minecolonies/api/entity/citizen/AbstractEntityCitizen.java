@@ -52,13 +52,13 @@ import java.util.Random;
 import static com.minecolonies.api.util.constant.CitizenConstants.*;
 
 /**
- * The abstract citizen entity.
+ * 抽象的市民实体。
  */
 @SuppressWarnings({"PMD.ExcessiveImports", "PMD.CouplingBetweenObjects"})
 public abstract class AbstractEntityCitizen extends AbstractCivilianEntity implements MenuProvider
 {
     /**
-     * Citizens swim speed factor
+     * 市民游泳速度因子
      */
     private static final double CITIZEN_SWIM_BONUS = 2.0;
 
@@ -77,57 +77,57 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     public static final EntityDataAccessor<String>   DATA_JOB             = SynchedEntityData.defineId(AbstractEntityCitizen.class, EntityDataSerializers.STRING);
 
     /**
-     * The default model.
+     * 默认模型。
      */
     private ResourceLocation modelId = ModModelTypes.SETTLER_ID;
 
     /**
-     * The texture id.
+     * 纹理ID。
      */
     private int textureId;
 
     /**
-     * Additional render data.
+     * 额外的渲染数据。
      */
     private String renderMetadata = "";
 
     /**
-     * The gender, true if female.
+     * 性别，如果为女性则为true。
      */
     private boolean female;
 
     /**
-     * The texture.
+     * 纹理。
      */
     private ResourceLocation texture;
 
     /**
-     * Was the texture initiated with the citizen view.
+     * 纹理是否已经被市民视图初始化。
      */
     private boolean textureDirty = true;
 
     private AbstractAdvancedPathNavigate pathNavigate;
 
     /**
-     * Counts entity collisions
+     * 计算实体碰撞的次数。
      */
     private int collisionCounter = 0;
 
     /**
-     * The collision threshold
+     * 碰撞阈值
      */
     private final static int COLL_THRESHOLD = 50;
 
     /**
-     * Flag to check if the equipment is dirty.
+     * 检查装备是否已变脏的标志。
      */
     private boolean isEquipmentDirty = true;
 
     /**
-     * Constructor for a new citizen typed entity.
+     * 构造新市民类型实体的构造函数。
      *
-     * @param type  the Entity type.
-     * @param world the world.
+     * @param type  实体类型。
+     * @param world 世界。
      */
     public AbstractEntityCitizen(final EntityType<? extends AgeableMob> type, final Level world)
     {
@@ -135,16 +135,16 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Get the default attributes with their values.
+     * 获取带有其值的默认属性。
      *
-     * @return the attribute modifier map.
+     * @return 属性修饰符映射。
      */
     public static AttributeSupplier.Builder getDefaultAttributes()
     {
         return LivingEntity.createLivingAttributes()
-          .add(Attributes.MAX_HEALTH, BASE_MAX_HEALTH)
-          .add(Attributes.MOVEMENT_SPEED, BASE_MOVEMENT_SPEED)
-          .add(Attributes.FOLLOW_RANGE, BASE_PATHFINDING_RANGE);
+                .add(Attributes.MAX_HEALTH, BASE_MAX_HEALTH)
+                .add(Attributes.MOVEMENT_SPEED, BASE_MOVEMENT_SPEED)
+                .add(Attributes.FOLLOW_RANGE, BASE_PATHFINDING_RANGE);
     }
 
     public GoalSelector getTasks()
@@ -164,7 +164,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Disable vanilla's item picking stuff as we're doing it ourselves
+     * 禁用物品拾取功能，因为我们自己处理它。
      */
     @Override
     public boolean canPickUpLoot()
@@ -173,7 +173,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Disable vanilla steering logic for villagers
+     * 禁用村民的基本转向逻辑。
      */
     @Override
     public boolean isControlledByLocalInstance()
@@ -182,12 +182,12 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Calculate adjusted damage.
-     * This doesn't actually damage armor, for non-player entities.
+     * 计算调整后的伤害。
+     * 对于非玩家实体，这实际上不会损坏装备。
      *
-     * @param source
-     * @param damage
-     * @return
+     * @param source 伤害来源
+     * @param damage 伤害值
+     * @return 装甲吸收后的伤害值。
      */
     public float calculateDamageAfterAbsorbs(DamageSource source, float damage)
     {
@@ -208,7 +208,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Returns false if the newer Entity AI code should be run.
+     * 如果应运行较新的实体AI代码，则返回false。
      */
     @Override
     public boolean isNoAi()
@@ -217,7 +217,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Sets the textures of all citizens and distinguishes between male and female.
+     * 设置所有市民的纹理并区分男性和女性。
      */
     public void setTexture()
     {
@@ -231,24 +231,24 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Get the citizen data view.
+     * 获取市民数据视图。
      *
-     * @return the view.
+     * @return 视图。
      */
     public abstract ICitizenDataView getCitizenDataView();
 
     /**
-     * Getter of the resource location of the texture.
+     * 获取纹理的资源位置。
      *
-     * @return location of the texture.
+     * @return 纹理的位置。
      */
     @NotNull
     public ResourceLocation getTexture()
     {
         if (texture == null
-              || textureDirty
-              || !texture.getPath().contains(getEntityData().get(DATA_STYLE))
-              || !texture.getPath().contains(getEntityData().get(DATA_TEXTURE_SUFFIX)))
+                || textureDirty
+                || !texture.getPath().contains(getEntityData().get(DATA_STYLE))
+                || !texture.getPath().contains(getEntityData().get(DATA_TEXTURE_SUFFIX)))
         {
             setTexture();
         }
@@ -256,7 +256,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the texture dirty.
+     * 设置纹理变脏。
      */
     public void setTextureDirty()
     {
@@ -264,9 +264,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Get the model assigned to the citizen.
+     * 获取分配给市民的模型。
      *
-     * @return the model.
+     * @return 模型。
      */
     public ResourceLocation getModelType()
     {
@@ -274,9 +274,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * For the time being we don't want any childrens of our colonists.
+     * 目前我们不希望殖民地的居民有任何孩子。
      *
-     * @return the child.
+     * @return 孩子。
      */
     @Nullable
     @Override
@@ -303,9 +303,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Getter which checks if the citizen is female.
+     * 获取市民是否为女性的getter方法。
      *
-     * @return true if female.
+     * @return 如果为女性则为true。
      */
     public boolean isFemale()
     {
@@ -313,9 +313,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the gender.
+     * 设置性别。
      *
-     * @param female true if female, false if male.
+     * @param female 如果为女性则为true，否则为false。
      */
     public void setFemale(final boolean female)
     {
@@ -340,9 +340,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Ignores entity collisions are colliding for a while, solves stuck e.g. for many trying to take the same door
+     * 为了解决许多尝试进入同一个门而被卡住的情况，允许暂时忽略实体碰撞。
      *
-     * @param entityIn entity to collide with
+     * @param entityIn 要碰撞的实体
      */
     @Override
     public void push(@NotNull final Entity entityIn)
@@ -372,7 +372,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
             super.onPlayerCollide(player);
             return;
         }
-        
+
         final IJob<?> job = getCitizenData().getJob();
         if (job == null || !job.isGuard())
         {
@@ -380,7 +380,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
         }
         else
         {
-            // guards push the player out of their way
+            // 卫兵推开玩家
             push(player);
         }
     }
@@ -425,10 +425,10 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the rotation of the citizen.
+     * 设置市民的旋转。
      *
-     * @param yaw   the rotation yaw.
-     * @param pitch the rotation pitch.
+     * @param yaw   旋转的yaw。
+     * @param pitch 旋转的pitch。
      */
     public void setOwnRotation(final float yaw, final float pitch)
     {
@@ -436,9 +436,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the model id.
+     * 设置模型ID。
      *
-     * @param model the model.
+     * @param model 要设置的模型。
      */
     public void setModelId(final ResourceLocation model)
     {
@@ -446,9 +446,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the render meta data.
+     * 设置渲染元数据。
      *
-     * @param renderMetadata the metadata to set.
+     * @param renderMetadata 要设置的元数据。
      */
     public void setRenderMetadata(final String renderMetadata)
     {
@@ -461,9 +461,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Getter for the texture id.
+     * 获取纹理ID。
      *
-     * @return the texture id.
+     * @return 纹理ID。
      */
     public int getTextureId()
     {
@@ -471,9 +471,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Set the texture id.
+     * 设置纹理ID。
      *
-     * @param textureId the id of the texture.
+     * @param textureId 纹理ID。
      */
     public void setTextureId(final int textureId)
     {
@@ -482,9 +482,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Getter for the render metadata.
+     * 获取渲染元数据。
      *
-     * @return the meta data.
+     * @return 元数据。
      */
     public String getRenderMetadata()
     {
@@ -492,9 +492,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Getter of the citizens random object.
+     * 获取市民的随机对象。
      *
-     * @return random object.
+     * @return 随机对象。
      */
     public RandomSource getRandom()
     {
@@ -513,9 +513,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Check if recently hit.
+     * 检查最近是否被打过。
      *
-     * @return the count of how often.
+     * @return 打击次数。
      */
     public int getRecentlyHit()
     {
@@ -523,9 +523,9 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Check if can drop loot.
+     * 检查是否可以掉落战利品。
      *
-     * @return true if so.
+     * @return 如果可以则为true。
      */
     public boolean checkCanDropLoot()
     {
@@ -533,32 +533,32 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Get the ILocation of the citizen.
+     * 获取市民的位置。
      *
-     * @return an ILocation object which contains the dimension and is unique.
+     * @return 包含维度信息并且唯一的ILocation对象。
      */
     public abstract ILocation getLocation();
 
     /**
-     * Checks if a worker is at his working site. If he isn't, sets it's path to the location
+     * 检查工人是否在工作场地。如果不在，设置他的路径到该位置。
      *
-     * @param site  the place where he should walk to
-     * @param range Range to check in
-     * @return True if worker is at site, otherwise false.
+     * @param site  应该走向的位置
+     * @param range 检查范围
+     * @return 如果工人在场地上则返回true，否则返回false。
      */
     public abstract boolean isWorkerAtSiteWithMove(@NotNull BlockPos site, int range);
 
     /**
-     * Getter for the citizendata. Tries to get it from the colony is the data is null.
+     * 获取市民数据的getter方法。如果数据为空，则尝试从殖民地获取。
      *
-     * @return the data.
+     * @return 数据。
      */
     public abstract ICitizenData getCitizenData();
 
     /**
-     * Return this citizens inventory.
+     * 返回该市民的库存。
      *
-     * @return the inventory this citizen has.
+     * @return 该市民拥有的库存。
      */
     @NotNull
     public abstract InventoryCitizen getInventoryCitizen();
@@ -570,129 +570,129 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     public abstract DesiredActivity getDesiredActivity();
 
     /**
-     * Sets the size of the citizen entity
+     * 设置市民实体的大小。
      *
-     * @param width  Width
-     * @param height Height
+     * @param width  宽度
+     * @param height 高度
      */
     public abstract void setCitizensize(@NotNull float width, @NotNull float height);
 
     /**
-     * Sets whether this entity is a child
+     * 设置此实体是否为儿童。
      *
-     * @param isChild boolean
+     * @param isChild 布尔值。
      */
     public abstract void setIsChild(boolean isChild);
 
     /**
-     * Play move away sound when running from an entity.
+     * 在逃离来自实体的攻击时播放移开声音。
      */
     public abstract void playMoveAwaySound();
 
     /**
-     * Get the path proxy of the citizen.
+     * 获取市民的路径代理。
      *
-     * @return the proxy.
+     * @return 代理。
      */
     public abstract IWalkToProxy getProxy();
 
     /**
-     * Decrease the saturation of the citizen for 1 action.
+     * 减少市民的饱和度以进行1个操作。
      */
     public abstract void decreaseSaturationForAction();
 
     /**
-     * Decrease the saturation of the citizen for 1 action.
+     * 减少市民的饱和度以进行1个连续的操作。
      */
     public abstract void decreaseSaturationForContinuousAction();
 
     /**
-     * The Handler for all experience related methods.
+     * 与市民经验相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenExperienceHandler getCitizenExperienceHandler();
 
     /**
-     * The Handler for all chat related methods.
+     * 与市民聊天相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenChatHandler getCitizenChatHandler();
 
     /**
-     * The Handler for all status related methods.
+     * 与市民状态相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenStatusHandler getCitizenStatusHandler();
 
     /**
-     * The Handler for all item related methods.
+     * 与市民物品相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenItemHandler getCitizenItemHandler();
 
     /**
-     * The Handler for all inventory related methods.
+     * 所有与库存相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenInventoryHandler getCitizenInventoryHandler();
 
     public abstract void setCitizenInventoryHandler(ICitizenInventoryHandler citizenInventoryHandler);
 
     /**
-     * The Handler for all colony related methods.
+     * 所有与殖民地相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenColonyHandler getCitizenColonyHandler();
 
     public abstract void setCitizenColonyHandler(ICitizenColonyHandler citizenColonyHandler);
 
     /**
-     * The Handler for all job related methods.
+     * 所有与工作相关方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenJobHandler getCitizenJobHandler();
 
     /**
-     * The Handler for all job related methods.
+     * 处理所有与居民相关的方法的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenSleepHandler getCitizenSleepHandler();
 
     /**
-     * The Handler to check if the citizen is sick.
+     * 用于检查居民是否生病的处理程序。
      *
-     * @return the instance of the handler.
+     * @return 处理程序的实例。
      */
     public abstract ICitizenDiseaseHandler getCitizenDiseaseHandler();
 
     public abstract void setCitizenDiseaseHandler(ICitizenDiseaseHandler citizenDiseaseHandler);
 
     /**
-     * Check if the citizen can eat now by considering the state and the job tasks.
+     * 通过考虑状态和工作任务来检查居民是否可以吃东西。
      *
-     * @return true if so.
+     * @return 如果可以，则为true。
      */
     public abstract boolean isOkayToEat();
 
     /**
-     * Check if the citizen can be fed.
+     * 检查居民是否可以被喂食。
      *
-     * @return true if so.
+     * @return 如果可以，则为true。
      */
     public abstract boolean shouldBeFed();
 
     /**
-     * Check if the citizen is just idling at their job and can eat now.
+     * 检查居民是否只是在工作中闲逛，现在可以吃东西。
      *
-     * @return true if so.
+     * @return 如果可以，则为true。
      */
     public abstract boolean isIdlingAtJob();
 
@@ -713,31 +713,31 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     public abstract void setCitizenExperienceHandler(ICitizenExperienceHandler citizenExperienceHandler);
 
     /**
-     * Get if the citizen is fleeing from an attacker.
+     * 获取居民是否正在逃离攻击者。
      *
-     * @return true if so.
+     * @return 如果是，则为true。
      */
     public abstract boolean isCurrentlyFleeing();
 
     /**
-     * Calls a guard for help against an attacker.
+     * 呼叫卫兵寻求对抗攻击者的帮助。
      *
-     * @param attacker       the attacking entity
-     * @param guardHelpRange the squaredistance in which we search for nearby guards
+     * @param attacker 攻击实体
+     * @param guardHelpRange 我们搜索附近卫兵的平方距离
      */
     public abstract void callForHelp(final Entity attacker, final int guardHelpRange);
 
     /**
-     * Sets the fleeing state
+     * 设置逃离状态
      *
-     * @param fleeing true if fleeing.
+     * @param fleeing 如果逃离，则为true。
      */
     public abstract void setFleeingState(final boolean fleeing);
 
     /**
-     * Setter for the citizen pose.
+     * 公民姿势的设置器。
      *
-     * @param pose the pose to set.
+     * @param pose 要设置的姿势。
      */
     public void updatePose(final Pose pose)
     {
@@ -787,7 +787,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Mark the equipment as dirty.
+     * 标记装备状态为脏。
      */
     public void markEquipmentDirty()
     {
@@ -795,7 +795,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Disallow pushing from fluids to prevent stuck
+     * 禁止受到液体的推动，以防止卡住
      *
      * @return
      */
@@ -805,7 +805,7 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Do not allow bubble movement
+     * 不允许气泡移动
      *
      * @param down
      */
@@ -815,18 +815,20 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
     }
 
     /**
-     * Queue a sound at the citizen.
-     * @param soundEvent the sound event to play.
-     * @param length the length of the event.
-     * @param repetitions the number of times to play it.
+     * 在居民处排队一个声音。
+     * @param soundEvent 要播放的声音事件。
+     * @param pos 事件的位置。
+     * @param length 事件的长度。
+     * @param repetitions 播放的次数。
      */
     public abstract void queueSound(@NotNull final SoundEvent soundEvent, final BlockPos pos, final int length, final int repetitions);
 
     /**
-     * Queue a sound at the citizen.
-     * @param soundEvent the sound event to play.
-     * @param length the length of the event.
-     * @param repetitions the number of times to play it.
+     * 在居民处排队一个声音。
+     * @param soundEvent 要播放的声音事件。
+     * @param pos 事件的位置。
+     * @param length 事件的长度。
+     * @param repetitions 播放的次数。
      */
     public abstract void queueSound(@NotNull final SoundEvent soundEvent, final BlockPos pos, final int length, final int repetitions, final float volume, final float pitch);
 }

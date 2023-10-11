@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The server side interaction response handler.
+ * 服务器端交互响应处理程序。
  */
 public class StandardInteraction extends ServerCitizenInteraction
 {
     /**
-     * Standard responses
+     * 标准响应
      */
     public static final String INTERACTION_R_OKAY   = "com.minecolonies.coremod.gui.chat.okay";
     public static final String INTERACTION_R_IGNORE = "com.minecolonies.coremod.gui.chat.ignore";
@@ -33,11 +33,11 @@ public class StandardInteraction extends ServerCitizenInteraction
       new Tuple<>(Component.translatable(INTERACTION_R_SKIP), null)};
 
     /**
-     * The server interaction response handler with custom validator.
+     * 具有自定义验证器的服务器交互响应处理程序。
      *
-     * @param inquiry   the client inquiry.
-     * @param validator the id of the validator.
-     * @param priority  the interaction priority.
+     * @param inquiry   客户端查询。
+     * @param validator 验证器的ID。
+     * @param priority  交互优先级。
      */
     public StandardInteraction(
       final Component inquiry,
@@ -48,10 +48,10 @@ public class StandardInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * The server interaction response handler.
+     * 服务器交互响应处理程序。
      *
-     * @param inquiry  the client inquiry.
-     * @param priority the interaction priority.
+     * @param inquiry  客户端查询。
+     * @param priority 交互优先级。
      */
     public StandardInteraction(
       final Component inquiry,
@@ -61,9 +61,9 @@ public class StandardInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * Way to load the response handler for a citizen.
+     * 加载市民响应处理程序的方式。
      *
-     * @param data the citizen owning this handler.
+     * @param data 拥有此处理程序的市民。
      */
     public StandardInteraction(final ICitizen data)
     {

@@ -41,13 +41,13 @@ import static com.minecolonies.api.util.constant.Constants.STACKSIZE;
 import static com.minecolonies.api.util.constant.TranslationConstants.COM_MINECOLONIES_COREMOD_ENTITY_BUILDER_BUILD_START;
 
 /**
- * AI class for the builder. Manages building and repairing buildings.
+ * 用于建造者的AI类。管理建筑和修复建筑物。
  */
 public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJobStructure<?, J>, B extends AbstractBuildingStructureBuilder>
   extends AbstractEntityAIStructure<J, B>
 {
     /**
-     * Possible request stages
+     * 可能的请求阶段
      */
     protected enum RequestStage
     {
@@ -57,7 +57,7 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
     }
 
     /**
-     * The current request state (0 is solid
+     * 当前请求状态（0 表示固态
      */
     protected RequestStage requestState = RequestStage.SOLID;
 
@@ -67,9 +67,9 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
     protected BlockPos requestProgress = null;
 
     /**
-     * Initialize the builder and add all his tasks.
+     * 初始化构建器并添加他的所有任务。
      *
-     * @param job the job he has.
+     * @param job 他拥有的工作。
      */
     public AbstractEntityAIStructureWithWorkOrder(@NotNull final J job)
     {
@@ -411,9 +411,9 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
     }
 
     /**
-     * Send a completion message to the colony if necessary.
+     * 如有必要，向殖民地发送完成消息。
      *
-     * @param wo the completed workorder.
+     * @param wo 完成的工单。
      */
     protected void sendCompletionMessage(final IWorkOrder wo)
     {
@@ -452,10 +452,10 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
     }
 
     /**
-     * Check how much of a certain stuck is actually required.
+     * 检查实际需要多少个特定堆叠物品。
      *
-     * @param stack the stack to check.
-     * @return the new stack with the correct amount.
+     * @param stack 要检查的堆叠物品。
+     * @return 具有正确数量的新堆叠物品。
      */
     @Override
     @Nullable

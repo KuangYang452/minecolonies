@@ -22,7 +22,7 @@ import java.util.function.BiPredicate;
 import static com.minecolonies.coremod.colony.interactionhandling.StandardInteraction.*;
 
 /**
- * The position based interaction response handler.
+ * 基于位置的交互响应处理程序。
  */
 public class PosBasedInteraction extends ServerCitizenInteraction
 {
@@ -36,22 +36,22 @@ public class PosBasedInteraction extends ServerCitizenInteraction
       new Tuple<>(Component.translatable(INTERACTION_R_SKIP), null)};
 
     /**
-     * The position this is related to.
+     * 与此相关的位置。
      */
     private BlockPos pos = null;
 
     /**
-     * Specific validator for this one.
+     * 用于此项的特定验证器。
      */
     private BiPredicate<ICitizenData, BlockPos> validator;
 
     /**
-     * The server interaction response handler.
+     * 服务器交互响应处理程序。
      *
-     * @param inquiry   the client inquiry.
-     * @param priority  the interaction priority.
-     * @param pos       the pos this is related to.
-     * @param validator the validator id.
+     * @param inquiry   客户端查询。
+     * @param priority  交互优先级。
+     * @param pos       与之相关的位置。
+     * @param validator 验证器标识。
      */
     public PosBasedInteraction(
       final Component inquiry,
@@ -65,11 +65,11 @@ public class PosBasedInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * The server interaction response handler.
+     * 服务器交互响应处理程序。
      *
-     * @param inquiry  the client inquiry.
-     * @param priority the interaction priority.
-     * @param pos      the pos this is related to.
+     * @param inquiry  客户端查询。
+     * @param priority 交互优先级。
+     * @param pos      与之相关的位置。
      */
     public PosBasedInteraction(
       final Component inquiry,
@@ -82,9 +82,9 @@ public class PosBasedInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * Way to load the response handler for a citizen.
+     * 为公民加载响应处理程序的方式。
      *
-     * @param data the citizen owning this handler.
+     * @param data 拥有此处理程序的公民。
      */
     public PosBasedInteraction(final ICitizen data)
     {

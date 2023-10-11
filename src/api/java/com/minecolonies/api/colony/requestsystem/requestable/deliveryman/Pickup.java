@@ -12,20 +12,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Class used to represent pickups inside the request system. This class can be used to request a pickup of
+ * 用于表示请求系统内的提货的类。这个类可以用来请求提货。
  */
 public class Pickup extends AbstractDeliverymanRequestable
 {
     /**
-     * Set of type tokens belonging to this class.
+     * 属于这个类的类型令牌集合。
      */
     private final static Set<TypeToken<?>>
       TYPE_TOKENS = ReflectionUtils.getSuperClasses(TypeToken.of(Pickup.class)).stream().filter(type -> !type.equals(TypeConstants.OBJECT)).collect(Collectors.toSet());
 
     /**
-     * Constructor for Delivery requests
+     * 交付请求的构造函数
      *
-     * @param priority The priority of the request.
+     * @param priority 请求的优先级。
      */
     public Pickup(final int priority)
     {
@@ -48,11 +48,11 @@ public class Pickup extends AbstractDeliverymanRequestable
     }
 
     /**
-     * Serialize the deliverable.
+     * 序列化可交付物。
      *
-     * @param controller the controller.
-     * @param buffer     the the buffer to write to.
-     * @param input      the input to serialize.
+     * @param controller 控制器。
+     * @param buffer     要写入的缓冲区。
+     * @param input      要序列化的输入。
      */
     public static void serialize(final IFactoryController controller, final FriendlyByteBuf buffer, final Pickup input)
     {
@@ -60,11 +60,11 @@ public class Pickup extends AbstractDeliverymanRequestable
     }
 
     /**
-     * Deserialize the deliverable.
+     * 反序列化可交付物。
      *
-     * @param controller the controller.
-     * @param buffer     the buffer to read.
-     * @return the deliverable.
+     * @param controller 控制器。
+     * @param buffer     要读取的缓冲区。
+     * @return 可交付物。
      */
     public static Pickup deserialize(final IFactoryController controller, final FriendlyByteBuf buffer)
     {
@@ -76,7 +76,7 @@ public class Pickup extends AbstractDeliverymanRequestable
     @Override
     public boolean equals(final Object o)
     {
-        // Note that the super class will compare the priority.
+        // 注意，超类将比较优先级。
         if (!super.equals(o))
         {
             return false;
@@ -92,8 +92,8 @@ public class Pickup extends AbstractDeliverymanRequestable
     public String toString()
     {
         return "Pickup{" +
-                 "priority=" + priority +
-                 '}';
+                "priority=" + priority +
+                '}';
     }
 
     @Override

@@ -3,17 +3,17 @@ package com.minecolonies.api.colony.buildings.modules;
 import com.minecolonies.api.colony.buildings.IBuilding;
 
 /**
- * Abstract class for all modules. Has base methods for all the necessary methods that have to be called from the building.
+ * 所有模块的抽象类。具有从建筑物中必须调用的所有必要方法的基本方法。
  */
 public abstract class AbstractBuildingModule implements IBuildingModule
 {
     /**
-     * If the module is dirty.
+     * 模块是否脏的标志。
      */
     public boolean isDirty = false;
 
     /**
-     * The building this module belongs to.
+     * 此模块所属的建筑物。
      */
     protected IBuilding building;
 

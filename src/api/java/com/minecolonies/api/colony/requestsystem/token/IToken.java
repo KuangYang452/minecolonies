@@ -1,19 +1,19 @@
 package com.minecolonies.api.colony.requestsystem.token;
 
 /**
- * Interface used to represent a request outside of the request management system.
+ * 用于表示请求管理系统之外的请求的接口。
  * <p>
- * Allows for simple storage of all open requests of a building, a worker etc, without having to store the whole request twice.
+ * 允许简单地存储建筑物、工人等所有打开的请求，而无需两次存储整个请求。
  * <p>
- * Also extends INBTSerializable to make writing the data to disk a lot easier.
+ * 还扩展了INBTSerializable，以便更轻松地将数据写入磁盘。
  */
 public interface IToken<T>
 {
 
     /**
-     * The identifier used to represent a request.
+     * 用于表示请求的标识符。
      *
-     * @return The identifier of the request that this token represents.
+     * @return 代表此令牌的请求的标识符。
      */
     T getIdentifier();
 }

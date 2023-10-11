@@ -681,5 +681,13 @@ public final class ModBuildingsInitializer
                                     .addBuildingModuleProducer(() -> new BuildingAlchemist.BrewingModule(ModJobs.alchemist.get()), () -> CraftingModuleView::new)
                                     .addBuildingModuleViewProducer(() -> CrafterTaskModuleView::new)
                                     .createBuildingEntry());
+
+        ModBuildings.planner = DEFERRED_REGISTER.register(ModBuildings.PLANNER_ID, () -> new BuildingEntry.Builder()
+                .setBuildingBlock(ModBlocks.blockHutPlanner)
+                .setBuildingProducer((colony, blockPos) -> new DefaultBuildingInstance(colony, blockPos, ModBuildings.PLANNER_ID, 5))
+                .setBuildingViewProducer(() -> EmptyView::new)
+                .setRegistryName(new ResourceLocation(Constants.MOD_ID, ModBuildings.PLANNER_ID))
+                .addBuildingModuleProducer(() -> new WorkerBuildingModule(ModJobs.builder.get(), Skill.Adaptability, Skill.Athletics, false, (b) -> 1), () -> WorkerBuildingModuleView::new)
+                .createBuildingEntry());
     }
 }

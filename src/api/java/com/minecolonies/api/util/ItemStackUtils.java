@@ -41,90 +41,90 @@ import static com.minecolonies.api.items.ModTags.fungi;
 import static com.minecolonies.api.util.constant.Constants.*;
 
 /**
- * Utility methods for the inventories.
+ * 用于库存的实用方法。
  */
 public final class ItemStackUtils
 {
     /**
-     * Variable representing the empty itemstack in 1.10. Used for easy updating to 1.11
+     * 表示1.10中的空物品栈的变量，用于便于更新到1.11。
      */
     public static final ItemStack EMPTY = ItemStack.EMPTY;
 
     /**
-     * Predicate to check if an itemStack is empty.
+     * 用于检查物品栈是否为空的谓词。
      */
     @NotNull
     public static final Predicate<ItemStack> EMPTY_PREDICATE = ItemStackUtils::isEmpty;
 
     /**
-     * Negation of the itemStack empty predicate (not empty).
+     * 物品栈非空的谓词（不为空）的否定。
      */
     @NotNull
     public static final Predicate<ItemStack> NOT_EMPTY_PREDICATE = EMPTY_PREDICATE.negate();
 
     /**
-     * The compound tag for fortune enchantment id.
+     * 用于幸运附魔ID的复合标签。
      */
     private static final String NBT_TAG_ENCHANT_ID = "id";
 
     /**
-     * The compound tag for fortune enchantment level.
+     * 用于幸运附魔等级的复合标签。
      */
     private static final String NBT_TAG_ENCHANT_LEVEL = "lvl";
 
     /**
-     * The compound id for fortune enchantment.
+     * 幸运附魔的复合ID。
      */
     private static final int FORTUNE_ENCHANT_ID = 35;
 
     /**
-     * The compound id for Silk Touch enchantment.
+     * 用于丝滑触控附魔的复合ID。
      */
     private static final int SILK_TOUCH_ENCHANT_ID = 33;
 
     /**
-     * True if this stack is a standard food item (has at least some healing and some saturation, not purely for effects).
+     * 如果此堆叠是标准食物物品（至少具有一些治疗和一些饱和度，不纯粹用于效果），则为true。
      */
     public static final Predicate<ItemStack> ISFOOD =
       stack -> ItemStackUtils.isNotEmpty(stack) && stack.isEdible() && stack.getItem().getFoodProperties() != null && stack.getItem().getFoodProperties().getNutrition() > 0
                  && stack.getItem().getFoodProperties().getSaturationModifier() > 0;
 
     /**
-     * Predicate describing things which work in the furnace.
+     * 描述在熔炉中有效的物品的谓词。
      */
     public static Predicate<ItemStack> IS_SMELTABLE;
 
     /**
-     * Predicate describing food which can be eaten (is not raw).
+     * 描述可以食用的食物的谓词（不是生的）。
      */
     public static Predicate<ItemStack> CAN_EAT;
 
     /**
-     * Predicate describing cookables.
+     * 描述可烹饪物品的谓词。
      */
     public static Predicate<ItemStack> ISCOOKABLE;
 
     /**
-     * Predicate to check for compost items.
+     * 用于检查堆肥物品的谓词。
      */
     public static final Predicate<ItemStack> IS_COMPOST = stack -> !stack.isEmpty() && stack.getItem() == ModItems.compost;
 
     /**
-     * Private constructor to hide the implicit one.
+     * 私有构造函数，隐藏了隐式构造函数。
      */
     private ItemStackUtils()
     {
         /*
-         * Intentionally left empty.
+         * 故意保留为空。
          */
     }
 
     /**
-     * Get the entity of an entityInfo object.
+     * 从entityInfo对象获取实体。
      *
-     * @param entityData the input.
-     * @param world      the world.
-     * @return the output object or null.
+     * @param entityData 输入。
+     * @param world      世界。
+     * @return 输出对象或null。
      */
     @Nullable
     public static Entity getEntityFromEntityInfoOrNull(final CompoundTag entityData, final Level world)
@@ -144,19 +144,19 @@ public final class ItemStackUtils
         }
         catch (final RuntimeException e)
         {
-            Log.getLogger().info("Couldn't restore entitiy", e);
+            Log.getLogger().info("无法恢复实体", e);
             return null;
         }
         return null;
     }
 
     /**
-     * Adds entities to the builder building if he needs it.
+     * 如果需要，将实体添加到构建器中。
      *
-     * @param entityData the entity info object.
-     * @param world      the world.
-     * @param placer     the entity placer.
-     * @return a list of stacks.
+     * @param entityData 实体信息对象。
+     * @param world      世界。
+     * @param placer     实体放置者。
+     * @return 物品栈的列表。
      */
     public static List<ItemStorage> getListOfStackForEntityInfo(final CompoundTag entityData, final Level world, final Entity placer)
     {
@@ -176,12 +176,12 @@ public final class ItemStackUtils
     }
 
     /**
-     * Adds entities to the builder building if he needs it.
+     * 如果需要，将实体添加到构建器中。
      *
-     * @param entityData the entity info object.
-     * @param world      the world.
-     * @param placer     the entity placer.
-     * @return a list of stacks.
+     * @param entityData 实体信息对象。
+     * @param world      世界。
+     * @param placer     抽象实体市民。
+     * @return 物品栈的列表。
      */
     public static List<ItemStorage> getListOfStackForEntityInfo(final CompoundTag entityData, final Level world, final AbstractEntityCitizen placer)
     {
@@ -194,11 +194,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Adds entities to the builder building if he needs it.
+     * 如果需要，将实体添加到构建器中。
      *
-     * @param entity the entity object.
-     * @param placer the entity placer.
-     * @return a list of stacks.
+     * @param entity 实体对象。
+     * @param placer 实体放置者。
+     * @return 物品栈的列表。
      */
     public static List<ItemStorage> getListOfStackForEntity(final Entity entity, final Entity placer)
     {
@@ -223,7 +223,7 @@ public final class ItemStackUtils
             }
 
             /*
-            todo: deactivated until forge fixes this problem.
+            todo: 直到Forge修复此问题之前不激活。
             else if (!(entity instanceof MobEntity))
             {
                 request.add(new ItemStorage(entity.getPickedResult(new EntityRayTraceResult(placer))));
@@ -235,13 +235,13 @@ public final class ItemStackUtils
     }
 
     /**
-     * Verifies if there is one tool with an acceptable level in a worker's inventory.
+     * 验证工作人员库存中是否有具有可接受级别的工具。
      *
-     * @param stack        the stack to test.
-     * @param toolType     the type of tool needed
-     * @param minimalLevel the minimum level for the tool to find.
-     * @param maximumLevel the maximum level for the tool to find.
-     * @return true if tool is acceptable
+     * @param stack        要测试的物品栈。
+     * @param toolType     需要的工具类型
+     * @param minimalLevel 工具要查找的最小级别。
+     * @param maximumLevel 工具要查找的最大级别。
+     * @return 如果工具可接受则为true
      */
     public static boolean hasToolLevel(@Nullable final ItemStack stack, final IToolType toolType, final int minimalLevel, final int maximumLevel)
     {
@@ -253,12 +253,11 @@ public final class ItemStackUtils
         final int level = Compatibility.isTinkersWeapon(stack) ? Compatibility.getToolLevel(stack) : getMiningLevel(stack, toolType);
         return isTool(stack, toolType) && verifyToolLevel(stack, level, minimalLevel, maximumLevel);
     }
-
     /**
-     * Wrapper method to check if a stack is empty. Used for easy updating to 1.11.
+     * 包装方法，用于检查堆栈是否为空。用于轻松升级到1.11版本。
      *
-     * @param stack The stack to check.
-     * @return True when the stack is empty, false when not.
+     * @param stack 要检查的堆栈。
+     * @return 当堆栈为空时为true，否则为false。
      */
     @NotNull
     public static Boolean isEmpty(@Nullable final ItemStack stack)
@@ -272,17 +271,17 @@ public final class ItemStackUtils
     }
 
     /**
-     * Calculate the mining level an item has as a tool of certain type.
+     * 计算物品作为特定类型工具的采矿等级。
      *
-     * @param stack    the stack to test.
-     * @param toolType the tool category.
-     * @return integer value for mining level &gt;= 0 is okay.
+     * @param stack    要测试的堆栈。
+     * @param toolType 工具类别。
+     * @return 采矿等级的整数值，>= 0 表示可接受。
      */
     public static int getMiningLevel(@Nullable final ItemStack stack, @Nullable final IToolType toolType)
     {
         if (toolType == ToolType.NONE)
         {
-            //empty hand is best on blocks who don't care (0 better 1)
+            // 对于不关心的方块，空手最佳（0比1更好）
             return stack == null ? 0 : 1;
         }
         if (!Compatibility.getMiningLevelCompatibility(stack, toolType.toString()))
@@ -318,7 +317,6 @@ public final class ItemStackUtils
                 final SwordItem SwordItem = (SwordItem) stack.getItem();
                 return SwordItem.getTier().getLevel();
             }
-
         }
         else if (ToolType.HELMET.equals(toolType)
                    || ToolType.BOOTS.equals(toolType)
@@ -341,7 +339,7 @@ public final class ItemStackUtils
         }
         else if (!toolType.hasVariableMaterials())
         {
-            //We need a hut level 1 minimum
+            // 我们需要至少1级的工具
             return 1;
         }
         else if (stack.getItem() instanceof TieredItem)
@@ -352,11 +350,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the first stack is a better tool than the second stack.
+     * 检查第一个堆栈是否比第二个堆栈更好的工具。
      *
-     * @param stack1 the first stack to check.
-     * @param stack2 the second to compare with.
-     * @return true if better, false if worse or either of them is not a tool.
+     * @param stack1 要检查的第一个堆栈。
+     * @param stack2 要比较的第二个堆栈。
+     * @return 如果更好则为true，如果更差或其中一个不是工具则为false。
      */
     public static boolean isBetterTool(final ItemStack stack1, final ItemStack stack2)
     {
@@ -371,11 +369,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Checks if this ItemStack can be used as a Tool of type.
+     * 检查此ItemStack是否可以用作指定类型的工具。
      *
-     * @param itemStack Item to check.
-     * @param toolType  Type of the tool.
-     * @return true if item can be used, otherwise false.
+     * @param itemStack 要检查的物品。
+     * @param toolType  工具类型。
+     * @return 如果物品可以使用，则为true，否则为false。
      */
     public static boolean isTool(@Nullable final ItemStack itemStack, final IToolType toolType)
     {
@@ -455,13 +453,13 @@ public final class ItemStackUtils
     }
 
     /**
-     * Verifies if an item has an appropriated grade.
+     * 验证物品是否具有适当的等级。
      *
-     * @param itemStack    the type of tool needed
-     * @param toolLevel    the tool level
-     * @param minimalLevel the minimum level needed
-     * @param maximumLevel the maximum level needed (usually the worker's hut level)
-     * @return true if tool is acceptable
+     * @param itemStack    需要的工具类型。
+     * @param toolLevel    工具等级。
+     * @param minimalLevel 最低需要的等级。
+     * @param maximumLevel 最大需要的等级（通常是工作小屋的等级）。
+     * @return 如果工具可接受则为true。
      */
     public static boolean verifyToolLevel(@NotNull final ItemStack itemStack, final int toolLevel, final int minimalLevel, final int maximumLevel)
     {
@@ -473,10 +471,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if an itemStack is a decorative item for the decoration step of the structure placement.
+     * 检查一个ItemStack是否是用于结构放置的装饰性物品。
      *
-     * @param stack the itemStack to test.
-     * @return true if so.
+     * @param stack 要测试的ItemStack。
+     * @return 如果是则为true。
      */
     public static boolean isDecoration(final ItemStack stack)
     {
@@ -511,10 +509,10 @@ public final class ItemStackUtils
     */
 
     /**
-     * This routine converts the material type of armor into a numerical value for the request system.
+     * 此例程将护甲的材料类型转换为请求系统的数字值。
      *
-     * @param material type of material of the armor
-     * @return armor level
+     * @param material 护甲的材料类型。
+     * @return 护甲等级。
      */
     private static int getArmorLevel(final ArmorMaterial material)
     {
@@ -544,10 +542,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Estimates the fishing rod tier from available durability and enchantment status.
+     * 从可用的耐久性和附魔状态估算钓鱼竿等级。
      *
-     * @param itemStack the tool to check.
-     * @return equivalent tool level.
+     * @param itemStack 要检查的工具。
+     * @return 相等的工具等级。
      */
     private static int getFishingRodLevel(final ItemStack itemStack)
     {
@@ -572,10 +570,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Calculates the max level enchantment this tool has.
+     * 计算此工具具有的最大等级附魔。
      *
-     * @param itemStack the tool to check.
-     * @return max enchantment level.
+     * @param itemStack 要检查的工具。
+     * @return 最大附魔等级。
      */
     public static int getMaxEnchantmentLevel(final ItemStack itemStack)
     {
@@ -599,12 +597,11 @@ public final class ItemStackUtils
         }
         return Math.max(maxLevel - 1, 0);
     }
-
     /**
-     * Calculates the fortune level this tool has.
+     * 计算此工具的幸运等级。
      *
-     * @param tool the tool to check.
-     * @return fortune level.
+     * @param tool 要检查的工具。
+     * @return 幸运等级。
      */
     public static int getFortuneOf(@Nullable final ItemStack tool)
     {
@@ -612,7 +609,7 @@ public final class ItemStackUtils
         {
             return 0;
         }
-        //calculate fortune enchantment
+        // 计算幸运附魔
         int fortune = 0;
         if (tool.isEnchanted())
         {
@@ -631,10 +628,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Checks if an item serves as a weapon.
+     * 检查物品是否用作武器。
      *
-     * @param stack the stack to analyze.
-     * @return true if it is a tool or sword.
+     * @param stack 要分析的物品栈。
+     * @return 如果是工具或剑则返回true。
      */
     public static boolean doesItemServeAsWeapon(@NotNull final ItemStack stack)
     {
@@ -642,10 +639,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Assigns a string containing the grade of the toolGrade.
+     * 分配一个包含工具等级的字符串。
      *
-     * @param toolGrade the number of the grade of a tool
-     * @return a string corresponding to the tool
+     * @param toolGrade 工具等级的数字
+     * @return 与工具对应的字符串
      */
     public static String swapArmorGrade(final int toolGrade)
     {
@@ -667,10 +664,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Assigns a string containing the grade of the armor grade.
+     * 分配一个包含护甲等级的字符串。
      *
-     * @param toolGrade the number of the grade of an armor
-     * @return a string corresponding to the armor
+     * @param toolGrade 护甲等级的数字
+     * @return 与护甲对应的字符串
      */
     public static String swapToolGrade(final int toolGrade)
     {
@@ -690,11 +687,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Method to check if two ItemStacks can be merged together.
+     * 检查两个ItemStack是否可以合并。
      *
-     * @param existingStack The existing stack.
-     * @param mergingStack  The merging stack
-     * @return True when they can be merged, false when not.
+     * @param existingStack 现有的物品栈。
+     * @param mergingStack  要合并的物品栈
+     * @return 当它们可以合并时返回true，否则返回false。
      */
     @NotNull
     public static Boolean areItemStacksMergable(final ItemStack existingStack, final ItemStack mergingStack)
@@ -708,11 +705,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Method to compare to stacks, ignoring their stacksize.
+     * 比较两个栈，忽略它们的堆叠大小。
      *
-     * @param itemStack1 The left stack to compare.
-     * @param itemStack2 The right stack to compare.
-     * @return True when they are equal except the stacksize, false when not.
+     * @param itemStack1 要比较的左栈。
+     * @param itemStack2 要比较的右栈。
+     * @return 当它们除了堆叠大小以外相等时返回true，否则返回false。
      */
     @NotNull
     public static Boolean compareItemStacksIgnoreStackSize(final ItemStack itemStack1, final ItemStack itemStack2)
@@ -721,10 +718,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * get the size of the stack. This is for compatibility between 1.10 and 1.11
+     * 获取栈的大小。这是为了在1.10和1.11之间的兼容性而设计的
      *
-     * @param stack to get the size from
-     * @return the size of the stack
+     * @param stack 要获取大小的栈
+     * @return 栈的大小
      */
     public static int getSize(@NotNull final ItemStack stack)
     {
@@ -737,10 +734,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * get the Durability of the stack.
+     * 获取栈的耐久性。
      *
-     * @param stack to get the size from
-     * @return the size of the stack
+     * @param stack 要获取大小的栈
+     * @return 栈的耐久性
      */
     public static int getDurability(@NotNull final ItemStack stack)
     {
@@ -753,35 +750,34 @@ public final class ItemStackUtils
     }
 
     /**
-     * Method to compare to stacks, ignoring their stacksize.
+     * 比较两个栈，忽略它们的堆叠大小。
      *
-     * @param itemStack1  The left stack to compare.
-     * @param itemStack2  The right stack to compare.
-     * @param matchDamage Set to true to match damage data.
-     * @param matchNBT    Set to true to match nbt
-     * @return True when they are equal except the stacksize, false when not.
+     * @param itemStack1  要比较的左栈。
+     * @param itemStack2  要比较的右栈。
+     * @param matchDamage 设置为true以匹配损坏数据。
+     * @param matchNBT    设置为true以匹配NBT
+     * @return 当它们除了堆叠大小以外相等时返回true，否则返回false。
      */
     public static boolean compareItemStacksIgnoreStackSize(final ItemStack itemStack1, final ItemStack itemStack2, final boolean matchDamage, final boolean matchNBT)
     {
         return compareItemStacksIgnoreStackSize(itemStack1, itemStack2, matchDamage, matchNBT, false);
     }
-
     /**
-     * Method to compare to stacks, ignoring their stacksize.
+     * 用于比较两个堆栈，忽略它们的堆叠大小的方法。
      *
-     * @param itemStack1  The left stack to compare.
-     * @param itemStack2  The right stack to compare.
-     * @param matchDamage Set to true to match damage data.
-     * @param matchNBT    Set to true to match nbt
-     * @param min         if the count of stack2 has to be at least the same as stack1.
-     * @return True when they are equal except the stacksize, false when not.
+     * @param itemStack1  要比较的左侧堆栈。
+     * @param itemStack2  要比较的右侧堆栈。
+     * @param matchDamage 设置为true以匹配损坏数据。
+     * @param matchNBT    设置为true以匹配NBT
+     * @param min         如果堆栈2的数量必须至少与堆栈1相同。
+     * @return 当它们相等（除了堆叠大小）时为true，否则为false。
      */
     public static boolean compareItemStacksIgnoreStackSize(
-      final ItemStack itemStack1,
-      final ItemStack itemStack2,
-      final boolean matchDamage,
-      final boolean matchNBT,
-      final boolean min)
+            final ItemStack itemStack1,
+            final ItemStack itemStack2,
+            final boolean matchDamage,
+            final boolean matchNBT,
+            final boolean min)
     {
         if (isEmpty(itemStack1) && isEmpty(itemStack2))
         {
@@ -797,7 +793,7 @@ public final class ItemStackUtils
         {
             if (!matchNBT)
             {
-                // Not comparing nbt
+                // 不比较NBT
                 return true;
             }
 
@@ -806,7 +802,7 @@ public final class ItemStackUtils
                 return false;
             }
 
-            // Then sort on NBT
+            // 然后按照NBT进行排序
             if (itemStack1.hasTag() && itemStack2.hasTag())
             {
                 CompoundTag nbt1 = itemStack1.getTag();
@@ -836,11 +832,11 @@ public final class ItemStackUtils
     }
 
     /**
-     * Method to check if a stack is in a list of stacks.
+     * 用于检查堆栈是否在堆栈列表中的方法。
      *
-     * @param stacks the list of stacks.
-     * @param stack  the stack.
-     * @return true if so.
+     * @param stacks 堆栈列表。
+     * @param stack  堆栈。
+     * @return 如果是，则为true。
      */
     public static boolean compareItemStackListIgnoreStackSize(final List<ItemStack> stacks, final ItemStack stack)
     {
@@ -848,13 +844,13 @@ public final class ItemStackUtils
     }
 
     /**
-     * Method to check if a stack is in a list of stacks.
+     * 用于检查堆栈是否在堆栈列表中的方法。
      *
-     * @param stacks      the list of stacks.
-     * @param stack       the stack.
-     * @param matchDamage if damage has to match.
-     * @param matchNBT    if nbt has to match.
-     * @return true if so.
+     * @param stacks      堆栈列表。
+     * @param stack       堆栈。
+     * @param matchDamage 如果损坏需要匹配。
+     * @param matchNBT    如果NBT需要匹配。
+     * @return 如果是，则为true。
      */
     public static boolean compareItemStackListIgnoreStackSize(final List<ItemStack> stacks, final ItemStack stack, final boolean matchDamage, final boolean matchNBT)
     {
@@ -869,10 +865,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * set the size of the stack. This is for compatibility between 1.10 and 1.11
+     * 设置堆栈的大小的方法。这是为了1.10和1.11之间的兼容性。
      *
-     * @param stack to set the size to
-     * @param size  of the stack
+     * @param stack 要设置大小的堆栈
+     * @param size  堆栈的大小
      */
     public static void setSize(@NotNull final ItemStack stack, final int size)
     {
@@ -880,10 +876,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Increase or decrease the stack size.
+     * 增加或减少堆栈大小的方法。
      *
-     * @param stack  to set the size to
-     * @param amount to increase the stack's size of (negative value to decrease)
+     * @param stack  要设置大小的堆栈
+     * @param amount 要增加堆栈大小的量（负数值以减少）
      */
     public static void changeSize(@NotNull final ItemStack stack, final int amount)
     {
@@ -891,10 +887,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Update method to allow for easy reading the ItemStack data from NBT.
+     * 允许从NBT中读取ItemStack数据的更新方法。
      *
-     * @param compound The compound to read from.
-     * @return The ItemStack stored in the NBT Data.
+     * @param compound 要从中读取的复合物。
+     * @return 存储在NBT数据中的ItemStack。
      */
     @NotNull
     public static ItemStack deserializeFromNBT(@NotNull final CompoundTag compound)
@@ -903,10 +899,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Checks if a stack is a type of sapling, using Oredict
+     * 使用Oredict检查堆栈是否为树苗类型的方法。
      *
-     * @param stack the stack to check.
-     * @return true if sapling.
+     * @param stack 要检查的堆栈。
+     * @return 如果是树苗，则为true。
      */
     public static boolean isStackSapling(@Nullable final ItemStack stack)
     {
@@ -919,10 +915,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the furnace has smeltable in it and fuel empty.
+     * 检查熔炉中是否有可熔炼物品而燃料为空的方法。
      *
-     * @param entity the furnace.
-     * @return true if so.
+     * @param entity 熔炉。
+     * @return 如果是，则为true。
      */
     public static boolean hasSmeltableInFurnaceAndNoFuel(final FurnaceBlockEntity entity)
     {
@@ -931,10 +927,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the furnace has smeltable in it and fuel empty.
+     * 检查熔炉中是否既没有可熔炼物品也没有燃料的方法。
      *
-     * @param entity the furnace.
-     * @return true if so.
+     * @param entity 熔炉。
+     * @return 如果是，则为true。
      */
     public static boolean hasNeitherFuelNorSmeltAble(final FurnaceBlockEntity entity)
     {
@@ -943,10 +939,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the furnace has fuel in it and smeltable empty.
+     * 检查熔炉中是否有燃料而可熔炼物品为空的方法。
      *
-     * @param entity the furnace.
-     * @return true if so.
+     * @param entity 熔炉。
+     * @return 如果是，则为true。
      */
     public static boolean hasFuelInFurnaceAndNoSmeltable(final FurnaceBlockEntity entity)
     {
@@ -955,10 +951,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the brewingStand has smeltable in it and fuel empty.
+     * 检查酿造台中是否有可酿造物品而燃料为空的方法。
      *
-     * @param entity the brewingStand.
-     * @return true if so.
+     * @param entity 酿造台。
+     * @return 如果是，则为true。
      */
     public static boolean hasBrewableAndNoFuel(final BrewingStandBlockEntity entity)
     {
@@ -967,10 +963,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the brewingStand has smeltable in it and fuel empty.
+     * 检查酿造台中既没有可酿造物品也没有燃料的方法。
      *
-     * @param entity the brewingStand.
-     * @return true if so.
+     * @param entity 酿造台。
+     * @return 如果是，则为true。
      */
     public static boolean hasNeitherFuelNorBrewable(final BrewingStandBlockEntity entity)
     {
@@ -979,10 +975,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Check if the brewingStand has fuel in it and smeltable empty.
+     * 检查酿造台中是否有燃料而可酿造物品为空的方法。
      *
-     * @param entity the brewingStand.
-     * @return true if so.
+     * @param entity 酿造台。
+     * @return 如果是，则为true。
      */
     public static boolean hasFuelAndNoBrewable(final BrewingStandBlockEntity entity)
     {
@@ -991,10 +987,10 @@ public final class ItemStackUtils
     }
 
     /**
-     * Convert an Item string with NBT to an ItemStack
+     * 将带有NBT的项目字符串转换为ItemStack的方法。
      *
-     * @param itemData ie: minecraft:potion{Potion=minecraft:water}
-     * @return stack with any defined NBT
+     * @param itemData 例如：minecraft:potion{Potion=minecraft:water}
+     * @return 具有任何定义的NBT的堆栈
      */
     public static ItemStack idToItemStack(final String itemData)
     {
@@ -1012,7 +1008,7 @@ public final class ItemStackUtils
             }
             else
             {
-                Log.getLogger().error("Unable to parse item definition: " + itemData);
+                Log.getLogger().error("无法解析项目定义：" + itemData);
             }
         }
         final Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
@@ -1025,30 +1021,29 @@ public final class ItemStackUtils
             }
             catch (CommandSyntaxException e1)
             {
-                //Unable to parse tags, drop them.
-                Log.getLogger().error("Unable to parse item definition: " + itemData);
+                //无法解析标签，丢弃它们。
+                Log.getLogger().error("无法解析项目定义：" + itemData);
             }
         }
         if (stack.isEmpty())
         {
-            Log.getLogger().warn("Parsed item definition returned empty: " + itemData);
+            Log.getLogger().warn("解析的项目定义返回为空：" + itemData);
         }
         return stack;
     }
 
     /**
-     * Obtains a list of all basic items in the game, plus any extra items present in the player's
-     * inventory (allowing for items with custom NBT, e.g. DO blocks or dyed armour).
+     * 获取游戏中所有基本项目的列表，以及玩家背包中的任何额外项目（允许具有自定义NBT的项目，例如DO块或染色护甲）的方法。
      *
-     * @param player The player whose inventory to check.
-     * @return The set of items.
+     * @param player 要检查背包的玩家。
+     * @return 项目集。
      */
     public static Set<ItemStack> allItemsPlusInventory(@NotNull final Player player)
     {
-        // get all known items first
+        //首先获取所有已知项目
         final Set<ItemStorage> allItems = new HashSet<>(IColonyManager.getInstance().getCompatibilityManager().getSetOfAllItems());
 
-        // plus all items from the player's inventory not already listed (adds items with extra NBT)
+        //加上玩家背包中尚未列出的所有项目（添加具有额外NBT的项目）
         for (final ItemStack stack : player.getInventory().items)
         {
             if (stack.isEmpty())
@@ -1061,7 +1056,7 @@ public final class ItemStackUtils
             if (stack.isDamageableItem() && stack.isDamaged())
             {
                 pristine.setDamageValue(0);
-                // in case the item wasn't already in the set, we want to only store a pristine one!
+                //如果项目尚未在集合中，我们只想存储一个原始的！
             }
             allItems.add(new ItemStorage(pristine, true));
         }

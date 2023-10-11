@@ -21,336 +21,336 @@ import java.util.Random;
 public interface ICitizenData extends ICivilianData
 {
     /**
-     * Maximum saturation of a citizen.
+     * 市民的最大饱和度。
      */
     int MAX_SATURATION = 20;
 
     /**
-     * When a building is destroyed, inform the citizen so it can do any cleanup of associations that the building's. own IBuilding.onDestroyed did not do.
+     * 当建筑物被销毁时，通知市民以便进行与建筑物关联的任何清理，建筑物自己的 IBuilding.onDestroyed 未执行的清理工作。
      *
-     * @param building building that is destroyed.
+     * @param building 被销毁的建筑物。
      */
     void onRemoveBuilding(IBuilding building);
 
     /**
-     * Returns the home building of the citizen.
+     * 返回市民的家庭建筑物。
      *
-     * @return home building.
+     * @return 家庭建筑物。
      */
     @Nullable
     IBuilding getHomeBuilding();
 
     /**
-     * Sets the home of the citizen.
+     * 设置市民的家庭建筑物。
      *
-     * @param building home building.
+     * @param building 家庭建筑物。
      */
     void setHomeBuilding(@Nullable IBuilding building);
 
     /**
-     * Returns the work building of a citizen.
+     * 返回市民的工作建筑物。
      *
-     * @return home building of a citizen.
+     * @return 市民的工作建筑物。
      */
     @Nullable
     IBuilding getWorkBuilding();
 
     /**
-     * Sets the work building of a citizen.
+     * 设置市民的工作建筑物。
      *
-     * @param building work building.
+     * @param building 工作建筑物。
      */
     void setWorkBuilding(@Nullable IBuilding building);
 
     /**
-     * Returns the job of the citizen.
+     * 返回市民的工作。
      *
-     * @return Job of the citizen.
+     * @return 市民的工作。
      */
     IJob<?> getJob();
 
     /**
-     * Sets the job of this citizen.
+     * 设置市民的工作。
      *
-     * @param job Job of the citizen.
+     * @param job 市民的工作。
      */
     void setJob(IJob<?> job);
 
     /**
-     * Returns the job subclass needed. Returns null on type mismatch.
+     * 返回市民所需的工作子类。类型不匹配时返回 null。
      *
-     * @param type the type of job wanted.
-     * @param <J>  The job type returned.
-     * @return the job this citizen has.
+     * @param type 所需的工作类型。
+     * @param <J>  返回的工作类型。
+     * @return 此市民拥有的工作。
      */
     @Nullable
     <J extends IJob<?>> J getJob(@NotNull Class<J> type);
 
     /**
-     * Set the last position of the citizen.
+     * 设置市民的上一个位置。
      *
-     * @param lastPosition the last position.
+     * @param lastPosition 上一个位置。
      */
     void setLastPosition(BlockPos lastPosition);
 
     /**
-     * Get the last position of the citizen.
+     * 获取市民的上一个位置。
      *
-     * @return the last position.
+     * @return 上一个位置。
      */
     BlockPos getLastPosition();
 
     /**
-     * Sets the citizens current saturation.
+     * 设置市民当前的饱和度。
      *
-     * @param saturation to set
+     * @param saturation 要设置的饱和度。
      */
     void setSaturation(double saturation);
 
     /**
-     * Check if citizen is asleep.
+     * 检查市民是否正在睡觉。
      *
-     * @return true if so.
+     * @return 如果是，则返回 true。
      */
     boolean isAsleep();
 
     /**
-     * Getter for the bedPos.
+     * 获取床的位置。
      *
-     * @return the bedPos.
+     * @return 床的位置。
      */
     BlockPos getBedPos();
 
     /**
-     * Set asleep.
+     * 设置是否正在睡觉。
      *
-     * @param asleep true if asleep.
+     * @param asleep 如果正在睡觉，则为 true。
      */
     void setAsleep(boolean asleep);
 
     /**
-     * Set the bed pos.
+     * 设置床的位置。
      *
-     * @param bedPos the pos to set.
+     * @param bedPos 要设置的位置。
      */
     void setBedPos(BlockPos bedPos);
 
     /**
-     * The Handler for the citizens happiness.
+     * 市民幸福度的处理程序。
      *
-     * @return the instance of the handler
+     * @return 处理程序的实例。
      */
     ICitizenHappinessHandler getCitizenHappinessHandler();
 
     /**
-     * The Handler for the citizens mourning.
+     * 市民悼念的处理程序。
      *
-     * @return the instance of the handler
+     * @return 处理程序的实例。
      */
     ICitizenMournHandler getCitizenMournHandler();
 
     /**
-     * Get the citizen skill handler.
+     * 获取市民技能处理程序。
      *
-     * @return the handler.
+     * @return 处理程序。
      */
     ICitizenSkillHandler getCitizenSkillHandler();
 
     /**
-     * Schedule restart and cleanup.
+     * 计划重启和清理。
      *
-     * @param player the player scheduling it.
+     * @param player 调度它的玩家。
      */
     void scheduleRestart(ServerPlayer player);
 
     /**
-     * AI will be restarted, also restart building etc
+     * 是否应重启 AI，还要重新启动建筑等。
      *
-     * @return true if so.
+     * @return 如果是，则返回 true。
      */
     boolean shouldRestart();
 
     /**
-     * Restart done successfully
+     * 重启完成。
      */
     void restartDone();
 
     /**
-     * Set the child flag.
+     * 设置是否为儿童。
      *
-     * @param isChild boolean
+     * @param isChild 布尔值。
      */
     void setIsChild(boolean isChild);
 
     /**
-     * Check if the citizen just ate.
+     * 检查市民是否刚刚吃过。
      *
-     * @return true if so.
+     * @return 如果是，则返回 true。
      */
     boolean justAte();
 
     /**
-     * Set or reset if the citizen just ate.
+     * 设置或重置市民是否刚刚吃过。
      *
-     * @param justAte true if justAte, false to reset.
+     * @param justAte 如果刚刚吃过，则为 true；如果要重置，则为 false。
      */
     void setJustAte(boolean justAte);
 
     /**
-     * If is idle at job.
+     * 是否在工作中闲置。
      *
-     * @return true if so.
+     * @return 如果是，则返回 true。
      */
     boolean isIdleAtJob();
 
     /**
-     * Set idle at job.
+     * 设置是否在工作中闲置。
      *
-     * @param idle true if so.
+     * @param idle 如果是，则为 true。
      */
     void setIdleAtJob(final boolean idle);
 
     /**
-     * Gets the entity
+     * 获取实体。
      * @return
      */
     @Override
     Optional<AbstractEntityCitizen> getEntity();
 
     /**
-     * Gets the citizen's status
+     * 获取市民的状态。
      *
-     * @return status
+     * @return 状态。
      */
     VisibleCitizenStatus getStatus();
 
     /**
-     * Sets the citizens status
+     * 设置市民的状态。
      *
-     * @param status status to set
+     * @param status 要设置的状态。
      */
     void setVisibleStatus(VisibleCitizenStatus status);
 
     /**
-     * Get the random var of the citizen.
-     * @return the random.
+     * 获取市民的随机数。
+     * @return 随机数。
      */
     Random getRandom();
 
     /**
-     * Applies the effects of research to the data's entity
+     * 应用研究效果到数据的实体。
      */
     void applyResearchEffects();
 
     /**
-     * Triggered when the citizen is going to sleep
+     * 市民去睡觉时触发。
      */
     void onGoSleep();
 
     /**
-     * Sets the next position to respawn at
+     * 设置下一个复活位置。
      *
-     * @param pos position to set
+     * @param pos 要设置的位置。
      */
     void setNextRespawnPosition(final BlockPos pos);
 
     /**
-     * Returns whether the citizen has food in their inventory that's not good enough (but no good food)
-     * @return true if so
+     * 检查市民是否在背包中有不够好的食物（但没有好食物）。
+     * @return 如果是，则返回 true。
      */
     boolean needsBetterFood();
 
     /**
-     * Get the partner of the citizen.
-     * @return the partner or null if non existent.
+     * 获取市民的伴侣。
+     * @return 伴侣或 null（如果不存在）。
      */
     @Nullable
     ICitizenData getPartner();
 
     /**
-     * Get the list of children of a citizen.
-     * @return the citizen ids.
+     * 获取市民的孩子列表。
+     * @return 市民的 ID 列表。
      */
     List<Integer> getChildren();
 
     /**
-     * Get the list of children of a citizen.
-     * @return the citizen ids.
+     * 获取市民的兄弟姐妹列表。
+     * @return 市民的 ID 列表。
      */
     List<Integer> getSiblings();
 
     /**
-     * Get the names of the parents.
-     * @return the name.
+     * 获取父母的姓名。
+     * @return 姓名。
      */
     Tuple<String, String> getParents();
 
     /**
-     * Add one or more siblings to a citizen.
-     * @param siblings the ids of the siblings.
+     * 向市民添加一个或多个兄弟姐妹。
+     * @param siblings 兄弟姐妹的 ID。
      */
     void addSiblings(final Integer...siblings);
 
     /**
-     * Add one or more children to a citizen.
-     * @param children the ids of the children.
+     * 向市民添加一个或多个孩子。
+     * @param children 孩子的 ID。
      */
     void addChildren(final Integer...children);
 
     /**
-     * Set a new partner to the citizen.
-     * @param id the partner id.
+     * 为市民设置新的伴侣。
+     * @param id 伴侣的 ID。
      */
     void setPartner(final int id);
 
     /**
-     * On death of a citizen this is invoked on the related citizens.
-     * @param id the id of the citizen.
+     * 当市民死亡时，将在相关的市民上调用此方法。
+     * @param id 市民的 ID。
      */
     void onDeath(final Integer id);
 
     /**
-     * Set the parents of the citizen.
-     * @param firstParent the parent name.
-     * @param secondParent second parent name.
+     * 设置市民的父母。
+     * @param firstParent 第一个父母的姓名。
+     * @param secondParent 第二个父母的姓名。
      */
     void setParents(final String firstParent, final String secondParent);
 
     /**
-     * Generate the name of the citizen.
-     * @param rand used random func.
-     * @param firstParentName name of the first parent.
-     * @param secondParentName name of the second parent.
+     * 生成市民的姓名。
+     * @param rand 使用的随机函数。
+     * @param firstParentName 第一个父母的姓名。
+     * @param secondParentName 第二个父母的姓名。
      */
     void generateName(@NotNull final Random rand, final String firstParentName, final String secondParentName);
 
     /**
-     * Check if the two citizens are related.
-     * @param data the data of the citizen.
-     * @return true if so.
+     * 检查两个市民是否有亲缘关系。
+     * @param data 市民的数据。
+     * @return 如果是，则返回 true。
      */
     boolean isRelatedTo(ICitizenData data);
 
     /**
-     * Check if the two citizens live together.
-     * @param data the data of the other citizen.
-     * @return true if so.
+     * 检查两个市民是否住在一起。
+     * @param data 另一个市民的数据。
+     * @return 如果是，则返回 true。
      */
     boolean doesLiveWith(ICitizenData data);
 
     /**
-     * Set if the worker is currently working actively.
+     * 设置工作是否当前处于活动状态的工作者。
      *
-     * @param b true if so.
+     * @param b 如果是，则为 true。
      */
     default void setWorking(final boolean b)
     {
-        //noop
+        // 空操作
     }
 
     /**
-     * Check if the worker is currently actively working.
-     * @return true if so.
+     * 检查工作者是否当前处于活动状态。
+     * @return 如果是，则返回 true。
      */
     default boolean isWorking()
     {
@@ -358,13 +358,13 @@ public interface ICitizenData extends ICivilianData
     }
 
     /**
-     * On citizen being resurrected.
+     * 在市民复活时触发。
      */
     void onResurrect();
 
     /**
-     * Check if the citizen has some kind of custom texture.
-     * @return true if so.
+     * 检查市民是否具有某种自定义纹理。
+     * @return 如果是，则返回 true。
      */
     default boolean hasCustomTexture()
     {

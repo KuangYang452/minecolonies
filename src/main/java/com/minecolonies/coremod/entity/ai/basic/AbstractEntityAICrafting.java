@@ -47,50 +47,49 @@ import static com.minecolonies.api.util.constant.Constants.DEFAULT_SPEED;
 import static net.minecraft.world.entity.animal.Sheep.ITEM_BY_DYE;
 
 /**
- * Abstract class for the principal crafting AIs.
+ * 用于主要的制作人工智能的抽象类。
  */
 public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J>, B extends AbstractBuilding> extends AbstractEntityAIInteract<J, B>
 {
     /**
-     * Time the worker delays until the next hit.
+     * 工人延迟下一次打击的时间。
      */
     protected static final int HIT_DELAY = 10;
 
     /**
-     * Increase this value to make the product creation progress way slower.
+     * 增加此值以使产品制作进度慢得多。
      */
     public static final int PROGRESS_MULTIPLIER = 10;
 
     /**
-     * Max level which should have an effect on the speed of the worker.
+     * 最大级别，应该影响工人速度。
      */
     protected static final int MAX_LEVEL = 50;
 
     /**
-     * Times the product needs to be hit.
+     * 需要击打产品的次数。
      */
     private static final int HITTING_TIME = 3;
 
     /**
-     * The current request that is being crafted;
+     * 当前正在制作的请求；
      */
     public IRequest<? extends PublicCrafting> currentRequest;
 
     /**
-     * The current recipe that is being crafted.
+     * 当前正在制作的配方。
      */
     protected IRecipeStorage currentRecipeStorage;
 
     /**
-     * Player damage source.
+     * 玩家伤害来源。
      */
     private DamageSource playerDamageSource;
 
     /**
-     * The number of actions a crafting "success" is worth. By default, that's 1 action for 1 crafting success. Override this in your subclass to make crafting recipes worth more
-     * actions :-)
+     * 制作成功的每个任务值多少动作。默认情况下，每个制作成功值为1个动作。在子类中覆盖此值以使制作配方值更高。
      *
-     * @return The number of actions a crafting "success" is worth.
+     * @return 制作成功的每个任务值多少动作。
      */
     protected int getActionRewardForCraftingSuccess()
     {
@@ -98,16 +97,16 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Initialize the crafter job and add all his tasks.
+     * 初始化制作工作并添加所有任务。
      *
-     * @param job the job he has.
+     * @param job 他所拥有的工作。
      */
     public AbstractEntityAICrafting(@NotNull final J job)
     {
         super(job);
         super.registerTargets(
           /*
-           * Check if tasks should be executed.
+           * 检查是否应执行任务。
            */
           new AITarget(IDLE, () -> START_WORKING, 1),
           new AITarget(START_WORKING, this::decide, STANDARD_DELAY),
@@ -125,9 +124,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Main method to decide on what to do.
+     * 决定要做什么的主要方法。
      *
-     * @return the next state to go to.
+     * @return 要转到的下一个状态。
      */
     protected IAIState decide()
     {
@@ -160,7 +159,7 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
 
         if (job.getActionsDone() >= getActionsDoneUntilDumping())
         {
-            // Wait to dump before continuing.
+            // 等待转储后继续。
             return getState();
         }
 
@@ -168,9 +167,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Gets the next crafting state required, if a task exists.
+     * 获取下一个需要制作的状态，如果存在任务。
      *
-     * @return next state
+     * @return 下一个状态
      */
     protected IAIState getNextCraftingState()
     {
@@ -188,9 +187,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Query the IRecipeStorage of the first request in the queue.
+     * 查询队列中第一个请求的IRecipeStorage。
      *
-     * @return the next state to go to.
+     * @return 要转到的下一个状态。
      */
     protected IAIState getRecipe()
     {
@@ -245,9 +244,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
                 remaining = inputStorage.getAmount() * remainingOpsCount;
             }
             if (InventoryUtils.getCountFromBuilding(building, itemStack -> ItemStackUtils.compareItemStacksIgnoreStackSize(itemStack, inputStorage.getItemStack(), false, true))
-                  + InventoryUtils.getItemCountInItemHandler(worker.getInventoryCitizen(), itemStack -> ItemStackUtils.compareItemStacksIgnoreStackSize(itemStack, inputStorage.getItemStack(), false, true))
-                  + getExtendedCount(inputStorage.getItemStack())
-                  < remaining)
+                    + InventoryUtils.getItemCountInItemHandler(worker.getInventoryCitizen(), itemStack -> ItemStackUtils.compareItemStacksIgnoreStackSize(itemStack, inputStorage.getItemStack(), false, true))
+                    + getExtendedCount(inputStorage.getItemStack())
+                    < remaining)
             {
                 job.finishRequest(false);
                 incrementActionsDone(getActionRewardForCraftingSuccess());
@@ -260,10 +259,10 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Get an extended count that can be overriden.
+     * 获取可以重写的扩展计数。
      *
-     * @param stack the stack to add.
-     * @return the additional quantities (for example in a furnace).
+     * @param stack 要添加的堆栈。
+     * @return 附加的数量（例如在熔炉中）。
      */
     protected int getExtendedCount(final ItemStack stack)
     {
@@ -277,9 +276,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Query the required items to take them in the inventory to craft.
+     * 查询要放入库存以制作的所需物品。
      *
-     * @return the next state to go to.
+     * @return 要转到的下一个状态。
      */
     private IAIState queryItems()
     {
@@ -292,10 +291,10 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Check for all items of the required recipe.
+     * 检查所需配方的所有物品。
      *
-     * @param storage the recipe storage.
-     * @return the next state to go to.
+     * @param storage 配方存储。
+     * @return 要转到的下一个状态。
      */
     protected IAIState checkForItems(@NotNull final IRecipeStorage storage)
     {
@@ -324,7 +323,7 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
             }
 
             if (invCount <= 0 || invCount + ((job.getCraftCounter() + progressOpsCount) * inputStorage.getAmount())
-                  < remaining)
+                    < remaining)
             {
                 if (InventoryUtils.hasItemInProvider(building, predicate))
                 {
@@ -341,9 +340,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * The actual crafting logic.
+     * 实际的制作逻辑。
      *
-     * @return the next state to go to.
+     * @return 要转到的下一个状态。
      */
     protected IAIState craft()
     {
@@ -451,7 +450,7 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Reset all the values.
+     * 重置所有值。
      */
     public void resetValues()
     {
@@ -467,7 +466,7 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     {
         if (job.getMaxCraftingCount() == 0 && job.getProgress() == 0 && job.getCraftCounter() == 0 && currentRequest != null)
         {
-            // Fallback security blanket. Normally, the craft() method should have dealt with the request.
+            // 回退安全保护。通常，craft() 方法应该处理请求。
             if (currentRequest.getState() == RequestState.IN_PROGRESS)
             {
                 job.finishRequest(true);
@@ -487,9 +486,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * Get the required progress to execute a recipe.
+     * 获取执行配方所需的进度。
      *
-     * @return the amount of hits required.
+     * @return 所需的打击次数。
      */
     private int getRequiredProgressForMakingRawMaterial()
     {
@@ -504,8 +503,8 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * get the LootContextBuilder for 
-     * @return the LootContext to use for crafting
+     * 获取用于制作的LootContextBuilder
+     * @return 用于制作的LootContext
      */
     protected LootContext getLootContext()
     {
@@ -513,9 +512,9 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
     }
 
     /**
-     * get the LootContextBuilder for 
-     * @param includeKiller true for killer-based parameters
-     * @return the LootContext to use for crafting
+     * 获取用于制作的LootContextBuilder
+     * @param includeKiller true表示包含基于击杀者的参数
+     * @return 用于制作的LootContext
      */
     protected LootContext getLootContext(boolean includeKiller)
     {

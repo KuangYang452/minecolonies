@@ -35,22 +35,21 @@ import static com.minecolonies.api.util.constant.WindowConstants.RESPONSE_BOX_ID
 import static com.minecolonies.coremod.client.gui.WindowInteraction.BUTTON_RESPONSE_ID;
 
 /**
- * Interaction for recruiting visitors
+ * 用于招募访客的交互
  */
-public class RecruitmentInteraction extends ServerCitizenInteraction
-{
+public class RecruitmentInteraction extends ServerCitizenInteraction {
     /**
-     * The icon NBT tag
+     * 图标的 NBT 标签
      */
     private static final String RECRUITMENT_ICON = "recruitIcon";
 
     /**
-     * The icon's res location which is displayed for this interaction
+     * 用于此交互显示的图标的资源位置
      */
     private static final ResourceLocation icon = new ResourceLocation(Constants.MOD_ID, "textures/icons/recruiticon.png");
 
     /**
-     * The recruit answer
+     * 招募答案
      */
     private static final Tuple<Component, Component> recruitAnswer = new Tuple<>(Component.translatable("com.minecolonies.coremod.gui.chat.recruit"), null);
 

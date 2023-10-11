@@ -18,78 +18,76 @@ public interface IRequestHandler
     void registerRequest(IRequest<?> request);
 
     /**
-     * Method used to assign a given request to a resolver. Does not take any blacklist into account.
+     * 用于将给定请求分配给解决器，不考虑任何黑名单。
      *
-     * @param request The request to assign
-     * @throws IllegalArgumentException when the request is already assigned
+     * @param request 分配的请求
+     * @throws IllegalArgumentException 当请求已经被分配时抛出
      */
     void assignRequest(IRequest<?> request);
 
     /**
-     * Method used to assign a given request to a resolver. Does take a given blacklist of resolvers into account.
+     * 用于将给定请求分配给解决器，考虑给定的解决器令牌黑名单。
      *
-     * @param request                The request to assign.
-     * @param resolverTokenBlackList Each resolver that has its token in this blacklist will be skipped when checking for a possible resolver.
-     * @return The token of the resolver that has gotten the request assigned, null if none was found.
-     * @throws IllegalArgumentException is thrown when the request is unknown to this manager.
+     * @param request                分配的请求。
+     * @param resolverTokenBlackList 在此黑名单中具有其令牌的每个解决器在检查可能的解决器时都将被跳过。
+     * @return 已分配请求的解决器的令牌，如果未找到则返回null。
+     * @throws IllegalArgumentException 当请求在此管理器中未知时抛出。
      */
     IToken<?> assignRequest(IRequest<?> request, Collection<IToken<?>> resolverTokenBlackList);
 
     /**
-     * Method used to assign a given request to a resolver. Does take a given blacklist of resolvers into account. Uses the default assigning strategy: {@link
-     * AssigningStrategy#PRIORITY_BASED}
+     * 用于将给定请求分配给解决器，考虑给定的解决器令牌黑名单。使用默认的分配策略：{@link AssigningStrategy#PRIORITY_BASED}
      *
-     * @param request                The request to assign.
-     * @param resolverTokenBlackList Each resolver that has its token in this blacklist will be skipped when checking for a possible resolver.
-     * @return The token of the resolver that has gotten the request assigned, null if none was found.
-     * @throws IllegalArgumentException is thrown when the request is unknown to this manager.
+     * @param request                分配的请求。
+     * @param resolverTokenBlackList 在此黑名单中具有其令牌的每个解决器在检查可能的解决器时都将被跳过。
+     * @return 已分配请求的解决器的令牌，如果未找到则返回null。
+     * @throws IllegalArgumentException 当请求在此管理器中未知时抛出。
      */
     IToken<?> assignRequestDefault(IRequest<?> request, Collection<IToken<?>> resolverTokenBlackList);
 
     /**
-     * Method used to reassign the request to a resolver that is not in the given blacklist. Cancels the request internally without notify the requester, and attempts a reassign.
-     * If the reassignment failed, it is assigned back to the orignal resolver.
+     * 用于重新分配请求给不在给定黑名单中的解决器。在不通知请求者的情况下，取消请求并尝试重新分配。如果重新分配失败，则分配回原始解决器。
      *
-     * @param request                The request that is being reassigned.
-     * @param resolverTokenBlackList The blacklist to which not to assign the request.
-     * @return The token of the resolver that has gotten the request assigned, null if none was found.
-     * @throws IllegalArgumentException Thrown when something went wrong.
+     * @param request                正在重新分配的请求。
+     * @param resolverTokenBlackList 不分配请求的黑名单。
+     * @return 已分配请求的解决器的令牌，如果未找到则返回null。
+     * @throws IllegalArgumentException 当发生错误时抛出。
      */
     IToken<?> reassignRequest(IRequest<?> request, Collection<IToken<?>> resolverTokenBlackList);
 
     /**
-     * Method used to check if a given request token is assigned to a resolver.
+     * 用于检查给定请求令牌是否已分配给解决器。
      *
-     * @param token The request token to check for.
-     * @return True when the request token has been assigned, false when not.
+     * @param token 要检查的请求令牌。
+     * @return 当请求令牌已分配时返回true，否则返回false。
      */
     boolean isAssigned(IToken<?> token);
 
     /**
-     * Method used to handle the successful resolving of a request and the completion of its children.
+     * 用于处理请求成功解决及其子请求的完成。
      *
-     * @param token The token of the requests that finished resolving.
+     * @param token 完成解决的请求令牌。
      */
     void onRequestResolved(IToken<?> token);
 
     /**
-     * Method used to handle the successful completion of a request, its children and the followups.
+     * 用于处理请求成功完成，其子请求和后续请求。
      *
-     * @param token The token of the request that got completed successfully.
+     * @param token 成功完成的请求令牌。
      */
     void onRequestCompleted(IToken<?> token);
 
     /**
-     * Method used to handle requests that were overruled or cancelled. Cancels all children first, handles the creation of clean up requests.
+     * 用于处理被覆盖或取消的请求。首先取消所有子请求，然后处理清理请求的创建。
      *
-     * @param token The token of the request that got cancelled or overruled
+     * @param token 被取消或覆盖的请求的令牌
      */
     void onRequestOverruled(IToken<?> token);
 
     /**
-     * Method used to handle requests that were overruled or cancelled. Cancels all children first, handles the creation of clean up requests.
+     * 用于处理被覆盖或取消的请求。首先取消所有子请求，然后处理清理请求的创建。
      *
-     * @param token The token of the request that got cancelled or overruled
+     * @param token 被取消或覆盖的请求的令牌
      */
     void onRequestCancelled(IToken<?> token);
 
@@ -102,50 +100,49 @@ public interface IRequestHandler
     void processDirectCancellationOf(IRequest<?> request);
 
     /**
-     * Method used to resolve a request. When this method is called the given request has to be assigned.
+     * 用于解决请求。调用此方法时，给定的请求必须已分配。
      *
-     * @param request The request about to be resolved.
-     * @throws IllegalArgumentException when the request is unknown, not resolved, or cannot be resolved.
+     * @param request 要解决的请求。
+     * @throws IllegalArgumentException 当请求未知、未解决或无法解决时抛出。
      */
     void resolveRequest(IRequest<?> request);
 
     /**
-     * Method called when the given manager gets notified of the receiving of a given task by its requester. All communication with the resolver should be aborted by this time, so
-     * overrullings and cancelations need to be processed, before this method is called.
+     * 当给定管理器被其请求者通知收到给定任务时调用的方法。在此时，所有与解决器的通信都应被中止，因此需要处理覆盖和取消。
      *
-     * @param token The token of the request.
-     * @throws IllegalArgumentException Thrown when the token is unknown.
+     * @param token 请求的令牌。
+     * @throws IllegalArgumentException 当令牌未知时抛出。
      */
     void cleanRequestData(IToken<?> token);
 
     /**
-     * Method used to get a registered request from a given token.
+     * 用于从给定令牌获取已注册的请求。
      *
-     * @param token The token to query
-     * @return the request.
-     * @throws IllegalArgumentException when the token is unknown to the given manager.
+     * @param token 要查询的令牌
+     * @return 请求。
+     * @throws IllegalArgumentException 当令牌未知于给定管理器时抛出。
      */
     IRequest<?> getRequest(IToken<?> token);
 
     /**
-     * Method used to get a registered request fora given token.
+     * 用于从给定令牌获取已注册的请求。
      *
-     * @param token The token to get the request for.
-     * @return The request or null when no request with that token exists.
+     * @param token 要获取请求的令牌。
+     * @return 请求，如果不存在具有该令牌的请求则返回null。
      */
     IRequest<?> getRequestOrNull(IToken<?> token);
 
     /**
-     * Returns all requests made by a given requester.
+     * 返回由给定请求者发出的所有请求。
      *
-     * @param requester The requester in question.
-     * @return A collection with request instances that are made by the given requester.
+     * @param requester 相关的请求者。
+     * @return 由给定请求者发出的请求实例的集合。
      */
     Collection<IRequest<?>> getRequestsMadeByRequester(IRequester requester);
 
     /**
-     * Remove a specific requester and all assigned requests from the manager.
-     * @param requester the requester.
+     * 从管理器中移除特定请求者和所有已分配的请求。
+     * @param requester 请求者。
      */
     void removeRequester(IRequester requester);
 }

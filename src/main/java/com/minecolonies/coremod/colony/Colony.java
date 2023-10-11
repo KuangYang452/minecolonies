@@ -72,258 +72,258 @@ import static com.minecolonies.api.util.constant.TranslationConstants.*;
 import static com.minecolonies.coremod.MineColonies.getConfig;
 
 /**
- * This class describes a colony and contains all the data and methods for manipulating a Colony.
+ * 此类描述了一个殖民地，并包含了所有操作殖民地所需的数据和方法。
  */
 @SuppressWarnings({Suppression.BIG_CLASS, Suppression.SPLIT_CLASS})
 public class Colony implements IColony
 {
     /**
-     * The default style for the building.
+     * 建筑的默认样式。
      */
     private String style = DEFAULT_STYLE;
 
     /**
-     * Id of the colony.
+     * 殖民地的ID。
      */
     private final int id;
 
     /**
-     * Dimension of the colony.
+     * 殖民地的维度。
      */
     private ResourceKey<Level> dimensionId;
 
     /**
-     * List of loaded chunks for the colony.
+     * 殖民地的加载的区块列表。
      */
     private Set<Long> loadedChunks = new HashSet<>();
 
     /**
-     * List of loaded chunks for the colony.
+     * 殖民地的加载的区块列表。
      */
     public Set<Long> ticketedChunks = new HashSet<>();
 
     private boolean ticketedChunksDirty = true;
 
     /**
-     * List of chunks that have to be be force loaded.
+     * 必须强制加载的区块列表。
      */
     private Set<Long> pendingChunks = new HashSet<>();
 
     /**
-     * List of chunks pending for unloading, which have their tickets removed
+     * 等待卸载的区块列表，其票证已被移除。
      */
     private Set<Long> pendingToUnloadChunks = new HashSet<>();
 
     /**
-     * List of waypoints of the colony.
+     * 殖民地的路标列表。
      */
     private final Map<BlockPos, BlockState> wayPoints = new HashMap<>();
 
     /**
-     * Work Manager of the colony (Request System).
+     * 殖民地的工作管理器（请求系统）。
      */
     private final WorkManager workManager = new WorkManager(this);
 
     /**
-     * Building manager of the colony.
+     * 殖民地的建筑管理器。
      */
     private final IRegisteredStructureManager buildingManager = new RegisteredStructureManager(this);
 
     /**
-     * Grave manager of the colony.
+     * 殖民地的墓地管理器。
      */
     private final IGraveManager graveManager = new GraveManager(this);
 
     /**
-     * Citizen manager of the colony.
+     * 殖民地的居民管理器。
      */
     private final ICitizenManager citizenManager = new CitizenManager(this);
 
     /**
-     * Citizen manager of the colony.
+     * 殖民地的访客管理器。
      */
     private final IVisitorManager visitorManager = new VisitorManager(this);
 
     /**
-     * Barbarian manager of the colony.
+     * 殖民地的蛮族管理器。
      */
     private final IRaiderManager raidManager = new RaidManager(this);
 
     /**
-     * Event manager of the colony.
+     * 殖民地的事件管理器。
      */
     private final IEventManager eventManager = new EventManager(this);
 
     /**
-     * Reproduction manager of the colony.
+     * 殖民地的繁殖管理器。
      */
     private final IReproductionManager reproductionManager = new ReproductionManager(this);
 
     /**
-     * Event description manager of the colony.
+     * 殖民地的事件描述管理器。
      */
     private final IEventDescriptionManager eventDescManager = new EventDescriptionManager(this);
 
     /**
-     * The colony package manager.
+     * 殖民地的包管理器。
      */
     private final IColonyPackageManager packageManager = new ColonyPackageManager(this);
 
     /**
-     * The progress manager of the colony.
+     * 殖民地的进度管理器。
      */
     private final IProgressManager progressManager = new ProgressManager(this);
 
     /**
-     * The Positions which players can freely interact.
+     * 玩家可以自由交互的位置。
      */
     private final Set<BlockPos> freePositions = new HashSet<>();
 
     /**
-     * The Blocks which players can freely interact with.
+     * 玩家可以自由交互的方块。
      */
     private final Set<Block> freeBlocks = new HashSet<>();
 
     /**
-     * Colony permission event handler.
+     * 殖民地权限事件处理器。
      */
     private ColonyPermissionEventHandler eventHandler;
 
     /**
-     * Whether or not this colony may be auto-deleted.
+     * 此殖民地是否可以自动删除。
      */
     private boolean canColonyBeAutoDeleted = true;
 
     /**
-     * Variable to determine if its currently day or night.
+     * 用于确定当前是白天还是黑夜的变量。
      */
     private boolean isDay = true;
 
     /**
-     * The world the colony currently runs on.
+     * 殖民地当前运行的世界。
      */
     @Nullable
     private Level world = null;
 
     /**
-     * The hiring mode in the colony.
+     * 殖民地的招聘模式。
      */
     private boolean manualHiring = false;
 
     /**
-     * The housing mode in the colony.
+     * 殖民地的住房模式。
      */
     private boolean manualHousing = false;
 
     /**
-     * Whether citizens can move in or not.
+     * 居民是否可以迁入。
      */
     private boolean moveIn = true;
 
     /**
-     * The name of the colony.
+     * 殖民地的名称。
      */
     private String name = "ERROR(Wasn't placed by player)";
 
     /**
-     * The center of the colony.
+     * 殖民地的中心位置。
      */
     private BlockPos center;
 
     /**
-     * The colony permission object.
+     * 殖民地的权限对象。
      */
     @NotNull
     private Permissions permissions;
 
     /**
-     * The request manager assigned to the colony.
+     * 分配给殖民地的请求管理器。
      */
     private IRequestManager requestManager;
 
     /**
-     * The request manager assigned to the colony.
+     * 分配给殖民地的研究管理器。
      */
     private IResearchManager researchManager;
 
     /**
-     * The NBTTag compound of the colony itself.
+     * 殖民地本身的NBTTag复合标签。
      */
     private CompoundTag colonyTag;
 
     /**
-     * List of players visiting the colony.
+     * 访问殖民地的玩家列表。
      */
     private final List<Player> visitingPlayers = new ArrayList<>();
 
     /**
-     * List of players attacking the colony.
+     * 攻击殖民地的玩家列表。
      */
     private final List<AttackingPlayer> attackingPlayers = new ArrayList<>();
 
     /**
-     * The colonies state machine
+     * 殖民地的状态机。
      */
     private final ITickRateStateMachine<ColonyState> colonyStateMachine;
 
     /**
-     * If the colony is dirty.
+     * 殖民地是否已更改。
      */
     private boolean isActive = true;
 
     /**
-     * The colony team color.
+     * 殖民地团队颜色。
      */
     private ChatFormatting colonyTeamColor = ChatFormatting.WHITE;
 
     /**
-     * The colony flag, as a list of patterns.
+     * 殖民地旗帜，作为一组图案的列表。
      */
     private ListTag colonyFlag = new BannerPattern.Builder()
                                    .addPattern(BannerPatterns.BASE, DyeColor.WHITE)
                                    .toListTag();
 
     /**
-     * The last time the mercenaries were used.
+     * 上次雇佣兵使用的时间。
      */
     private long mercenaryLastUse = 0;
 
     /**
-     * The amount of additional child time gathered when the colony is not loaded.
+     * 当殖民地未加载时收集的额外儿童时间数量。
      */
     private int additionalChildTime = 0;
 
     /**
-     * The maximum amount of additional child time to be stored when the colony is not loaded.
+     * 当殖民地未加载时要存储的额外儿童时间的最大数量。
      */
     private static final int maxAdditionalChildTime = 70000;
 
     /**
-     * Boolean whether the colony has childs.
+     * 殖民地是否有儿童的布尔值。
      */
     private boolean hasChilds = false;
 
     /**
-     * Last time the server was online.
+     * 上次服务器在线的时间。
      */
     public long lastOnlineTime = 0;
 
     /**
-     * The force chunk load timer.
+     * 强制区块加载计时器。
      */
     private int forceLoadTimer = 0;
 
     /**
-     * The texture set of the colony.
+     * 殖民地的纹理风格。
      */
     private String textureStyle = "default";
 
     /**
-     * Constructor for a newly created Colony.
+     * 用于新创建的殖民地的构造函数。
      *
-     * @param id The id of the colony to create.
-     * @param w  The world the colony exists in.
-     * @param c  The center of the colony (location of Town Hall).
+     * @param id 殖民地的ID。
+     * @param w  殖民地所在的世界。
+     * @param c  殖民地的中心（市政厅的位置）。
      */
     @SuppressWarnings("squid:S2637")
     Colony(final int id, @Nullable final Level w, final BlockPos c)
@@ -336,10 +336,10 @@ public class Colony implements IColony
     }
 
     /**
-     * Base constructor.
+     * 基础构造函数。
      *
-     * @param id    The current id for the colony.
-     * @param world The world the colony exists in.
+     * @param id    殖民地的当前ID。
+     * @param world 殖民地所在的世界。
      */
     protected Colony(final int id, @Nullable final Level world)
     {
@@ -369,11 +369,10 @@ public class Colony implements IColony
         colonyStateMachine.addTransition(new TickingTransition<>(ACTIVE, this::worldTickSlow, () -> ACTIVE, MAX_TICKRATE));
         colonyStateMachine.addTransition(new TickingTransition<>(UNLOADED, this::worldTickUnloaded, () -> UNLOADED, MAX_TICKRATE));
     }
-
     /**
-     * Updates the state the colony is in.
+     * 更新殖民地的状态。
      *
-     * @return the new colony state.
+     * @return 新的殖民地状态。
      */
     private ColonyState updateState()
     {
@@ -399,7 +398,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Updates the existing subscribers
+     * 更新现有的订阅者。
      *
      * @return false
      */
@@ -410,7 +409,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Ticks the request manager.
+     * 执行请求管理器的刻。
      *
      * @return false
      */
@@ -424,7 +423,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Called every 500 ticks, for slower updates.
+     * 每500刻钟调用一次，用于较慢的更新。
      *
      * @return false
      */
@@ -460,8 +459,8 @@ public class Colony implements IColony
     }
 
     /**
-     * Check if we can unload the colony now.
-     * Update chunk unload timer and releases chunks when it hits 0.
+     * 检查是否可以卸载殖民地。
+     * 更新块卸载计时器，并在计时器为0时释放块。
      */
     private void updateChunkLoadTimer()
     {
@@ -508,9 +507,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Checks the chunk and registers a ticket for it if needed
+     * 检查块并注册一个票据。
      *
-     * @param chunkPos chunk position to check
+     * @param chunkPos 要检查的块位置
      */
     private void checkChunkAndRegisterTicket(final long chunkPos, final LevelChunk chunk)
     {
@@ -526,7 +525,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Called every 500 ticks, for slower updates. Only ticked when the colony is not loaded.
+     * 每500刻钟调用一次，用于较慢的更新。仅在殖民地未加载时调用。
      *
      * @return false
      */
@@ -538,7 +537,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Adds 500 additional ticks to the child growth.
+     * 为孩子的生长增加500个额外的刻钟。
      */
     private void updateChildTime()
     {
@@ -553,7 +552,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Updates the day and night detection.
+     * 更新白天和黑夜检测。
      *
      * @return false
      */
@@ -580,13 +579,13 @@ public class Colony implements IColony
     }
 
     /**
-     * Updates the pvping playeres.
+     * 更新正在攻击的玩家。
      */
     public void updateAttackingPlayers()
     {
         final List<Player> visitors = new ArrayList<>(visitingPlayers);
 
-        //Clean up visiting player.
+        // 清理访问玩家。
         for (final Player player : visitors)
         {
             if (!packageManager.getCloseSubscribers().contains(player))
@@ -612,12 +611,12 @@ public class Colony implements IColony
     @Override
     public PlayerTeam getTeam()
     {
-        // This getter will create the team if it doesn't exist. Could do something different though in the future.
+        // 此getter将在不存在时创建团队。未来可以采取不同的方式。
         return checkOrCreateTeam();
     }
 
     /**
-     * Check or create the team.
+     * 检查或创建团队。
      */
     private PlayerTeam checkOrCreateTeam()
     {
@@ -630,9 +629,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Set up the colony color for team handling for pvp.
+     * 为pvp处理设置殖民地颜色。
      *
-     * @param colonyColor the colony color.
+     * @param colonyColor 殖民地颜色。
      */
     public void setColonyColor(final ChatFormatting colonyColor)
     {
@@ -647,9 +646,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Set up the colony flag patterns for use in decorations etc
+     * 设置用于装饰等的殖民地旗帜图案。
      *
-     * @param colonyFlag the list of pattern-color pairs
+     * @param colonyFlag 包含图案-颜色对的列表
      */
     @Override
     public void setColonyFlag(ListTag colonyFlag)
@@ -659,11 +658,11 @@ public class Colony implements IColony
     }
 
     /**
-     * Load a saved colony.
+     * 从保存的数据中加载殖民地。
      *
-     * @param compound The NBT compound containing the colony's data.
-     * @param world    the world to load it for.
-     * @return loaded colony.
+     * @param compound 包含殖民地数据的NBT复合标签。
+     * @param world    要加载的世界。
+     * @return 加载的殖民地。
      */
     @Nullable
     public static Colony loadColony(@NotNull final CompoundTag compound, @Nullable final Level world)
@@ -683,13 +682,13 @@ public class Colony implements IColony
         }
         catch (final Exception e)
         {
-            Log.getLogger().warn("Something went wrong loading a colony, please report this to the administrators", e);
+            Log.getLogger().warn("加载殖民地时出现问题，请向管理员报告此问题", e);
         }
         return null;
     }
 
     /**
-     * Sets the request manager on colony load.
+     * 在殖民地加载时设置请求管理器。
      */
     private void setRequestManager()
     {
@@ -697,9 +696,14 @@ public class Colony implements IColony
     }
 
     /**
-     * Read colony from saved data.
+     * 从保存的数据中读取殖民地。
      *
-     * @param compound compound to read from.
+     * @param compound 要从中读取的复合标签。
+     */
+    /**
+     * 从CompoundTag中读取数据。
+     *
+     * @param compound 包含数据的CompoundTag。
      */
     public void read(@NotNull final CompoundTag compound)
     {
@@ -709,14 +713,14 @@ public class Colony implements IColony
         mercenaryLastUse = compound.getLong(TAG_MERCENARY_TIME);
         additionalChildTime = compound.getInt(TAG_CHILD_TIME);
 
-        // Permissions
+        // 权限
         permissions.loadPermissions(compound);
 
         citizenManager.read(compound.getCompound(TAG_CITIZEN_MANAGER));
         visitorManager.read(compound);
         buildingManager.read(compound.getCompound(TAG_BUILDING_MANAGER));
 
-        // Recalculate max after citizens and buildings are loaded.
+        // 在市民和建筑加载后重新计算最大市民数量。
         citizenManager.calculateMaxCitizens();
 
         graveManager.read(compound.getCompound(TAG_GRAVE_MANAGER));
@@ -732,16 +736,16 @@ public class Colony implements IColony
         if (compound.getAllKeys().contains(TAG_RESEARCH))
         {
             researchManager.readFromNBT(compound.getCompound(TAG_RESEARCH));
-            // now that buildings, colonists, and research are loaded, check for new autoStartResearch.
-            // this is mostly for backwards compatibility with older saves, so players do not have to manually start newly added autostart researches that they've unlocked before the update.
+            // 现在已加载建筑、殖民者和研究，检查新的自动启动研究。
+            // 这主要是为了向后兼容旧的存档，以便玩家不必手动启动更新前已解锁的新自动启动研究。
             researchManager.checkAutoStartResearch();
         }
 
-        //  Workload
+        // 工作量
         workManager.read(compound.getCompound(TAG_WORK));
 
         wayPoints.clear();
-        // Waypoints
+        // 路点
         final ListTag wayPointTagList = compound.getList(TAG_WAYPOINT, Tag.TAG_COMPOUND);
         for (int i = 0; i < wayPointTagList.size(); ++i)
         {
@@ -751,7 +755,7 @@ public class Colony implements IColony
             wayPoints.put(pos, state);
         }
 
-        // Free blocks
+        // 空闲方块
         freeBlocks.clear();
         final ListTag freeBlockTagList = compound.getList(TAG_FREE_BLOCKS, Tag.TAG_STRING);
         for (int i = 0; i < freeBlockTagList.size(); ++i)
@@ -760,7 +764,7 @@ public class Colony implements IColony
         }
 
         freePositions.clear();
-        // Free positions
+        // 空闲位置
         final ListTag freePositionTagList = compound.getList(TAG_FREE_POSITIONS, Tag.TAG_COMPOUND);
         for (int i = 0; i < freePositionTagList.size(); ++i)
         {
@@ -795,8 +799,8 @@ public class Colony implements IColony
 
         if (compound.getAllKeys().contains(TAG_TEAM_COLOR))
         {
-            // This read can occur before the world is non-null, due to Minecraft's order of operations for capabilities.
-            // As a result, setColonyColor proper must wait until onWorldLoad fires.
+            // 此读取可能在世界非空之前发生，因为Minecraft的能力操作顺序。
+            // 因此，setColonyColor适当必须等到onWorldLoad触发。
             this.colonyTeamColor = ChatFormatting.values()[compound.getInt(TAG_TEAM_COLOR)];
         }
 
@@ -819,9 +823,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the event handler assigned to the colony.
+     * 获取分配给殖民地的事件处理程序。
      *
-     * @return the ColonyPermissionEventHandler.
+     * @return 殖民地权限事件处理程序。
      */
     public ColonyPermissionEventHandler getEventHandler()
     {
@@ -829,17 +833,18 @@ public class Colony implements IColony
     }
 
     /**
-     * Write colony to save data.
+     * 将殖民地写入保存数据。
      *
-     * @param compound compound to write to.
+     * @param compound 要写入的CompoundTag。
+     * @return 写入后的CompoundTag。
      */
     public CompoundTag write(@NotNull final CompoundTag compound)
     {
-        //  Core attributes
+        // 核心属性
         compound.putInt(TAG_ID, id);
         compound.putString(TAG_DIMENSION, dimensionId.location().toString());
 
-        //  Basic data
+        // 基本数据
         compound.putString(TAG_NAME, name);
         BlockPosUtil.write(compound, TAG_CENTER, center);
 
@@ -848,7 +853,7 @@ public class Colony implements IColony
 
         compound.putInt(TAG_CHILD_TIME, additionalChildTime);
 
-        // Permissions
+        // 权限
         permissions.savePermissions(compound);
 
         final CompoundTag buildingCompound = new CompoundTag();
@@ -865,7 +870,7 @@ public class Colony implements IColony
         graveManager.write(graveCompound);
         compound.put(TAG_GRAVE_MANAGER, graveCompound);
 
-        //  Workload
+        // 工作量
         @NotNull final CompoundTag workManagerCompound = new CompoundTag();
         workManager.write(workManagerCompound);
         compound.put(TAG_WORK, workManagerCompound);
@@ -879,7 +884,7 @@ public class Colony implements IColony
         researchManager.writeToNBT(researchManagerCompound);
         compound.put(TAG_RESEARCH, researchManagerCompound);
 
-        // Waypoints
+        // 路点
         @NotNull final ListTag wayPointTagList = new ListTag();
         for (@NotNull final Map.Entry<BlockPos, BlockState> entry : wayPoints.entrySet())
         {
@@ -890,7 +895,7 @@ public class Colony implements IColony
         }
         compound.put(TAG_WAYPOINT, wayPointTagList);
 
-        // Free blocks
+        // 空闲方块
         @NotNull final ListTag freeBlocksTagList = new ListTag();
         for (@NotNull final Block block : freeBlocks)
         {
@@ -898,7 +903,7 @@ public class Colony implements IColony
         }
         compound.put(TAG_FREE_BLOCKS, freeBlocksTagList);
 
-        // Free positions
+        // 空闲位置
         @NotNull final ListTag freePositionsTagList = new ListTag();
         for (@NotNull final BlockPos pos : freePositions)
         {
@@ -925,9 +930,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Returns the dimension ID.
+     * 获取维度ID。
      *
-     * @return Dimension ID.
+     * @return 维度ID。
      */
     public ResourceKey<Level> getDimension()
     {
@@ -947,9 +952,9 @@ public class Colony implements IColony
     }
 
     /**
-     * When the Colony's world is loaded, associate with it.
+     * 当殖民地的世界加载时，与之关联。
      *
-     * @param w World object.
+     * @param w 世界对象。
      */
     @Override
     public void onWorldLoad(@NotNull final Level w)
@@ -957,7 +962,7 @@ public class Colony implements IColony
         if (w.dimension() == dimensionId)
         {
             this.world = w;
-            // Register a new event handler
+            // 注册新的事件处理程序
             if (eventHandler == null)
             {
                 eventHandler = new ColonyPermissionEventHandler(this);
@@ -968,9 +973,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Unsets the world if the world unloads.
+     * 如果世界卸载，则取消关联世界。
      *
-     * @param w World object.
+     * @param w 世界对象。
      */
     @Override
     public void onWorldUnload(@NotNull final Level w)
@@ -978,8 +983,8 @@ public class Colony implements IColony
         if (w != world)
         {
             /*
-             * If the event world is not the colony world ignore. This might happen in interactions with other mods.
-             * This should not be a problem for minecolonies as long as we take care to do nothing in that moment.
+             * 如果事件世界不是殖民地世界，则忽略。这可能发生在与其他模组的交互中。
+             * 只要我们确保在那个时刻什么都不做，这对于MineColonies不应该是问题。
              */
             return;
         }
@@ -995,11 +1000,10 @@ public class Colony implements IColony
     public void onServerTick(@NotNull final TickEvent.ServerTickEvent event)
     {
     }
-
     /**
-     * Get the Work Manager for the Colony.
+     * 获取殖民地的工作管理器。
      *
-     * @return WorkManager for the Colony.
+     * @return 殖民地的工作管理器。
      */
     @Override
     @NotNull
@@ -1009,9 +1013,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get a copy of the freePositions list.
+     * 获取自由交互位置列表的副本。
      *
-     * @return the list of free to interact positions.
+     * @return 自由交互位置列表。
      */
     public Set<BlockPos> getFreePositions()
     {
@@ -1019,9 +1023,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get a copy of the freeBlocks list.
+     * 获取自由交互方块列表的副本。
      *
-     * @return the list of free to interact blocks.
+     * @return 自由交互方块列表。
      */
     public Set<Block> getFreeBlocks()
     {
@@ -1029,9 +1033,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Add a new free to interact position.
+     * 添加一个新的自由交互位置。
      *
-     * @param pos position to add.
+     * @param pos 要添加的位置。
      */
     public void addFreePosition(@NotNull final BlockPos pos)
     {
@@ -1040,9 +1044,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Add a new free to interact block.
+     * 添加一个新的自由交互方块。
      *
-     * @param block block to add.
+     * @param block 要添加的方块。
      */
     public void addFreeBlock(@NotNull final Block block)
     {
@@ -1051,9 +1055,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Remove a free to interact position.
+     * 移除一个自由交互位置。
      *
-     * @param pos position to remove.
+     * @param pos 要移除的位置。
      */
     public void removeFreePosition(@NotNull final BlockPos pos)
     {
@@ -1062,9 +1066,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Remove a free to interact block.
+     * 移除一个自由交互方块。
      *
-     * @param block state to remove.
+     * @param block 要移除的方块。
      */
     public void removeFreeBlock(@NotNull final Block block)
     {
@@ -1073,8 +1077,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Any per-world-tick logic should be performed here. NOTE: If the Colony's world isn't loaded, it won't have a world tick. Use onServerTick for logic that should _always_
-     * run.
+     * 任何与世界每个tick相关的逻辑都应在此处执行。注意：如果殖民地的世界没有加载，它不会有世界tick。在应该_始终_运行的逻辑上使用onServerTick。
      *
      * @param event {@link TickEvent.WorldTickEvent}
      */
@@ -1084,8 +1087,7 @@ public class Colony implements IColony
         if (event.level != getWorld())
         {
             /*
-             * If the event world is not the colony world ignore. This might happen in interactions with other mods.
-             * This should not be a problem for minecolonies as long as we take care to do nothing in that moment.
+             * 如果事件的世界不是殖民地世界，则忽略。这可能发生在与其他模组的交互中。只要我们小心在那个时刻什么都不做，这对MineColonies不会成为问题。
              */
             return;
         }
@@ -1094,11 +1096,11 @@ public class Colony implements IColony
     }
 
     /**
-     * Calculate randomly if the colony should update the citizens. By mean they update it at CLEANUP_TICK_INCREMENT.
+     * 随机计算殖民地是否应更新市民。通常在CLEANUP_TICK_INCREMENT时更新。
      *
-     * @param world        the world.
-     * @param averageTicks the average ticks to upate it.
-     * @return a boolean by random.
+     * @param world        世界。
+     * @param averageTicks 平均刻度以进行更新。
+     * @return 随机布尔值。
      */
     public static boolean shallUpdate(final Level world, final int averageTicks)
     {
@@ -1106,7 +1108,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Update the waypoints after worldTicks.
+     * 在worldTicks之后更新路径点。
      *
      * @return false
      */
@@ -1124,8 +1126,8 @@ public class Colony implements IColony
                     {
                         final Block worldBlock = world.getBlockState(entry.getKey()).getBlock();
                         if (
-                          ((worldBlock != (entry.getValue().getBlock()) && entry.getValue().getBlock() != ModBlocks.blockWayPoint) && worldBlock != ModBlocks.blockConstructionTape)
-                            || (world.isEmptyBlock(entry.getKey().below()) && !entry.getValue().getMaterial().isSolid()))
+                                ((worldBlock != (entry.getValue().getBlock()) && entry.getValue().getBlock() != ModBlocks.blockWayPoint) && worldBlock != ModBlocks.blockConstructionTape)
+                                        || (world.isEmptyBlock(entry.getKey().below()) && !entry.getValue().getMaterial().isSolid()))
                         {
                             wayPoints.remove(entry.getKey());
                             markDirty();
@@ -1140,9 +1142,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Returns the center of the colony.
+     * 返回殖民地的中心。
      *
-     * @return Chunk Coordinates of the center of the colony.
+     * @return 殖民地中心的块坐标。
      */
     @Override
     public BlockPos getCenter()
@@ -1157,9 +1159,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Sets the name of the colony. Marks dirty.
+     * 设置殖民地的名称。标记为脏。
      *
-     * @param n new name.
+     * @param n 新名称。
      */
     @Override
     public void setName(final String n)
@@ -1201,9 +1203,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Returns the ID of the colony.
+     * 返回殖民地的ID。
      *
-     * @return Colony ID.
+     * @return 殖民地ID。
      */
     @Override
     public int getID()
@@ -1252,9 +1254,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Returns the world the colony is in.
+     * 返回殖民地所在的世界。
      *
-     * @return World the colony is in.
+     * @return 殖民地所在的世界。
      */
     @Nullable
     public Level getWorld()
@@ -1270,7 +1272,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Marks the instance dirty.
+     * 标记实例为脏。
      */
     public void markDirty()
     {
@@ -1284,7 +1286,6 @@ public class Colony implements IColony
         return canColonyBeAutoDeleted;
     }
 
-    @Nullable
     @Override
     public IRequester getRequesterBuildingForPosition(@NotNull final BlockPos pos)
     {
@@ -1325,9 +1326,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter which checks if jobs should be manually allocated.
+     * 获取是否需要手动分配工作。
      *
-     * @return true of false.
+     * @return true或false。
      */
     public boolean isManualHiring()
     {
@@ -1335,9 +1336,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Setter to set the job allocation manual or automatic.
+     * 设置工作分配手动或自动。
      *
-     * @param manualHiring true if manual, false if automatic.
+     * @param manualHiring 如果手动分配工作则为true，否则为false。
      */
     public void setManualHiring(final boolean manualHiring)
     {
@@ -1347,9 +1348,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter which checks if houses should be manually allocated.
+     * 获取是否需要手动分配住房。
      *
-     * @return true of false.
+     * @return true或false。
      */
     public boolean isManualHousing()
     {
@@ -1357,9 +1358,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Setter to set the house allocation manual or automatic.
+     * 设置住房分配手动或自动。
      *
-     * @param manualHousing true if manual, false if automatic.
+     * @param manualHousing 如果手动分配住房则为true，否则为false。
      */
     public void setManualHousing(final boolean manualHousing)
     {
@@ -1368,9 +1369,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter which checks if houses should be manually allocated.
+     * 获取是否可以搬入住房。
      *
-     * @return true of false.
+     * @return true或false。
      */
     public boolean canMoveIn()
     {
@@ -1378,9 +1379,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Setter to set the citizen moving in.
+     * 设置是否可以搬入市民。
      *
-     * @param newMoveIn true if can move in, false if can't move in.
+     * @param newMoveIn 如果可以搬入则为true，否则为false。
      */
     public void setMoveIn(final boolean newMoveIn)
     {
@@ -1389,13 +1390,13 @@ public class Colony implements IColony
     }
 
     /**
-     * Send the message of a removed workOrder to the client.
+     * 向客户端发送已删除工作订单的消息。
      *
-     * @param orderId the workOrder to remove.
+     * @param orderId 要删除的工作订单。
      */
     public void removeWorkOrderInView(final int orderId)
     {
-        //  Inform Subscribers of removed workOrder
+        // 通知已删除的工作订单的订阅者
         for (final ServerPlayer player : packageManager.getCloseSubscribers())
         {
             Network.getNetwork().sendToPlayer(new ColonyViewRemoveWorkOrderMessage(this, orderId), player);
@@ -1403,10 +1404,10 @@ public class Colony implements IColony
     }
 
     /**
-     * Adds a waypoint to the colony.
+     * 向殖民地添加路径点。
      *
-     * @param point the waypoint to add.
-     * @param block the block at the waypoint.
+     * @param point 要添加的路径点。
+     * @param block 路径点的方块。
      */
     public void addWayPoint(final BlockPos point, final BlockState block)
     {
@@ -1415,9 +1416,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter for overall happiness.
+     * 获取总体幸福度。
      *
-     * @return the overall happiness.
+     * @return 总体幸福度。
      */
     @Override
     public double getOverallHappiness()
@@ -1436,9 +1437,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get all the waypoints of the colony.
+     * 获取殖民地的所有路径点。
      *
-     * @return copy of hashmap.
+     * @return 哈希映射的副本。
      */
     @Override
     public Map<BlockPos, BlockState> getWayPoints()
@@ -1447,9 +1448,9 @@ public class Colony implements IColony
     }
 
     /**
-     * This sets whether or not a colony can be automatically deleted Via command, or an on-tick check.
+     * 设置殖民地是否可以自动删除。
      *
-     * @param canBeDeleted whether the colony is able to be deleted automatically
+     * @param canBeDeleted 如果殖民地可以自动删除则为true。
      */
     public void setCanBeAutoDeleted(final boolean canBeDeleted)
     {
@@ -1458,9 +1459,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter for the default style of the colony.
+     * 获取殖民地的默认风格。
      *
-     * @return the style string.
+     * @return 默认风格字符串。
      */
     @Override
     public String getStyle()
@@ -1469,9 +1470,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Setter for the default style of the colony.
+     * 设置殖民地的默认风格。
      *
-     * @param style the default string.
+     * @param style 默认字符串。
      */
     @Override
     public void setStyle(final String style)
@@ -1481,9 +1482,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the buildingmanager of the colony.
+     * 获取殖民地的建筑管理器。
      *
-     * @return the buildingManager.
+     * @return 建筑管理器。
      */
     @Override
     public IRegisteredStructureManager getBuildingManager()
@@ -1492,9 +1493,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the graveManager of the colony.
+     * 获取殖民地的坟墓管理器。
      *
-     * @return the graveManager.
+     * @return 坟墓管理器。
      */
     @Override
     public IGraveManager getGraveManager()
@@ -1503,9 +1504,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the citizenManager of the colony.
+     * 获取殖民地的市民管理器。
      *
-     * @return the citizenManager.
+     * @return 市民管理器。
      */
     @Override
     public ICitizenManager getCitizenManager()
@@ -1514,9 +1515,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the visitor manager of the colony.
+     * 获取殖民地的访客管理器。
      *
-     * @return the visitor manager.
+     * @return 访客管理器。
      */
     @Override
     public IVisitorManager getVisitorManager()
@@ -1525,9 +1526,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the barbManager of the colony.
+     * 获取殖民地的入侵者管理器。
      *
-     * @return the barbManager.
+     * @return 入侵者管理器。
      */
     @Override
     public IRaiderManager getRaiderManager()
@@ -1554,9 +1555,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the packagemanager of the colony.
+     * 获取殖民地的包裹管理器。
      *
-     * @return the manager.
+     * @return 包裹管理器。
      */
     @Override
     public IColonyPackageManager getPackageManager()
@@ -1565,9 +1566,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the progress manager of the colony.
+     * 获取殖民地的进度管理器。
      *
-     * @return the manager.
+     * @return 进度管理器。
      */
     @Override
     public IProgressManager getProgressManager()
@@ -1576,9 +1577,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get all visiting players.
+     * 获取所有正在访问的玩家。
      *
-     * @return the list.
+     * @return 列表。
      */
     public ImmutableList<Player> getVisitingPlayers()
     {
@@ -1615,9 +1616,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the NBT tag of the colony.
+     * 获取殖民地的NBT标签。
      *
-     * @return the tag of it.
+     * @return 标签。
      */
     @Override
     public CompoundTag getColonyTag()
@@ -1637,10 +1638,10 @@ public class Colony implements IColony
     }
 
     /**
-     * Is player part of a wave trying to invade the colony?
+     * 检查玩家是否是试图入侵殖民地的波浪的一部分。
      *
-     * @param player the player to check..
-     * @return true if so.
+     * @param player 要检查的玩家。
+     * @return 如果是则为true。
      */
     public boolean isValidAttackingPlayer(final Player player)
     {
@@ -1660,10 +1661,10 @@ public class Colony implements IColony
     }
 
     /**
-     * Check if attack of guard is valid.
+     * 检查守卫的攻击是否有效。
      *
-     * @param entity the guard entity.
-     * @return true if so.
+     * @param entity 守卫实体。
+     * @return 如果有效则为true。
      */
     public boolean isValidAttackingGuard(final AbstractEntityCitizen entity)
     {
@@ -1676,9 +1677,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Add a guard to the list of attacking guards.
+     * 向攻击守卫列表中添加守卫。
      *
-     * @param IEntityCitizen the citizen to add.
+     * @param IEntityCitizen 要添加的市民。
      */
     public void addGuardToAttackers(final AbstractEntityCitizen IEntityCitizen, final Player player)
     {
@@ -1714,9 +1715,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Check if the colony is currently under attack by another player.
+     * 检查殖民地是否正在被另一个玩家攻击。
      *
-     * @return true if so.
+     * @return 如果是则为true。
      */
     public boolean isColonyUnderAttack()
     {
@@ -1724,9 +1725,9 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter for the colony team color.
+     * 获取殖民地团队颜色。
      *
-     * @return the ChatFormatting enum color.
+     * @return ChatFormatting枚举颜色。
      */
     public ChatFormatting getTeamColonyColor()
     {
@@ -1734,17 +1735,17 @@ public class Colony implements IColony
     }
 
     /**
-     * Getter for the colony flag patterns
+     * 获取殖民地的旗帜模式。
      *
-     * @return the list of pattern-color pairs
+     * @return 模式-颜色对的列表
      */
     @Override
     public ListTag getColonyFlag() { return colonyFlag; }
 
     /**
-     * Set the colony to be active.
+     * 设置殖民地为活动状态。
      *
-     * @param isActive if active.
+     * @param isActive 是否为活动状态。
      */
     public void setActive(final boolean isActive)
     {
@@ -1752,7 +1753,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Save the time when mercenaries are used, to set a cooldown.
+     * 保存使用佣兵的时间，以设置冷却时间。
      */
     @Override
     public void usedMercenaries()
@@ -1762,7 +1763,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Get the last time mercenaries were used.
+     * 获取上次使用佣兵的时间。
      */
     @Override
     public long getMercenaryUseTime()
@@ -1867,7 +1868,7 @@ public class Colony implements IColony
     }
 
     /**
-     * Check if we need to update the view's chunk ticket info
+     * 检查是否需要更新视图的块票信息
      *
      * @return
      */

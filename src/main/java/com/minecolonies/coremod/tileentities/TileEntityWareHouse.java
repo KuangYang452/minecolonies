@@ -25,12 +25,12 @@ import static com.minecolonies.coremod.colony.buildings.workerbuildings.Building
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
- * Class which handles the tileEntity of our colony warehouse.
+ * 处理我们殖民地仓库的瓦砾实体的类。
  */
 public class TileEntityWareHouse extends AbstractTileEntityWareHouse
 {
     /**
-     * Time of last sent notifications.
+     * 上次发送通知的时间。
      */
     private long lastNotification                   = 0;
 
@@ -155,9 +155,9 @@ public class TileEntityWareHouse extends AbstractTileEntityWareHouse
     }
 
     /**
-     * Get a rack for a stack.
-     * @param stack the stack to insert.
-     * @return the matching rack.
+     * 获取适合堆叠的瓦砾。
+     * @param stack 要插入的堆叠。
+     * @return 匹配的瓦砾。
      */
     public BlockEntity getRackForStack(final ItemStack stack)
     {
@@ -174,10 +174,10 @@ public class TileEntityWareHouse extends AbstractTileEntityWareHouse
     }
 
     /**
-     * Search the right chest for an itemStack.
+     * 搜索带有堆叠物品的正确箱子。
      *
-     * @param stack the stack to dump.
-     * @return the tile entity of the chest
+     * @param stack 要倾倒的堆叠物品。
+     * @return 箱子的瓦砾实体。
      */
     @Nullable
     private BlockEntity getPositionOfChestWithItemStack(@NotNull final ItemStack stack)
@@ -201,10 +201,10 @@ public class TileEntityWareHouse extends AbstractTileEntityWareHouse
     }
 
     /**
-     * Searches a chest with a similar item as the incoming stack.
+     * 搜索具有类似物品堆叠的箱子。
      *
-     * @param stack the stack.
-     * @return the entity of the chest.
+     * @param stack 堆叠物品。
+     * @return 箱子的瓦砾实体。
      */
     @Nullable
     private BlockEntity getPositionOfChestWithSimilarItemStack(final ItemStack stack)
@@ -227,9 +227,9 @@ public class TileEntityWareHouse extends AbstractTileEntityWareHouse
     }
 
     /**
-     * Search for the chest with the least items in it.
+     * 搜索物品最少的箱子。
      *
-     * @return the tileEntity of this chest.
+     * @return 该箱子的瓦砾实体。
      */
     @Nullable
     private BlockEntity searchMostEmptyRack()

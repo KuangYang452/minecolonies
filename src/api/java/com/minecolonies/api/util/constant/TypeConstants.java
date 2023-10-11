@@ -18,7 +18,7 @@ import com.minecolonies.api.crafting.RecipeStorage;
 import java.util.UUID;
 
 /**
- * Class holds type constants to reduce the formatting errors.
+ * 该类保存类型常量，以减少格式错误。
  */
 public class TypeConstants
 {

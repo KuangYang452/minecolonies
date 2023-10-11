@@ -11,34 +11,33 @@ import static com.minecolonies.api.entity.ai.statemachine.tickratestatemachine.T
 import static com.minecolonies.api.entity.ai.statemachine.tickratestatemachine.TickRateConstants.MAX_TICKRATE_VARIANT;
 
 /**
- * Transition with tickrate logic, allows to define an intended tickrate at which this transition will be checked.
+ * 使用滴答率逻辑进行过渡，允许定义一个预期的滴答率，在该滴答率下将检查此过渡。
  */
 public class TickingTransition<S extends IState> extends BasicTransition<S> implements ITickingTransition<S>
 {
     /**
-     * The tickrate at which the Target should be called, e.g. tickRate = 20 means call function every 20 Ticks
+     * 要调用目标的滴答率，例如 tickRate = 20 意味着每 20 个滴答调用一次函数。
      */
     private int tickRate;
 
     /**
-     * The random offset for Ticks, so that AITargets get more distributed activations on server ticks
+     * 用于滴答的随机偏移，以使 AITarget 在服务器滴答上获得更分布均匀的激活。
      */
     private final int tickOffset;
 
     /**
-     * The variant used upon creation of the AITarget to uniformly distribute the Tick offset Static variable counter that changes with each AITarget creation and affects the next
-     * one.
+     * 在创建 AITarget 时使用的变量，它会随着每个 AITarget 的创建而变化，影响下一个 AITarget。
      */
     @SuppressWarnings("PMD.AssignmentToNonFinalStatic")
     private static int tickOffsetVariant = 0;
 
     /**
-     * Create a new Transition with tickrate
+     * 创建一个带有滴答率的新过渡。
      *
-     * @param state     State to apply the transition in
-     * @param condition Condition checked before going to the next state
-     * @param nextState The next state this transition leads into
-     * @param tickRate  The expected tickrate at which this transition should be checked.
+     * @param state     要应用过渡的状态
+     * @param condition 在进入下一个状态之前检查的条件
+     * @param nextState 这个过渡导向的下一个状态
+     * @param tickRate  应该检查此过渡的期望滴答率。
      */
     public TickingTransition(
       @NotNull final S state,
@@ -48,13 +47,13 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     {
         super(state, condition, nextState);
 
-        // Limit rates
+        // 限制滴答率
         this.tickRate = Math.min(tickRate, MAX_TICKRATE);
         this.tickRate = Math.max(this.tickRate, 1);
 
-        // Calculate offSet % tickRate already to not have redundant calculations later
+        // 计算偏移以避免后续重复计算
         this.tickOffset = tickOffsetVariant % this.tickRate;
-        // Increase variant for next AITarget and reset variant at a certain point
+        // 增加偏移变量以供下一个 AITarget 使用，并在一定点重置变量
         tickOffsetVariant++;
         if (tickOffsetVariant >= MAX_TICKRATE_VARIANT)
         {
@@ -63,11 +62,11 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     }
 
     /**
-     * Create a new Transition with tickrate
+     * 创建一个带有滴答率的新过渡。
      *
-     * @param condition Condition checked before going to the next state
-     * @param nextState The next state this transition leads into
-     * @param tickRate  The expected tickrate at which this transition should be checked.
+     * @param condition 在进入下一个状态之前检查的条件
+     * @param nextState 这个过渡导向的下一个状态
+     * @param tickRate  应该检查此过渡的期望滴答率。
      */
     public TickingTransition(
       @NotNull final BooleanSupplier condition,
@@ -76,13 +75,13 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     {
         super(condition, nextState);
 
-        // Limit rates
+        // 限制滴答率
         this.tickRate = Math.min(tickRate, MAX_TICKRATE);
         this.tickRate = Math.max(this.tickRate, 1);
 
-        // Calculate offSet % tickRate already to not have redundant calculations later
+        // 计算偏移以避免后续重复计算
         this.tickOffset = tickOffsetVariant % this.tickRate;
-        // Increase variant for next AITarget and reset variant at a certain point
+        // 增加偏移变量以供下一个 AITarget 使用，并在一定点重置变量
         tickOffsetVariant++;
         if (tickOffsetVariant >= MAX_TICKRATE_VARIANT)
         {
@@ -91,9 +90,9 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     }
 
     /**
-     * Returns the intended tickRate of the AITarget
+     * 返回 AITarget 的预期滴答率。
      *
-     * @return Tickrate
+     * @return 滴答率
      */
     @Override
     public int getTickRate()
@@ -102,9 +101,9 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     }
 
     /**
-     * Allow to dynamically change the tickrate
+     * 允许动态更改滴答率。
      *
-     * @param tickRate rate at which the AITarget should tick
+     * @param tickRate AITarget 应该滴答的速率
      */
     @Override
     public void setTickRate(final int tickRate)
@@ -113,9 +112,9 @@ public class TickingTransition<S extends IState> extends BasicTransition<S> impl
     }
 
     /**
-     * Returns a preset offset to Ticks
+     * 返回预设的滴答偏移。
      *
-     * @return random
+     * @return 随机值
      */
     @Override
     public int getTickOffset()

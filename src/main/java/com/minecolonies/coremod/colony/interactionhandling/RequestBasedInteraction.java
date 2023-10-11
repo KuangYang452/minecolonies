@@ -28,7 +28,7 @@ import java.util.function.BiPredicate;
 import static com.minecolonies.coremod.colony.interactionhandling.StandardInteraction.*;
 
 /**
- * The request based interaction response handler.
+ * 基于请求的交互响应处理器。
  */
 public class RequestBasedInteraction extends ServerCitizenInteraction
 {
@@ -49,22 +49,22 @@ public class RequestBasedInteraction extends ServerCitizenInteraction
       new Tuple<>(Component.translatable(INTERACTION_R_SKIP), null)};
 
     /**
-     * The request this is related to.
+     * 与此相关的请求。
      */
     private IToken<?> token = null;
 
     /**
-     * Specific validator for this one.
+     * 用于此操作的特定验证器。
      */
     private BiPredicate<ICitizenData, IToken<?>> validator;
 
     /**
-     * The server interaction response handler.
+     * 服务器交互响应处理器。
      *
-     * @param inquiry   the client inquiry.
-     * @param priority  the interaction priority.
-     * @param token     the token this is related to.
-     * @param validator the validator id.
+     * @param inquiry   客户端查询。
+     * @param priority  交互优先级。
+     * @param token     与之相关的令牌。
+     * @param validator 验证器标识。
      */
     public RequestBasedInteraction(
       final Component inquiry,
@@ -78,11 +78,11 @@ public class RequestBasedInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * The server interaction response handler.
+     * 服务器交互响应处理器。
      *
-     * @param inquiry  the client inquiry.
-     * @param priority the interaction priority.
-     * @param token    the token this is related to.
+     * @param inquiry  客户端查询。
+     * @param priority 交互优先级。
+     * @param token    与之相关的令牌。
      */
     public RequestBasedInteraction(
       final Component inquiry,
@@ -95,9 +95,9 @@ public class RequestBasedInteraction extends ServerCitizenInteraction
     }
 
     /**
-     * Way to load the response handler for a citizen.
+     * 为市民加载响应处理器的方式。
      *
-     * @param data the citizen owning this handler.
+     * @param data 拥有此处理器的市民。
      */
     public RequestBasedInteraction(final ICitizen data)
     {

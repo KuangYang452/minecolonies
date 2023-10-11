@@ -6,37 +6,37 @@ import net.minecraft.network.chat.Component;
 public interface ICitizenStatusHandler
 {
     /**
-     * Get the latest status of the citizen.
+     * 获取市民的最新状态。
      *
-     * @return a Component with the length 4 describing it.
+     * @return 描述状态的长度为4的组件。
      */
     Component[] getLatestStatus();
 
     /**
-     * Set the latest status of the citizen and clear the existing status
+     * 设置市民的最新状态并清除现有状态。
      *
-     * @param status the new status to set.
+     * @param status 要设置的新状态。
      */
     void setLatestStatus(Component... status);
 
     /**
-     * Append to the existing latestStatus list. This will override the oldest one if full and move the others one down in the array.
+     * 追加到现有的latestStatus列表中。如果已满，这将覆盖最旧的状态并将其他状态向下移动到数组中。
      *
-     * @param status the latest status to append
+     * @param status 要追加的最新状态。
      */
     void addLatestStatus(Component status);
 
     /**
-     * Getter for the current status.
+     * 获取当前状态的getter。
      *
-     * @return the status.
+     * @return 状态。
      */
     Status getStatus();
 
     /**
-     * Setter for the current status.
+     * 当前状态的setter。
      *
-     * @param status the status to set.
+     * @param status 要设置的状态。
      */
     void setStatus(Status status);
 }

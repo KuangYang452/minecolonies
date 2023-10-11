@@ -103,6 +103,7 @@ public final class ModJobs
     public static RegistryObject<JobEntry> quarrier;
     public static RegistryObject<JobEntry> druid;
     public static RegistryObject<JobEntry> alchemist;
+    public static RegistryObject<JobEntry> planner;
 
     /**
      * List of all jobs.

@@ -11,17 +11,17 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * Special AI Targets which are used for preState cecks and limits. They are checked before normal AITargets always
+ * 特殊的AI目标，用于进行先决状态检查和限制。它们始终在常规AITargets之前进行检查。
  */
 public class AIEventTarget<S extends IState> extends TickingEvent<S>
 {
     /**
-     * Construct a special target.
+     * 构造一个特殊的目标。
      *
-     * @param eventType the AISpecial State
-     * @param predicate boolean predicate to check before executin the action
-     * @param action    action supplier which returns the next eventType
-     * @param tickRate  tickRate at which this target should be called
+     * @param eventType  AISpecial State（AI特殊状态）
+     * @param predicate  在执行操作之前检查的布尔谓词
+     * @param action     返回下一个eventType的操作供应商
+     * @param tickRate   应调用此目标的tick速率
      */
     public AIEventTarget(
       @NotNull final AIBlockingEventType eventType,

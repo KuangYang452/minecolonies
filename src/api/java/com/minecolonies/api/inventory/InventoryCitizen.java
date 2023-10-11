@@ -21,53 +21,53 @@ import static com.minecolonies.api.research.util.ResearchConstants.CITIZEN_INV_S
 import static com.minecolonies.api.util.constant.NbtTagConstants.TAG_SIZE;
 
 /**
- * Basic inventory for the citizens.
+ * 公民的基本库存。
  */
 public class InventoryCitizen implements IItemHandlerModifiable, Nameable
 {
     /**
-     * The returned slot if a slot hasn't been found.
+     * 如果未找到插槽，则返回的插槽。
      */
     private static final int NO_SLOT = -1;
 
     /**
-     * The default inv size.
+     * 默认库存大小。
      */
     private static final int DEFAULT_INV_SIZE = 27;
     private static final int ROW_SIZE         = 9;
 
     /**
-     * Amount of free slots
+     * 空插槽的数量
      */
     private int freeSlots = DEFAULT_INV_SIZE;
 
     /**
-     * The inventory. (27 main inventory, 4 armor slots, 1 offhand slot)
+     * 库存。（27个主库存，4个盔甲插槽，1个副手插槽）
      */
     private NonNullList<ItemStack> mainInventory = NonNullList.withSize(DEFAULT_INV_SIZE, ItemStackUtils.EMPTY);
 
     /**
-     * The index of the currently held items (0-8).
+     * 当前持有物品的索引（0-8）。
      */
     private int mainItem    = NO_SLOT;
     private int offhandItem = NO_SLOT;
 
     /**
-     * The inventories custom name. In our case the citizens name.
+     * 库存的自定义名称。在我们的情况下是公民的名称。
      */
     private String customName;
 
     /**
-     * The citizen which owns the inventory.
+     * 拥有库存的公民。
      */
     private ICitizenData citizen;
 
     /**
-     * Creates the inventory of the citizen.
+     * 创建公民的库存。
      *
-     * @param title         Title of the inventory.
-     * @param localeEnabled Boolean whether the inventory has a custom name.
-     * @param citizen       Citizen owner of the inventory.
+     * @param title         库存的标题。
+     * @param localeEnabled 布尔值，库存是否具有自定义名称。
+     * @param citizen       拥有库存的公民。
      */
     public InventoryCitizen(final String title, final boolean localeEnabled, final ICitizenData citizen)
     {
@@ -79,10 +79,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Creates the inventory of the citizen.
+     * 创建公民的库存。
      *
-     * @param title         Title of the inventory.
-     * @param localeEnabled Boolean whether the inventory has a custom name.
+     * @param title         库存的标题。
+     * @param localeEnabled 布尔值，库存是否具有自定义名称。
      */
     public InventoryCitizen(final String title, final boolean localeEnabled)
     {
@@ -93,9 +93,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Sets the name of the inventory.
+     * 设置库存的名称。
      *
-     * @param customName the string to use to set the name.
+     * @param customName 用于设置名称的字符串。
      */
     public void setCustomName(final String customName)
     {
@@ -103,10 +103,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Returns the item that is currently being held by citizen.
+     * 返回当前由公民持有的物品。
      *
-     * @param hand the hand it is held in.
-     * @return {@link ItemStack} currently being held by citizen.
+     * @param hand 手中持有的手。
+     * @return 公民当前持有的{@link ItemStack}。
      */
     public ItemStack getHeldItem(final InteractionHand hand)
     {
@@ -119,10 +119,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Set item to be held by citizen.
+     * 设置由公民持有的物品。
      *
-     * @param hand the hand it is held in.
-     * @param slot Slot index with item to be held by citizen.
+     * @param hand 手中持有的手。
+     * @param slot 要由公民持有的物品的插槽索引。
      */
     public void setHeldItem(final InteractionHand hand, final int slot)
     {
@@ -135,10 +135,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Gets slot that hold item that is being held by citizen.
+     * 获取由公民持有的物品的插槽。
      *
-     * @param hand the hand it is held in.
-     * @return Slot index of held item
+     * @param hand 手中持有的手。
+     * @return 持有物品的插槽索引
      */
     public int getHeldItemSlot(final InteractionHand hand)
     {
@@ -157,9 +157,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Checks if the inventory has space
+     * 检查库存是否有空间。
      *
-     * @return true if the main inventory (without armor slots) has an empty slot.
+     * @return 如果主库存（不包括盔甲插槽）有空插槽，则返回true。
      */
     public boolean hasSpace()
     {
@@ -167,9 +167,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Checks if the inventory is completely empty.
+     * 检查库存是否完全为空。
      *
-     * @return true if the main inventory (without armor slots) is completely empty.
+     * @return 如果主库存（不包括盔甲插槽）完全为空，则返回true。
      */
     public boolean isEmpty()
     {
@@ -177,9 +177,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Checks if the inventory is completely full.
+     * 检查库存是否完全满。
      *
-     * @return true if the main inventory (without armor slots) is completely full.
+     * @return 如果主库存（不包括盔甲插槽）完全满，则返回true。
      */
     public boolean isFull()
     {
@@ -187,10 +187,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Resize this inventory.
+     * 调整此库存的大小。
      *
-     * @param size       the current size.
-     * @param futureSize the future size.
+     * @param size       当前大小。
+     * @param futureSize 未来大小。
      */
     private void resizeInventory(final int size, final int futureSize)
     {
@@ -209,9 +209,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Get the name of this object. For citizens this returns their name.
+     * 获取此对象的名称。对于公民，这将返回其名称。
      *
-     * @return the name of the inventory.
+     * @return 库存的名称。
      */
     @NotNull
     @Override
@@ -221,9 +221,9 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Checks if the inventory is named.
+     * 检查库存是否具有自定义名称。
      *
-     * @return true if the inventory has a custom name.
+     * @return 如果库存具有自定义名称，则返回true。
      */
     @Override
     public boolean hasCustomName()
@@ -232,10 +232,10 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Returns the stack in the given slot.
+     * 返回给定插槽中的堆栈。
      *
-     * @param index the index.
-     * @return the stack.
+     * @param index 索引。
+     * @return 堆栈。
      */
     @NotNull
     @Override
@@ -256,13 +256,13 @@ public class InventoryCitizen implements IItemHandlerModifiable, Nameable
     }
 
     /**
-     * Damage an item within the inventory
+     * 在库存内损坏物品
      *
-     * @param slot     slot to damage
-     * @param amount   damage amount
-     * @param entityIn entity which uses the item
-     * @param onBroken action upon item break
-     * @return true if the item broke
+     * @param slot     要损坏的插槽
+     * @param amount   损坏数量
+     * @param entityIn 使用物品的实体
+     * @param onBroken 物品损坏后的操作
+     * @return 如果物品损坏，则返回true
      */
     public <T extends LivingEntity> boolean damageInventoryItem(final int slot, int amount, @Nullable T entityIn, @Nullable Consumer<T> onBroken)
     {

@@ -40,10 +40,10 @@ public class TickRateStateMachine<S extends IState> extends BasicStateMachine<IT
     private final List<ITickingTransition<S>> eventTransitions;
 
     /**
-     * Construct a new StateMachine
+     * 构造一个新的状态机。
      *
-     * @param exceptionHandler the exception handler.
-     * @param initialState     the initial state.
+     * @param exceptionHandler 异常处理器。
+     * @param initialState     初始状态。
      */
     public TickRateStateMachine(@NotNull final S initialState, @NotNull final Consumer<RuntimeException> exceptionHandler)
     {

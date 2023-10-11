@@ -23,12 +23,12 @@ import static com.minecolonies.api.entity.ai.statemachine.states.AIWorkerState.*
 import static com.minecolonies.api.util.constant.Constants.STACKSIZE;
 
 /**
- * Concrete mason AI class.
+ * 具体的石匠AI类。
  */
 public class EntityAIConcreteMixer extends AbstractEntityAICrafting<JobConcreteMixer, BuildingConcreteMixer>
 {
     /**
-     * Predicate to check if concrete powder is in inv.
+     * 用于检查库存中是否有混凝土粉末的谓词。
      */
     private static final Predicate<ItemStack> CONCRETE =
       stack -> !stack.isEmpty() 
@@ -36,9 +36,9 @@ public class EntityAIConcreteMixer extends AbstractEntityAICrafting<JobConcreteM
             && ((BlockItem) stack.getItem()).getBlock() instanceof ConcretePowderBlock;
 
     /**
-     * Constructor for the Concrete mason. Defines the tasks the Concrete mason executes.
+     * 混凝土石匠的构造函数。定义混凝土石匠执行的任务。
      *
-     * @param job a Concrete mason job to use.
+     * @param job 要使用的混凝土石匠职业。
      */
     public EntityAIConcreteMixer(@NotNull final JobConcreteMixer job)
     {
@@ -54,8 +54,8 @@ public class EntityAIConcreteMixer extends AbstractEntityAICrafting<JobConcreteM
     @Override
     protected IAIState decide()
     {
-        // This needs to only run on concrete powder that isn't earmarked for delivery. 
-        // We need an 'output' inventory to protect those from processing here. 
+        // 这只需在没有标记为交付的混凝土粉末上运行。
+        // 我们需要一个“输出”库存来保护它们，以防止在这里处理。
         /*
         if (job.getTaskQueue().isEmpty())
         {
@@ -80,7 +80,7 @@ public class EntityAIConcreteMixer extends AbstractEntityAICrafting<JobConcreteM
 
         if (job.getActionsDone() > 0)
         {
-            // Wait to dump before continuing.
+            // 在继续之前等待卸载。
             return getState();
         }
 
@@ -99,9 +99,9 @@ public class EntityAIConcreteMixer extends AbstractEntityAICrafting<JobConcreteM
     }
 
     /**
-     * Mix the concrete and mine it.
+     * 混合混凝土并开采它。
      *
-     * @return next state.
+     * @return 下一个状态。
      */
     private IAIState mixConcrete()
     {

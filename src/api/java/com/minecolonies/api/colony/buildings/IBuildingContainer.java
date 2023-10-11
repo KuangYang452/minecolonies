@@ -24,73 +24,83 @@ public interface IBuildingContainer extends ISchematicProvider, ICapabilityProvi
     CompoundTag serializeNBT();
 
     /**
-     * Get the pick up priority of the building.
+     * 获取建筑物的拾取优先级。
      *
-     * @return the priority, an integer.
+     * @return 优先级，一个整数。
      */
     int getPickUpPriority();
 
     /**
-     * Increase or decrease the current pickup priority.
+     * 增加或减少当前的拾取优先级。
      *
-     * @param value the new prio to add to.
+     * @param value 要添加的新优先级。
      */
     void alterPickUpPriority(int value);
 
     /**
-     * Add a new container to the building.
+     * 添加一个新的容器位置到建筑物中。
      *
-     * @param pos position to add.
+     * @param pos 要添加的位置。
      */
     void addContainerPosition(@NotNull BlockPos pos);
 
     /**
-     * Remove a container from the building.
+     * 从建筑物中移除一个容器。
      *
-     * @param pos position to remove.
+     * @param pos 要移除的位置。
      */
     void removeContainerPosition(BlockPos pos);
 
     /**
-     * Get all containers which belong to the building (including hutblock).
+     * 获取所有属于建筑物的容器（包括小屋块）。
      *
-     * @return a copy of the list to avoid currentModification exception.
+     * @return 列表的副本，以避免当前修改异常。
      */
     List<BlockPos> getContainers();
 
     /**
-     * Register a blockState and position. We suppress this warning since this parameter will be used in child classes which override this method.
+     * 注册一个块状态和位置。我们抑制此警告，因为该参数将在重写此方法的子类中使用。
      *
-     * @param blockState to be registered
-     * @param pos        of the blockState
-     * @param world      world to register it at.
+     * @param blockState 要注册的块状态
+     * @param pos        块状态的位置
+     * @param world      要在其中注册的世界。
      */
     void registerBlockPosition(@NotNull BlockState blockState, @NotNull BlockPos pos, @NotNull Level world);
 
     /**
-     * Register a block and position. We suppress this warning since this parameter will be used in child classes which override this method.
+     * 注册一个块和位置。我们抑制此警告，因为该参数将在重写此方法的子类中使用。
      *
-     * @param block to be registered
-     * @param pos   of the block
-     * @param world world to register it at.
+     * @param block 要注册的块
+     * @param pos   块的位置
+     * @param world 要在其中注册的世界。
      */
     @SuppressWarnings("squid:S1172")
     void registerBlockPosition(@NotNull Block block, @NotNull BlockPos pos, @NotNull Level world);
 
     /**
-     * Returns the tile entity that belongs to the colony building.
+     * 返回属于殖民地建筑物的瓦片实体。
      *
-     * @return {@link AbstractTileEntityColonyBuilding} object of the building.
+     * @return 建筑物的 {@link AbstractTileEntityColonyBuilding} 对象。
      */
     AbstractTileEntityColonyBuilding getTileEntity();
 
     /**
-     * Sets the tile entity for the building.
+     * 为建筑物设置瓦片实体。
      *
-     * @param te The tileentity
+     * @param te 瓦片实体
      */
     void setTileEntity(AbstractTileEntityColonyBuilding te);
-
+    /**
+     * 检索所请求的能力在特定侧的可选处理程序。
+     * 返回值可以对于多个侧是相同的。
+     * 鼓励Mod开发者缓存此值，使用Optional的监听功能来
+     * 通知是否丢失了所请求的能力。
+     *
+     * @param cap 要检查的能力
+     * @param direction 要检查的侧面，
+     *   可以为NULL。NULL定义为表示“内部”或“自身”
+     * @return 所请求的能力的可选项，其中包含所请求的能力。
+     */
     @Nonnull
     @Override
     <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final Direction direction);

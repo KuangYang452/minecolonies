@@ -39,9 +39,9 @@ import java.util.function.Predicate;
 import static com.minecolonies.api.util.constant.Suppression.BIG_CLASS;
 
 /**
- * Main class of the request system. Default implementation of the IRequestManager interface.
+ * 请求系统的主要类。实现了IRequestManager接口的默认实现。
  * <p>
- * Uses
+ * 使用
  */
 
 @SuppressWarnings(BIG_CLASS)
@@ -76,12 +76,12 @@ public class StandardRequestManager implements IStandardRequestManager
     private IDataStoreManager dataStoreManager;
 
     /**
-     * Variable describing if the request manager itself is dirty.
+     * 描述请求管理器本身是否已更改的变量。
      */
     private boolean dirty = true;
 
     /**
-     * Colony of the manager.
+     * 管理器的群体。
      */
     @NotNull
     private final IColony colony;
@@ -140,9 +140,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * The colony this manager manages the requests for.
+     * 由此管理器管理请求的群体。
      *
-     * @return The colony this manager manages the requests for.
+     * @return 由此管理器管理请求的群体。
      */
     @NotNull
     @Override
@@ -152,9 +152,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to get the FactoryController of the RequestManager.
+     * 用于获取RequestManager的FactoryController的方法。
      *
-     * @return The FactoryController of this RequestManager.
+     * @return 该RequestManager的FactoryController。
      */
     @NotNull
     @Override
@@ -164,12 +164,12 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method to create a request for a given object
+     * 用于为给定对象创建请求的方法。
      *
-     * @param requester The requester.
-     * @param object    The Object that is being requested.
-     * @return The token representing the request.
-     * @throws IllegalArgumentException is thrown when this manager cannot produce a request for the given types.
+     * @param requester 请求者。
+     * @param object    正在请求的对象。
+     * @return 表示请求的令牌。
+     * @throws IllegalArgumentException 当此管理器无法为给定类型生成请求时抛出。
      */
     @NotNull
     @Override
@@ -181,7 +181,7 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Mark the request manager and colony as dirty.
+     * 标记请求管理器和群体为脏的方法。
      */
     @Override
     public void markDirty()
@@ -190,9 +190,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Check if the request manager is dirty.
+     * 检查请求管理器是否脏。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     @Override
     public boolean isDirty()
@@ -212,10 +212,10 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to assign a request to a resolver.
+     * 用于分配请求给解析器的方法。
      *
-     * @param token The token of the request to assign.
-     * @throws IllegalArgumentException when the token is not registered to a request, or is already assigned to a resolver.
+     * @param token 要分配的请求的令牌。
+     * @throws IllegalArgumentException 当令牌未注册到请求或已分配给解析器时抛出。
      */
     @Override
     public void assignRequest(@NotNull final IToken<?> token)
@@ -225,12 +225,12 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to create and immediately assign a request.
+     * 用于创建并立即分配请求的方法。
      *
-     * @param requester The requester of the requestable.
-     * @param object    The requestable
-     * @return The token that represents the request.
-     * @throws IllegalArgumentException when either createRequest or assignRequest have thrown an IllegalArgumentException
+     * @param requester 请求者。
+     * @param object    可请求的对象。
+     * @return 表示请求的令牌。
+     * @throws IllegalArgumentException 当createRequest或assignRequest抛出IllegalArgumentException时抛出。
      */
     @NotNull
     @Override
@@ -276,18 +276,18 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method to update the state of a given request.
+     * 用于更新给定请求的状态的方法。
      *
-     * @param token The token that represents a given request to update.
-     * @param state The new state of that request.
-     * @throws IllegalArgumentException when the token is unknown to this manager.
+     * @param token 表示要更新的给定请求的令牌。
+     * @param state 请求的新状态。
+     * @throws IllegalArgumentException 当令牌对此管理器未知时抛出。
      */
     @Override
     public void updateRequestState(@NotNull final IToken<?> token, @NotNull final RequestState state)
     {
         final IRequest<?> request = getRequestHandler().getRequest(token);
 
-        getLogger().debug("Updating request state from:" + token + ". With original state: " + request.getState() + " to : " + state);
+        getLogger().debug("从：" + token + " 更新请求状态。原始状态：" + request.getState() + " 更新后状态：" + state);
 
         request.setState(new WrappedStaticStateRequestManager(this), state);
         markDirty();
@@ -295,27 +295,27 @@ public class StandardRequestManager implements IStandardRequestManager
         switch (request.getState())
         {
             case RESOLVED:
-                getLogger().debug("Request resolved: " + token + ". Determining followup requests...");
+                getLogger().debug("请求已解决：" + token + "。确定后续请求...");
                 getRequestHandler().onRequestResolved(token);
                 return;
             case COMPLETED:
-                getLogger().debug("Request completed: " + token + ". Notifying parent and requester...");
+                getLogger().debug("请求已完成：" + token + "。通知父级和请求者...");
                 getRequestHandler().onRequestCompleted(token);
                 return;
             case OVERRULED:
-                getLogger().debug("Request overruled: " + token + ". Notifying parent, children and requester...");
+                getLogger().debug("请求已被否决：" + token + "。通知父级、子级和请求者...");
                 getRequestHandler().onRequestOverruled(token);
                 return;
             case FAILED:
-                getLogger().debug("Request failed: " + token + ". Notifying parent, children and requester...");
+                getLogger().debug("请求失败：" + token + "。通知父级、子级和请求者...");
                 getRequestHandler().onRequestCancelled(token);
                 return;
             case CANCELLED:
-                getLogger().debug("Request cancelled: " + token + ". Notifying parent, children and requester...");
+                getLogger().debug("请求已取消：" + token + "。通知父级、子级和请求者...");
                 getRequestHandler().onRequestCancelled(token);
                 return;
             case RECEIVED:
-                getLogger().debug("Request received: " + token + ". Removing from system...");
+                getLogger().debug("请求已接收：" + token + "。从系统中移除...");
                 getRequestHandler().cleanRequestData(token);
                 return;
             default:
@@ -323,9 +323,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to indicate to this manager that a new Provider has been added to the colony.
+     * 用于指示向此管理器添加新提供者的方法。
      *
-     * @param provider The new provider.
+     * @param provider 新提供者。
      */
     @Override
     public void onProviderAddedToColony(@NotNull final IRequestResolverProvider provider)
@@ -347,9 +347,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to indicate to this manager that Provider has been removed from the colony.
+     * 用于指示从群体中移除提供者的方法。
      *
-     * @param provider The removed provider.
+     * @param provider 被移除的提供者。
      */
     @Override
     public void onProviderRemovedFromColony(@NotNull final IRequestResolverProvider provider) throws IllegalArgumentException
@@ -364,9 +364,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to reassign requests based on a predicate.
+     * 基于谓词重新分配请求的方法。
      *
-     * @param shouldTriggerReassign The predicate to determine if the request should be reassigned.
+     * @param shouldTriggerReassign 用于确定是否应重新分配请求的谓词。
      */
     @Override
     public void onColonyUpdate(@NotNull final Predicate<IRequest<?>> shouldTriggerReassign)
@@ -375,9 +375,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Get the player resolve.
+     * 获取玩家解析器。
      *
-     * @return the player resolver object.
+     * @return 玩家解析器对象。
      */
     @NotNull
     @Override
@@ -415,9 +415,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to serialize the current request system to NBT.
+     * 用于将当前请求系统序列化为NBT的方法。
      *
-     * @return The NBTData that describes the current request system
+     * @return 描述当前请求系统的NBTData
      */
     @Override
     public CompoundTag serializeNBT()
@@ -439,9 +439,9 @@ public class StandardRequestManager implements IStandardRequestManager
     }
 
     /**
-     * Method used to deserialize the data inside the given nbt tag into this request system.
+     * 用于将给定nbt标签内的数据反序列化到此请求系统的方法。
      *
-     * @param nbt The data to deserialize.
+     * @param nbt 要反序列化的数据。
      */
     @Override
     public void deserializeNBT(final CompoundTag nbt)

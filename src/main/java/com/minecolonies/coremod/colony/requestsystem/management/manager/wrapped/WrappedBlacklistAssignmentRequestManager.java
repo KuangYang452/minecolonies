@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 /**
- * Class used to handle internal reassignment changes. Take the given blacklist into account when it assigns the requests.
+ * 用于处理内部重新分配更改的类。在分配请求时，考虑给定的黑名单。
  */
 public final class WrappedBlacklistAssignmentRequestManager extends AbstractWrappedRequestManager
 {
@@ -22,10 +22,10 @@ public final class WrappedBlacklistAssignmentRequestManager extends AbstractWrap
     }
 
     /**
-     * Method used to assign a request to a resolver.
+     * 用于将请求分配给解析器的方法。
      *
-     * @param token The token of the request to assign.
-     * @throws IllegalArgumentException when the token is not registered to a request, or is already assigned to a resolver.
+     * @param token 要分配的请求的令牌。
+     * @throws IllegalArgumentException 当令牌未注册到请求或已分配给解析器时抛出。
      */
     @Override
     public void assignRequest(@NotNull final IToken<?> token) throws IllegalArgumentException

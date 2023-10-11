@@ -5,17 +5,17 @@ import com.minecolonies.coremod.colony.jobs.AbstractJob;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * AI class for skills.
+ * 技能的AI类。
  *
- * @param <J> The job this ai has to fulfil.
+ * @param <J> 此AI需要履行的职责。
  */
 public abstract class AbstractEntityAISkill<J extends AbstractJob<?, J>, B extends AbstractBuilding> extends AbstractEntityAIBasic<J, B>
 {
 
     /**
-     * Sets up some important skeleton stuff for every ai.
+     * 为每个AI设置一些重要的骨架内容。
      *
-     * @param job the job class.
+     * @param job 工作类。
      */
     protected AbstractEntityAISkill(@NotNull final J job)
     {

@@ -38,12 +38,12 @@ import static com.minecolonies.api.util.constant.TranslationConstants.MESSAGE_IN
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
- * Utility methods for the inventories.
+ * 用于库存的实用方法。
  */
 public class InventoryUtils
 {
     /**
-     * Several values to spawn items in the world.
+     * 用于在世界中生成物品的若干数值。
      */
     private static final double SPAWN_MODIFIER    = 0.8D;
     private static final double SPAWN_ADDITION    = 0.1D;
@@ -53,22 +53,21 @@ public class InventoryUtils
     private static final double MOTION_Y_MIN      = 0.20000000298023224D;
 
     /**
-     * Private constructor to hide the implicit one.
+     * 私有构造函数以隐藏隐式构造函数。
      */
     private InventoryUtils()
     {
         /*
-         * Intentionally left empty.
+         * 故意留空。
          */
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, in an {@link IItemHandler}. Uses the MetaData and {@link #getItemFromBlock(Block)}
-     * as parameters for the Predicate.
+     * 过滤物品处理器（IItemHandler）中的物品列表，使用{@link #compareItems(ItemStack, Item)}来匹配堆栈，使用MetaData和{@link #getItemFromBlock(Block)}作为谓词的参数。
      *
-     * @param itemHandler Inventory to filter in
-     * @param block       Block to filter
-     * @return List of item stacks
+     * @param itemHandler 物品处理器
+     * @param block       要过滤的方块
+     * @return 物品堆栈列表
      */
     @NotNull
     public static List<ItemStack> filterItemHandler(@NotNull final IItemHandler itemHandler, @NotNull final Block block)
@@ -77,17 +76,17 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, that match the given predicate, in an {@link IItemHandler}.
+     * 在物品处理器（IItemHandler）中过滤匹配给定谓词的物品列表。
      *
-     * @param itemHandler                 The IItemHandler to get items from.
-     * @param itemStackSelectionPredicate The predicate to match the stack to.
-     * @return List of item stacks that match the given predicate.
+     * @param itemHandler                 要获取物品的IItemHandler
+     * @param itemStackSelectionPredicate 用于匹配堆栈的谓词
+     * @return 匹配给定谓词的物品堆栈列表
      */
     @NotNull
     public static List<ItemStack> filterItemHandler(@NotNull final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
         @NotNull final ArrayList<ItemStack> filtered = new ArrayList<>();
-        //Check every itemHandler slot
+        //检查每个itemHandler槽
         for (int slot = 0; slot < itemHandler.getSlots(); slot++)
         {
             final ItemStack stack = itemHandler.getStackInSlot(slot);
@@ -100,11 +99,11 @@ public class InventoryUtils
     }
 
     /**
-     * Compares whether or not the item in an itemstack is equal to a given item.
+     * 比较物品堆栈中的物品是否与给定物品相等。
      *
-     * @param itemStack  ItemStack to check.
-     * @param targetItem Item to check.
-     * @return True when item in item stack is equal to target item.
+     * @param itemStack  要检查的物品堆栈
+     * @param targetItem 要检查的物品
+     * @return 如果物品堆栈中的物品等于目标物品，则返回true
      */
     private static boolean compareItems(@Nullable final ItemStack itemStack, final Item targetItem)
     {
@@ -112,10 +111,10 @@ public class InventoryUtils
     }
 
     /**
-     * Converts a Block to its Item so it can be compared.
+     * 将方块转换为其物品形式，以便进行比较。
      *
-     * @param block the block to convert
-     * @return an item from the registry
+     * @param block 要转换的方块
+     * @return 注册表中的物品
      */
     public static Item getItemFromBlock(final Block block)
     {
@@ -123,11 +122,11 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, with targetItem and itemDamage as parameters, in an {@link IItemHandler}.
+     * 过滤物品处理器（IItemHandler）中的物品列表，使用{@link #compareItems(ItemStack, Item)}来匹配目标物品和itemDamage作为参数。
      *
-     * @param itemHandler Inventory to get items from
-     * @param targetItem  Item to look for
-     * @return List of item stacks with the given item in inventory
+     * @param itemHandler 要获取物品的库存
+     * @param targetItem  要查找的物品
+     * @return 包含给定物品的库存中的物品堆栈列表
      */
     @NotNull
     public static List<ItemStack> filterItemHandler(@NotNull final IItemHandler itemHandler, @NotNull final Item targetItem)
@@ -136,11 +135,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of the block in the {@link IItemHandler}.
+     * 返回在IItemHandler中第一次出现的方块的索引。
      *
-     * @param itemHandler {@link IItemHandler} to check.
-     * @param block       Block to find.
-     * @return Index of the first occurrence.
+     * @param itemHandler 要检查的IItemHandler
+     * @param block       要查找的方块
+     * @return 第一次出现的方块的索引
      */
     public static int findFirstSlotInItemHandlerWith(@NotNull final IItemHandler itemHandler, @NotNull final Block block)
     {
@@ -148,11 +147,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of the Item with the given ItemDamage in the {@link IItemHandler}.
+     * 返回在IItemHandler中第一次出现具有给定ItemDamage的物品的索引。
      *
-     * @param itemHandler {@link IItemHandler} to check
-     * @param targetItem  Item to find.
-     * @return Index of the first occurrence
+     * @param itemHandler 要检查的IItemHandler
+     * @param targetItem  要查找的物品
+     * @return 第一次出现的物品的索引
      */
     public static int findFirstSlotInItemHandlerWith(@NotNull final IItemHandler itemHandler, @NotNull final Item targetItem)
     {
@@ -160,11 +159,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link IItemHandler}.
+     * 返回在IItemHandler中第一次出现与给定谓词匹配的ItemStack的索引。
      *
-     * @param itemHandler                 ItemHandler to check
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return Index of the first occurrence
+     * @param itemHandler                 要检查的ItemHandler
+     * @param itemStackSelectionPredicate 用于匹配的谓词
+     * @return 第一次出现的索引
      */
     public static int findFirstSlotInItemHandlerWith(@NotNull final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -177,16 +176,16 @@ public class InventoryUtils
         }
 
         return -1;
-        //TODO: Later harden contract to remove compare on slot := -1
+        //TODO: 稍后增强合同以删除对slot := -1的比较
         //throw new IllegalStateException("Item "+targetItem.getTranslationKey() + " not found in ItemHandler!");
     }
 
     /**
-     * Shrinks a specific stack in an item handler.
+     * 减少物品处理器中特定堆栈的数量。
      *
-     * @param itemHandler                 the handler..
-     * @param itemStackSelectionPredicate the predicate..
-     * @return true if successful.
+     * @param itemHandler                 处理器
+     * @param itemStackSelectionPredicate 谓词
+     * @return 如果成功则返回true
      */
     public static boolean shrinkItemCountInItemHandler(final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -203,11 +202,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the indexes of all occurrences of an ItemStack that matches the given predicate in the {@link IItemHandler}.
+     * 返回在IItemHandler中匹配给定谓词的所有ItemStack的索引。
      *
-     * @param itemHandler                 ItemHandler to check
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return list of Indexes of the occurrences
+     * @param itemHandler                 要检查的ItemHandler
+     * @param itemStackSelectionPredicate 用于匹配的谓词
+     * @return 匹配项的索引列表
      */
     public static List<Integer> findAllSlotsInItemHandlerWith(@NotNull final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -224,49 +223,49 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link IItemHandler}.
+     * 返回IItemHandler中的物品数量。
      *
-     * @param itemHandler {@link IItemHandler} to scan.
-     * @param block       The block to count
-     * @return Amount of occurrences of stacks that match the given block and ItemDamage
+     * @param itemHandler 要扫描的IItemHandler
+     * @param block       要计数的方块
+     * @return 匹配给定方块和ItemDamage的堆栈的数量
      */
     public static int getItemCountInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Block block)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("getItemCountInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("getItemCountInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler == null ? 0 : getItemCountInItemHandler(itemHandler, getItemFromBlock(block));
     }
 
     /**
-     * Returns the amount of occurrences in the {@link IItemHandler}.
+     * 返回IItemHandler中的物品数量。
      *
-     * @param itemHandler {@link IItemHandler} to scan.
-     * @param targetItem  Item to count
-     * @return Amount of occurrences of stacks that match the given item and ItemDamage
+     * @param itemHandler 要扫描的IItemHandler
+     * @param targetItem  要计数的物品
+     * @return 匹配给定物品和ItemDamage的堆栈的数量
      */
     public static int getItemCountInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Item targetItem)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("getItemCountInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("getItemCountInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler == null ? 0 : getItemCountInItemHandler(itemHandler, (ItemStack stack) -> compareItems(stack, targetItem));
     }
 
     /**
-     * Returns the amount of occurrences in the {@link IItemHandler}.
+     * 返回IItemHandler中的物品数量。
      *
-     * @param itemHandler                 {@link IItemHandler} to scan.
-     * @param itemStackSelectionPredicate The predicate used to select the stacks to count.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param itemHandler                 要扫描的IItemHandler
+     * @param itemStackSelectionPredicate 用于选择要计数的堆栈的谓词
+     * @return 匹配给定谓词的堆栈的数量
      */
     public static int getItemCountInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("getItemCountInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("getItemCountInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler == null ? 0 : filterItemHandler(itemHandler, itemStackSelectionPredicate).stream().mapToInt(ItemStackUtils::getSize).sum();
     }
@@ -291,116 +290,117 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has a block in the {@link IItemHandler}. Checked by {@link #getItemCountInItemHandler(IItemHandler, Block)} &gt; 0;
+     * 检查IItemHandler中是否存在方块。通过{@link #getItemCountInItemHandler(IItemHandler, Block)} > 0进行检查。
      *
-     * @param itemHandler {@link IItemHandler} to scan
-     * @param block       Block to count
-     * @return True when in {@link IItemHandler}, otherwise false
+     * @param itemHandler 要扫描的IItemHandler
+     * @param block       要计数的方块
+     * @return 如果在IItemHandler中存在则返回true，否则返回false
      */
     public static boolean hasItemInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Block block)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler != null && hasItemInItemHandler(itemHandler, getItemFromBlock(block));
     }
 
     /**
-     * Checks if a player has an item in the {@link IItemHandler}. Checked by {@link #getItemCountInItemHandler(IItemHandler, Item)} &gt; 0;
+     * 检查IItemHandler中是否存在物品。通过{@link #getItemCountInItemHandler(IItemHandler, Item)} > 0进行检查。
      *
-     * @param itemHandler {@link IItemHandler} to scan
-     * @param item        Item to count
-     * @return True when in {@link IItemHandler}, otherwise false
+     * @param itemHandler 要扫描的IItemHandler
+     * @param item        要计数的物品
+     * @return 如果在IItemHandler中存在则返回true，否则返回false
      */
     public static boolean hasItemInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Item item)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler != null && hasItemInItemHandler(itemHandler, (ItemStack stack) -> compareItems(stack, item));
     }
 
     /**
-     * Checks if a player has an item in the {@link IItemHandler}. Checked by {@link InventoryUtils#getItemCountInItemHandler(IItemHandler, Predicate)} &gt; 0;
+     * 检查IItemHandler中是否存在物品。通过{@link InventoryUtils#getItemCountInItemHandler(IItemHandler, Predicate)} > 0进行检查。
      *
-     * @param itemHandler                 {@link IItemHandler} to scan
-     * @param itemStackSelectionPredicate The predicate to match the ItemStack to.
-     * @return True when in {@link IItemHandler}, otherwise false
+     * @param itemHandler                 要扫描的IItemHandler
+     * @param itemStackSelectionPredicate 用于匹配ItemStack的谓词
+     * @return 如果在IItemHandler中存在则返回true，否则返回false
      */
     public static boolean hasItemInItemHandler(@Nullable final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler != null && findFirstSlotInItemHandlerNotEmptyWith(itemHandler, itemStackSelectionPredicate) > -1;
     }
 
     /**
-     * Returns if the {@link IItemHandler} is full.
+     * 返回是否IItemHandler已满。
      *
-     * @param itemHandler The {@link IItemHandler}.
-     * @return True if the {@link IItemHandler} is full, false when not.
+     * @param itemHandler 要检查的IItemHandler
+     * @return 如果IItemHandler已满则返回true，否则返回false
      */
     public static boolean isItemHandlerFull(@Nullable final IItemHandler itemHandler)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
         }
         return itemHandler == null || getFirstOpenSlotFromItemHandler(itemHandler) == -1;
     }
 
     /**
-     * Returns the first open slot in the {@link IItemHandler}.
+     * 返回IItemHandler中的第一个开放槽。
      *
-     * @param itemHandler The {@link IItemHandler} to check.
-     * @return slot index or -1 if none found.
+     * @param itemHandler 要检查的IItemHandler
+     * @return 槽位索引，如果未找到则返回-1
      */
     public static int getFirstOpenSlotFromItemHandler(@Nullable final IItemHandler itemHandler)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
             return -1;
         }
-        //Test with two different ItemStacks to insert in simulation mode.
+        //测试使用两个不同的ItemStack在模拟模式下插入。
         return IntStream.range(0, itemHandler.getSlots())
-                 .filter(slot -> ItemStackUtils.isEmpty(itemHandler.getStackInSlot(slot)))
-                 .findFirst()
-                 .orElse(-1);
+                .filter(slot -> ItemStackUtils.isEmpty(itemHandler.getStackInSlot(slot)))
+                .findFirst()
+                .orElse(-1);
     }
 
     /**
-     * Count all open slots in inventory.
+     * 计算库存中的开放槽数量。
      *
-     * @param itemHandler the inventory.
-     * @return the amount of open slots.
+     * @param itemHandler 库存
+     * @return 开放槽数量
      */
     public static long openSlotCount(@Nullable final IItemHandler itemHandler)
     {
         if (itemHandler == null)
         {
-            Log.getLogger().error("This is not supposed to happen, please notify the developers!", new Exception("hasItemInItemHandler got a null itemHandler"));
+            Log.getLogger().error("这不应该发生，请通知开发人员！", new Exception("hasItemInItemHandler收到了一个空的itemHandler"));
             return 0;
         }
         return IntStream.range(0, itemHandler.getSlots())
-                 .filter(slot -> ItemStackUtils.isEmpty(itemHandler.getStackInSlot(slot)))
-                 .count();
+                .filter(slot -> ItemStackUtils.isEmpty(itemHandler.getStackInSlot(slot)))
+                .count();
     }
 
     /**
-     * Force stack to handler.
+     * 强制将ItemStack添加到IItemHandler中。
      *
-     * @param itemHandler              {@link IItemHandler} to add itemstack to.
-     * @param itemStack                ItemStack to add.
-     * @param itemStackToKeepPredicate The {@link Predicate} that determines which ItemStacks to keep in the inventory. Return false to replace.
-     * @return itemStack which has been replaced, null if none has been replaced.
+     * @param itemHandler              要添加ItemStack的IItemHandler
+     * @param itemStack                要添加的ItemStack
+     * @param itemStackToKeepPredicate 确定要保留在库存中的ItemStack的谓词。返回false以替换。
+     * @return 已替换的ItemStack，如果没有替换则返回null
      */
     @Nullable
-    public static ItemStack forceItemStackToItemHandler(
+    public static ItemStack forceItemStackToItemHandler
+(
       @NotNull final IItemHandler itemHandler,
       @NotNull final ItemStack itemStack,
       @NotNull final Predicate<ItemStack> itemStackToKeepPredicate)
@@ -432,12 +432,11 @@ public class InventoryUtils
         }
         return standardInsertionResult;
     }
-
     /**
-     * Returns the amount of item stacks in an inventory. This equals {@link #getItemHandlerAsList(IItemHandler)}<code>.length();</code>.
+     * 返回存储中物品栈的数量。这等于 {@link #getItemHandlerAsList(IItemHandler)}<code>.length();</code>。
      *
-     * @param itemHandler {@link IItemHandler} to count item stacks of.
-     * @return Amount of item stacks in the {@link IItemHandler}.
+     * @param itemHandler 要计算物品栈数量的 {@link IItemHandler}。
+     * @return {@link IItemHandler} 中物品栈的数量。
      */
     public static int getAmountOfStacksInItemHandler(@NotNull final IItemHandler itemHandler)
     {
@@ -445,10 +444,10 @@ public class InventoryUtils
     }
 
     /**
-     * Returns an {@link IItemHandler} as list of item stacks.
+     * 返回一个 {@link IItemHandler} 作为物品栈列表。
      *
-     * @param itemHandler Inventory to convert.
-     * @return List of item stacks.
+     * @param itemHandler 要转换的库存。
+     * @return 物品栈列表。
      */
     @NotNull
     public static List<ItemStack> getItemHandlerAsList(@NotNull final IItemHandler itemHandler)
@@ -457,12 +456,12 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, in an {@link ICapabilityProvider}. Uses the MetaData and {@link
-     * #getItemFromBlock(Block)} as parameters for the Predicate.
+     * 过滤一个 {@link ICapabilityProvider} 中的物品列表，使用 {@link #compareItems(ItemStack, Item)} 进行匹配。
+     * 使用 MetaData 和 {@link #getItemFromBlock(Block)} 作为 Predicate 的参数。
      *
-     * @param provider Provider to filter in
-     * @param block    Block to filter
-     * @return List of item stacks
+     * @param provider 要过滤的提供者
+     * @param block    要过滤的方块
+     * @return 物品栈列表
      */
     @NotNull
     public static List<ItemStack> filterProvider(@NotNull final ICapabilityProvider provider, final Block block)
@@ -471,11 +470,11 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, that match the given predicate, in an {@link ICapabilityProvider}.
+     * 在 {@link ICapabilityProvider} 中过滤一个物品列表，匹配给定的谓词。
      *
-     * @param provider                    The ICapabilityProvider to get items from.
-     * @param itemStackSelectionPredicate The predicate to match the stack to.
-     * @return List of item stacks that match the given predicate.
+     * @param provider                    用于获取物品的 {@link ICapabilityProvider}。
+     * @param itemStackSelectionPredicate 用于匹配物品栈的谓词。
+     * @return 匹配给定谓词的物品栈列表。
      */
     @NotNull
     public static List<ItemStack> filterProvider(@NotNull final ICapabilityProvider provider, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
@@ -484,11 +483,11 @@ public class InventoryUtils
     }
 
     /**
-     * Method to process the given predicate for all {@link Direction} of a {@link ICapabilityProvider}, including the internal one (passing null as argument).
+     * 处理 {@link ICapabilityProvider} 的所有 {@link Direction} 的给定谓词，包括内部的一个（传递 null 作为参数）。
      *
-     * @param provider  The provider to process all the
-     * @param predicate The predicate to match the ItemStacks in the {@link IItemHandler} for each side with.
-     * @return A combined {@link List}<{@link ItemStack}> as if the given predicate was called on all ItemStacks in all {@link IItemHandler}s of the given provider.
+     * @param provider  要处理的提供者
+     * @param predicate 用于匹配每个方向的 {@link IItemHandler} 中的物品栈的谓词。
+     * @return 组合的 {@link List}<{@link ItemStack}>，就像给定谓词在给定提供者的所有 {@link IItemHandler} 的所有物品栈上都被调用一样。
      */
     @NotNull
     private static List<ItemStack> getFromProviderForAllSides(@NotNull final ICapabilityProvider provider, @NotNull final Predicate<ItemStack> predicate)
@@ -506,10 +505,10 @@ public class InventoryUtils
     }
 
     /**
-     * Method to get all the IItemHandlers from a given Provider.
+     * 从给定提供者获取所有的 IItemHandlers 的方法。
      *
-     * @param provider The provider to get the IItemHandlers from.
-     * @return A list with all the unique IItemHandlers a provider has.
+     * @param provider 要获取 IItemHandlers 的提供者。
+     * @return 一个包含所有独特的 IItemHandlers 的列表。
      */
     @NotNull
     public static Set<IItemHandler> getItemHandlersFromProvider(@NotNull final ICapabilityProvider provider)
@@ -524,11 +523,11 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, with targetItem and itemDamage as parameters, in an {@link ICapabilityProvider}.
+     * 过滤一个物品列表，使用 {@link #compareItems(ItemStack, Item)} 进行匹配，使用 targetItem 和 itemDamage 作为参数，在 {@link ICapabilityProvider} 中。
      *
-     * @param provider   Provider to get items from
-     * @param targetItem Item to look for
-     * @return List of item stacks with the given item in inventory
+     * @param provider   要获取物品的提供者
+     * @param targetItem 要查找的物品
+     * @return 包含给定物品的库存中的物品栈列表
      */
     @NotNull
     public static List<ItemStack> filterProvider(@NotNull final ICapabilityProvider provider, @Nullable final Item targetItem)
@@ -537,11 +536,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of the block in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中第一个出现的方块的索引。
      *
-     * @param provider {@link ICapabilityProvider} to check.
-     * @param block    Block to find.
-     * @return Index of the first occurrence.
+     * @param provider {@link ICapabilityProvider} 要检查。
+     * @param block    要查找的方块。
+     * @return 第一个出现的方块的索引。
      */
     public static int findFirstSlotInProviderWith(@NotNull final ICapabilityProvider provider, final Block block)
     {
@@ -549,11 +548,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of the Item with the given ItemDamage in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中具有给定 ItemDamage 的 Item 的第一个出现的索引。
      *
-     * @param provider   {@link ICapabilityProvider} to check
-     * @param targetItem Item to find.
-     * @return Index of the first occurrence
+     * @param provider   要检查的 {@link ICapabilityProvider}。
+     * @param targetItem 要查找的物品。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderWith(@NotNull final ICapabilityProvider provider, final Item targetItem)
     {
@@ -561,11 +560,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns a map with all itemhandlers and slots matching the predicate in the provider. the given predicate in the {@link ICapabilityProvider}.
+     * 返回一个包含在提供者中与提供的谓词匹配的所有物品处理程序和槽位的映射。在 {@link ICapabilityProvider} 中使用给定谓词。
      *
-     * @param provider                    Provider to check
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return Index of the first occurrence
+     * @param provider                    要检查的提供者
+     * @param itemStackSelectionPredicate 用于匹配的谓词。
+     * @return 第一个出现的索引。
      */
     public static Map<IItemHandler, List<Integer>> findAllSlotsInProviderWith(@NotNull final ICapabilityProvider provider, final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -583,11 +582,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中第一个不为空的物品栈匹配给定谓词的索引。
      *
-     * @param provider                    Provider to check
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return Index of the first occurrence
+     * @param provider                    要检查的提供者
+     * @param itemStackSelectionPredicate 用于匹配的谓词。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderNotEmptyWith(@NotNull final ICapabilityProvider provider, final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -604,11 +603,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中第一个不为空的物品栈匹配给定谓词列表的索引。
      *
-     * @param provider                    Provider to check
-     * @param itemStackSelectionPredicate The list of predicates to match.
-     * @return Index of the first occurrence
+     * @param provider                    要检查的提供者
+     * @param itemStackSelectionPredicate 要匹配的谓词列表。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderNotEmptyWith(@NotNull final ICapabilityProvider provider, final List<Predicate<ItemStack>> itemStackSelectionPredicate)
     {
@@ -625,11 +624,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link IItemHandler}. Also applies the not empty check.
+     * 返回 {@link IItemHandler} 中第一个不为空的物品栈匹配给定谓词列表的索引。同时应用非空检查。
      *
-     * @param itemHandler                 ItemHandler to check
-     * @param itemStackSelectionPredicate The list of predicates to match.
-     * @return Index of the first occurrence
+     * @param itemHandler                 要检查的物品处理程序
+     * @param itemStackSelectionPredicate 要匹配的谓词列表。
+     * @return 第一个出现的索引。
      */
     private static int findFirstSlotInItemHandlerNotEmptyWith(final IItemHandler itemHandler, final List<Predicate<ItemStack>> itemStackSelectionPredicate)
     {
@@ -648,11 +647,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link IItemHandler}. Also applies the not empty check.
+     * 返回 {@link IItemHandler} 中第一个不为空的物品栈匹配给定谓词的索引。同时应用非空检查。
      *
-     * @param itemHandler                 ItemHandler to check
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return Index of the first occurrence
+     * @param itemHandler                 要检查的物品处理程序
+     * @param itemStackSelectionPredicate 要匹配的谓词。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInItemHandlerNotEmptyWith(@NotNull final IItemHandler itemHandler, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -672,11 +671,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中的物品栈数量。
      *
-     * @param provider {@link ICapabilityProvider} to scan.
-     * @param block    The block to count
-     * @return Amount of occurrences of stacks that match the given block and ItemDamage
+     * @param provider {@link ICapabilityProvider} 要扫描的提供者。
+     * @param block    要计数的方块
+     * @return 匹配给定方块和 ItemDamage 的堆栈的数量。
      */
     public static int getItemCountInProvider(@NotNull final ICapabilityProvider provider, @NotNull final Block block)
     {
@@ -684,11 +683,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中的物品栈数量。
      *
-     * @param provider   {@link ICapabilityProvider} to scan.
-     * @param targetItem Item to count.
-     * @return Amount of occurrences of stacks that match the given item and ItemDamage
+     * @param provider   {@link ICapabilityProvider} 要扫描的提供者。
+     * @param targetItem 要计数的物品。
+     * @return 匹配给定物品和 ItemDamage 的堆栈的数量。
      */
     public static int getItemCountInProvider(@NotNull final ICapabilityProvider provider, @NotNull final Item targetItem)
     {
@@ -696,11 +695,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中的物品栈数量。
      *
-     * @param provider                    {@link ICapabilityProvider} to scan.
-     * @param itemStackSelectionPredicate The predicate used to select the stacks to count.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param provider                    {@link ICapabilityProvider} 要扫描的提供者。
+     * @param itemStackSelectionPredicate 用于选择要计数的物品栈的谓词。
+     * @return 匹配给定谓词的堆栈的数量。
      */
     public static int getItemCountInProvider(@NotNull final ICapabilityProvider provider, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -710,11 +709,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the sum of the durability of occurrences in the {@link ICapabilityProvider}.
+     * 返回 {@link ICapabilityProvider} 中耐久性的总和。
      *
-     * @param provider                    {@link ICapabilityProvider} to scan.
-     * @param itemStackSelectionPredicate The predicate used to select the stacks to count.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param provider                    {@link ICapabilityProvider} 要扫描的提供者。
+     * @param itemStackSelectionPredicate 用于选择要计数的物品栈的谓词。
+     * @return 匹配给定谓词的堆栈的耐久性总和。
      */
     public static int getDurabilityInProvider(@NotNull final ICapabilityProvider provider, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -724,11 +723,12 @@ public class InventoryUtils
     }
 
     /**
-     * Check if a building has more than a count in stack. Return the count it has if it has less.
+     * 检查建筑物中是否有超过一定数量的堆栈。如果堆栈较少，则返回它的数量。
      *
-     * @param provider building to check in.
-     * @param stack    the stack to check.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param provider 要检查的建筑物
+     * @param stack    要检查的堆栈
+     * @param count    要检查的数量
+     * @return 匹配给定谓词的堆栈的数量。
      */
     public static int hasBuildingEnoughElseCount(@NotNull final IBuilding provider, @NotNull final ItemStorage stack, final int count)
     {
@@ -760,11 +760,12 @@ public class InventoryUtils
     }
 
     /**
-     * Check if a building has more than a count in stack. Return the count it has if it has less.
+     * 检查建筑物中是否有超过一定数量的堆栈。如果堆栈较少，则返回它的数量。
      *
-     * @param provider building to check in.
-     * @param stack    the stack to check.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param provider 要检查的建筑物
+     * @param stack    要检查的堆栈
+     * @param count    要检查的数量
+     * @return 匹配给定谓词的堆栈的数量。
      */
     public static int hasBuildingEnoughElseCount(@NotNull final IBuilding provider, @NotNull final Predicate<ItemStack> stack, final int count)
     {
@@ -792,11 +793,11 @@ public class InventoryUtils
     }
 
     /**
-     * Count the number of items of different types a building has.
-     * 
-     * @param provider the building to check.
-     * @param stacks   the stacks to check for.
-     * @return Amount of occurrences of stacks that match the given stacks.
+     * 计算建筑物中不同类型物品的数量。
+     *
+     * @param provider 要检查的建筑物。
+     * @param stacks   要检查的堆栈。
+     * @return 匹配给定堆栈的数量。
      */
     public static int getCountFromBuilding(@NotNull final IBuilding provider, @NotNull final List<ItemStorage> stacks)
     {
@@ -811,11 +812,11 @@ public class InventoryUtils
     }
 
     /**
-     * Count the number of items a building has.
+     * 计算建筑物中的物品数量。
      *
-     * @param provider building to check in.
-     * @param stack    the stack to check.
-     * @return Amount of occurrences of stacks that match the given stack.
+     * @param provider 要检查的建筑物
+     * @param stack    要检查的堆栈
+     * @return 匹配给定堆栈的数量。
      */
     public static int getCountFromBuilding(@NotNull final IBuilding provider, @NotNull final ItemStorage stack)
     {
@@ -840,11 +841,10 @@ public class InventoryUtils
 
         return totalCount;
     }
-
     /**
-     * Calculate the number of empty slots in a given building.
-     * @param ownBuilding the building to check.
-     * @return the number of empty slots.
+     * 计算给定建筑物中的空槽位数量。
+     * @param ownBuilding 要检查的建筑物。
+     * @return 空槽位的数量。
      */
     public static int countEmptySlotsInBuilding(final IBuilding ownBuilding)
     {
@@ -867,11 +867,11 @@ public class InventoryUtils
     }
 
     /**
-     * Count the number of items a building has.
+     * 计算建筑物中的物品数量。
      *
-     * @param provider  building to check in.
-     * @param predicate the predicate to match.
-     * @return Amount of occurrences of stacks that match the given stack.
+     * @param provider  要检查的建筑物。
+     * @param predicate 要匹配的谓词。
+     * @return 匹配给定堆栈的堆栈的数量。
      */
     public static int getCountFromBuilding(@NotNull final IBuilding provider, @NotNull final Predicate<ItemStack> predicate)
     {
@@ -894,12 +894,12 @@ public class InventoryUtils
     }
 
     /**
-     * Count the number of items a building has.
-     * Only count up to "limit" of a particular item.
+     * 计算建筑物中的物品数量。
+     * 仅计算特定物品的“限制”。
      *
-     * @param provider  building to check in.
-     * @param predicate the predicate to match.
-     * @return Amount of occurrences of stacks that match the given stack.
+     * @param provider  要检查的建筑物。
+     * @param predicate 要匹配的谓词。
+     * @return 匹配给定堆栈的堆栈的数量。
      */
     public static int getCountFromBuildingWithLimit(@NotNull final IBuilding provider, @NotNull final Predicate<ItemStack> predicate, final Function<ItemStack, Integer> limit)
     {
@@ -935,11 +935,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has a block in the {@link ICapabilityProvider}. Checked by {@link #getItemCountInProvider(ICapabilityProvider, Block)} &gt; 0;
+     * 检查玩家是否在{@link ICapabilityProvider}中拥有一个块。
+     * 通过{@link #getItemCountInProvider(ICapabilityProvider, Block)} > 0;来检查。
      *
-     * @param Provider {@link ICapabilityProvider} to scan
-     * @param block    Block to count
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param Provider {@link ICapabilityProvider} 要扫描的
+     * @param block    要计数的块
+     * @return 如果在{@link ICapabilityProvider}中，则为true，否则为false
      */
     public static boolean hasItemInProvider(@NotNull final ICapabilityProvider Provider, @NotNull final Block block)
     {
@@ -947,11 +948,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has an item in the {@link ICapabilityProvider}. Checked by {@link #getItemCountInProvider(ICapabilityProvider, Item)} &gt; 0;
+     * 检查玩家是否在{@link ICapabilityProvider}中拥有一个物品。
+     * 通过{@link #getItemCountInProvider(ICapabilityProvider, Item)} > 0;来检查。
      *
-     * @param Provider {@link ICapabilityProvider} to scan
-     * @param item     Item to count
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param Provider {@link ICapabilityProvider} 要扫描的
+     * @param item     要计数的物品
+     * @return 如果在{@link ICapabilityProvider}中，则为true，否则为false
      */
     public static boolean hasItemInProvider(@NotNull final ICapabilityProvider Provider, @NotNull final Item item)
     {
@@ -959,11 +961,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has an item in the {@link ICapabilityProvider}. Checked by {@link InventoryUtils#getItemCountInProvider(ICapabilityProvider, Predicate)} &gt; 0;
+     * 检查玩家是否在{@link ICapabilityProvider}中拥有一个物品。
+     * 通过{@link InventoryUtils#getItemCountInProvider(ICapabilityProvider, Predicate)} > 0;来检查。
      *
-     * @param Provider                    {@link ICapabilityProvider} to scan
-     * @param itemStackSelectionPredicate The predicate to match the ItemStack to.
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param Provider                    {@link ICapabilityProvider} 要扫描的
+     * @param itemStackSelectionPredicate 要匹配ItemStack的谓词。
+     * @return 如果在{@link ICapabilityProvider}中，则为true，否则为false
      */
     public static boolean hasItemInProvider(@NotNull final ICapabilityProvider Provider, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -978,10 +981,10 @@ public class InventoryUtils
     }
 
     /**
-     * Returns if the {@link ICapabilityProvider} is full.
+     * 返回{@link ICapabilityProvider}是否已满。
      *
-     * @param provider The {@link ICapabilityProvider}.
-     * @return True if the {@link ICapabilityProvider} is full, false when not.
+     * @param provider {@link ICapabilityProvider}。
+     * @return 如果{@link ICapabilityProvider}已满则返回true，否则返回false。
      */
     public static boolean isProviderFull(@NotNull final ICapabilityProvider provider)
     {
@@ -989,28 +992,28 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the first open slot in the {@link ICapabilityProvider}.
+     * 返回{@link ICapabilityProvider}中的第一个空槽位。
      *
-     * @param provider The {@link ICapabilityProvider} to check.
-     * @return slot index or -1 if none found.
+     * @param provider 要检查的{@link ICapabilityProvider}。
+     * @return 槽位索引，如果没有找到则返回-1。
      */
     public static int getFirstOpenSlotFromProvider(@NotNull final ICapabilityProvider provider)
     {
         return getItemHandlersFromProvider(provider).stream()
-                 .mapToInt(InventoryUtils::getFirstOpenSlotFromItemHandler)
-                 .filter(slotIndex -> slotIndex > -1)
-                 .findFirst()
-                 .orElse(-1);
+                .mapToInt(InventoryUtils::getFirstOpenSlotFromItemHandler)
+                .filter(slotIndex -> slotIndex > -1)
+                .findFirst()
+                .orElse(-1);
     }
 
     /**
-     * Checks if the {@link ICapabilityProvider} contains the following toolName with the given minimal Level.
+     * 检查{@link ICapabilityProvider}是否包含具有给定最小级别的以下工具名称。
      *
-     * @param provider     The {@link ICapabilityProvider} to scan.
-     * @param toolType     The toolTypeName of the tool to find.
-     * @param minimalLevel The minimal level to find.
-     * @param maximumLevel The maximum level to find.
-     * @return True if a Tool with the given toolTypeName was found in the given {@link ICapabilityProvider}, false when not.
+     * @param provider     要扫描的{@link ICapabilityProvider}。
+     * @param toolType     要查找的工具的工具类型名称。
+     * @param minimalLevel 要查找的最小级别。
+     * @param maximumLevel 要查找的最大级别。
+     * @return 如果在给定的{@link ICapabilityProvider}中找到具有给定工具类型名称的工具，则为true，否则为false。
      */
     public static boolean isToolInProvider(@NotNull final ICapabilityProvider provider, @NotNull final IToolType toolType, final int minimalLevel, final int maximumLevel)
     {
@@ -1018,11 +1021,11 @@ public class InventoryUtils
     }
 
     /**
-     * Add stack to provider.
+     * 将堆栈添加到提供者。
      *
-     * @param provider  {@link ICapabilityProvider} to add itemstack to.
-     * @param itemStack ItemStack to add.
-     * @return True if successful, otherwise false.
+     * @param provider  要添加物品堆栈的{@link ICapabilityProvider}。
+     * @param itemStack 要添加的物品堆栈。
+     * @return 如果成功，则为true，否则为false。
      */
     public static boolean addItemStackToProvider(@NotNull final ICapabilityProvider provider, @Nullable final ItemStack itemStack)
     {
@@ -1030,11 +1033,11 @@ public class InventoryUtils
     }
 
     /**
-     * Add stack to item handler.
+     * 将堆栈添加到物品处理程序。
      *
-     * @param itemHandler {@link IItemHandler} to add itemstack to.
-     * @param itemStack   ItemStack to add.
-     * @return True if successful, otherwise false.
+     * @param itemHandler {@link IItemHandler} 要添加物品堆栈的。
+     * @param itemStack   要添加的物品堆栈。
+     * @return 如果成功，则为true，否则为false。
      */
     public static boolean addItemStackToItemHandler(@NotNull final IItemHandler itemHandler, @Nullable final ItemStack itemStack)
     {
@@ -1093,7 +1096,7 @@ public class InventoryUtils
                     slot++;
                 }
 
-                // This can never happen! We checked if it is possible. This is not possible.
+                // 这是永远不可能发生的！我们检查了它是否可能。这是不可能的。
                 return false;
             }
         }
@@ -1104,11 +1107,11 @@ public class InventoryUtils
     }
 
     /**
-     * Add stack to provider with result.
+     * 将堆栈添加到带有结果的提供者。
      *
-     * @param provider  {@link ICapabilityProvider} to add itemstack to.
-     * @param itemStack ItemStack to add.
-     * @return Empty when fully transfered without swapping, otherwise return the remain of a partial transfer
+     * @param provider  要添加物品堆栈的{@link ICapabilityProvider}。
+     * @param itemStack 要添加的物品堆栈。
+     * @return 当完全传输而不交换时为空，否则返回物品堆栈的部分传输剩余。
      */
     public static ItemStack addItemStackToProviderWithResult(@NotNull final ICapabilityProvider provider, @Nullable final ItemStack itemStack)
     {
@@ -1128,11 +1131,11 @@ public class InventoryUtils
     }
 
     /**
-     * Add stack to handler with result.
+     * 将堆栈添加到带有结果的处理程序。
      *
-     * @param itemHandler {@link IItemHandler} to add itemstack to.
-     * @param itemStack   ItemStack to add.
-     * @return Empty when fully transfered, otherwise return the remain of a partial transfer of the itemStack.
+     * @param itemHandler {@link IItemHandler} 要添加物品堆栈的。
+     * @param itemStack   要添加的物品堆栈。
+     * @return 当完全传输时为空，否则返回物品堆栈的部分传输剩余。
      */
     public static ItemStack addItemStackToItemHandlerWithResult(@NotNull final IItemHandler itemHandler, @Nullable final ItemStack itemStack)
     {
@@ -1177,18 +1180,18 @@ public class InventoryUtils
     }
 
     /**
-     * Force stack to provider.
+     * 强制将堆栈添加到提供者。
      *
-     * @param provider                 {@link ICapabilityProvider} to add itemstack to.
-     * @param itemStack                ItemStack to add.
-     * @param itemStackToKeepPredicate The {@link Predicate} that determines which ItemStacks to keep in the inventory. Return false to replace.
-     * @return itemStack which has been replaced.
+     * @param provider                   要添加物品堆栈的{@link ICapabilityProvider}。
+     * @param itemStack                  要添加的物品堆栈。
+     * @param itemStackToKeepPredicate    确定要在库存中保留哪些ItemStack的{@link Predicate}。返回false以替换。
+     * @return 已替换的itemStack。
      */
     @Nullable
     public static ItemStack forceItemStackToProvider(
-      @NotNull final ICapabilityProvider provider,
-      @NotNull final ItemStack itemStack,
-      @NotNull final Predicate<ItemStack> itemStackToKeepPredicate)
+            @NotNull final ICapabilityProvider provider,
+            @NotNull final ItemStack itemStack,
+            @NotNull final Predicate<ItemStack> itemStackToKeepPredicate)
     {
         final ItemStack standardInsertionResult = addItemStackToProviderWithResult(provider, itemStack);
 
@@ -1208,10 +1211,10 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of item stacks in an inventory. This equals {@link #getProviderAsList(ICapabilityProvider)}<code>.length();</code>.
+     * 返回库存中的物品堆栈数量。这等于{@link #getProviderAsList(ICapabilityProvider)}<code>.length();</code>。
      *
-     * @param provider {@link ICapabilityProvider} to count item stacks of.
-     * @return Amount of item stacks in the {@link ICapabilityProvider}.
+     * @param provider 要计算物品堆栈数量的{@link ICapabilityProvider}。
+     * @return {@link ICapabilityProvider}中的物品堆栈数量。
      */
     public static int getAmountOfStacksInProvider(@NotNull final ICapabilityProvider provider)
     {
@@ -1219,22 +1222,21 @@ public class InventoryUtils
     }
 
     /**
-     * Returns an {@link ICapabilityProvider} as list of item stacks.
+     * 将{@link ICapabilityProvider}返回为物品堆栈列表。
      *
-     * @param provider provider to convert.
-     * @return List of item stacks.
+     * @param provider 要转换的提供者。
+     * @return 物品堆栈的列表。
      */
     @NotNull
     public static List<ItemStack> getProviderAsList(@NotNull final ICapabilityProvider provider)
     {
         return filterProvider(provider, (ItemStack stack) -> true);
     }
-
     /**
-     * Method used to check if a {@link ICapabilityProvider} has any {@link IItemHandler}
+     * 用于检查 {@link ICapabilityProvider} 是否具有任何 {@link IItemHandler} 的方法
      *
-     * @param provider The provider to check.
-     * @return True when the provider has any {@link IItemHandler}, false when not.
+     * @param provider 要检查的提供者。
+     * @return 如果提供者具有任何 {@link IItemHandler}，则返回 true，否则返回 false。
      */
     @NotNull
     public static boolean hasProviderIItemHandler(@NotNull final ICapabilityProvider provider)
@@ -1243,10 +1245,10 @@ public class InventoryUtils
     }
 
     /**
-     * Method used to check if this provider is sided.
+     * 用于检查此提供者是否是有多个不同方向的 IItemHandler 的方法。
      *
-     * @param provider The provider to check for.
-     * @return True when the provider has multiple distinct IItemHandler of different sides, false when not
+     * @param provider 要检查的提供者。
+     * @return 如果提供者具有多个不同方向的 IItemHandler，则返回 true，否则返回 false。
      */
     @NotNull
     public static boolean isProviderSided(@NotNull final ICapabilityProvider provider)
@@ -1255,11 +1257,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns an {@link IItemHandler} as list of item stacks.
+     * 返回作为项目堆栈列表的 {@link IItemHandler}。
      *
-     * @param provider The {@link ICapabilityProvider} that holds the {@link IItemHandler} for the given {@link Direction}
-     * @param facing   The facing to get the {@link IItemHandler} from. Can be null for the internal one
-     * @return List of item stacks.
+     * @param provider 包含给定 {@link Direction} 的 {@link IItemHandler} 的 {@link ICapabilityProvider}
+     * @param facing   要获取 {@link IItemHandler} 的方向。内部的可以为 null。
+     * @return 项目堆栈的列表。
      */
     @NotNull
     public static List<ItemStack> getInventoryAsListFromProviderForSide(@NotNull final ICapabilityProvider provider, @Nullable final Direction facing)
@@ -1268,55 +1270,54 @@ public class InventoryUtils
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, in an {@link IItemHandler}. Uses the MetaData and {@link #getItemFromBlock(Block)}
-     * as parameters for the Predicate.
+     * 在 {@link IItemHandler} 中过滤项目列表，使用 {@link #compareItems(ItemStack, Item)} 进行匹配，使用 MetaData 和 {@link #getItemFromBlock(Block)} 作为 Predicate 的参数。
      *
-     * @param provider The {@link ICapabilityProvider} that holds the {@link IItemHandler} for the given {@link Direction}
-     * @param facing   The facing to get the {@link IItemHandler} from. Can be null for the internal one
-     * @param block    Block to filter
-     * @return List of item stacks
+     * @param provider 包含给定 {@link Direction} 的 {@link IItemHandler} 的 {@link ICapabilityProvider}
+     * @param facing   要获取 {@link IItemHandler} 的方向。内部的可以为 null。
+     * @param block    要过滤的方块
+     * @return 项目堆栈的列表
      */
     @NotNull
     public static List<ItemStack> filterItemHandlerFromProviderForSide(
-      @NotNull final ICapabilityProvider provider,
-      @Nullable final Direction facing,
-      @NotNull final Block block)
+            @NotNull final ICapabilityProvider provider,
+            @Nullable final Direction facing,
+            @NotNull final Block block)
     {
         return filterItemHandler(provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).orElse(null), (ItemStack stack) -> compareItems(stack, getItemFromBlock(block)));
     }
 
     /**
-     * Filters a list of items, matches the stack using {@link #compareItems(ItemStack, Item)}, with targetItem and itemDamage as parameters, in an {@link IItemHandler}.
+     * 在 {@link IItemHandler} 中过滤项目列表，使用 {@link #compareItems(ItemStack, Item)} 进行匹配，使用 targetItem 和 itemDamage 作为参数。
      *
-     * @param provider   The {@link ICapabilityProvider} that holds the {@link IItemHandler} for the given {@link Direction}
-     * @param facing     The facing to get the {@link IItemHandler} from. Can be null for the internal one
-     * @param targetItem Item to look for
-     * @param itemDamage the damage value.
-     * @return List of item stacks with the given item in inventory
+     * @param provider     包含给定 {@link Direction} 的 {@link IItemHandler} 的 {@link ICapabilityProvider}
+     * @param facing       要获取 {@link IItemHandler} 的方向。内部的可以为 null。
+     * @param targetItem   要查找的项目
+     * @param itemDamage   损坏值。
+     * @return 包含给定项目的库存中的项目堆栈列表
      */
     @NotNull
     public static List<ItemStack> filterItemHandlerFromProviderForSide(
-      @NotNull final ICapabilityProvider provider,
-      @Nullable final Direction facing,
-      @NotNull final Item targetItem,
-      final int itemDamage)
+            @NotNull final ICapabilityProvider provider,
+            @Nullable final Direction facing,
+            @NotNull final Item targetItem,
+            final int itemDamage)
     {
         return filterItemHandler(provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).orElse(null), (ItemStack stack) -> compareItems(stack, targetItem));
     }
 
     /**
-     * Filters a list of items, that match the given predicate, in an {@link IItemHandler}.
+     * 在 {@link IItemHandler} 中过滤项目列表，匹配给定的断言，使用 {@link ICapabilityProvider}。
      *
-     * @param provider                    The {@link ICapabilityProvider} that holds the {@link IItemHandler} for the given {@link Direction}
-     * @param facing                      The facing to get the {@link IItemHandler} from. Can be null for the internal one
-     * @param itemStackSelectionPredicate The predicate to match the stack to.
-     * @return List of item stacks that match the given predicate.
+     * @param provider                    包含给定 {@link Direction} 的 {@link IItemHandler} 的 {@link ICapabilityProvider}
+     * @param facing                      要获取 {@link IItemHandler} 的方向。内部的可以为 null。
+     * @param itemStackSelectionPredicate 用于匹配堆栈的断言。
+     * @return 匹配给定断言的项目堆栈列表。
      */
     @NotNull
     public static List<ItemStack> filterItemHandlerFromProviderForSide(
-      @NotNull final ICapabilityProvider provider,
-      @Nullable final Direction facing,
-      @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
+            @NotNull final ICapabilityProvider provider,
+            @Nullable final Direction facing,
+            @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
         if (!provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).isPresent())
         {
@@ -1327,46 +1328,46 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the index of the first occurrence of the block in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中给定块的第一个出现的索引。
      *
-     * @param provider   {@link ICapabilityProvider} to check.
-     * @param facing     The facing to check for.
-     * @param block      Block to find.
-     * @param itemDamage the damage value.
-     * @return Index of the first occurrence.
+     * @param provider   要检查的 {@link ICapabilityProvider}。
+     * @param facing     要检查的方向。
+     * @param block      要查找的块。
+     * @param itemDamage 项目损坏值。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderForSideWith(
-      @NotNull final ICapabilityProvider provider,
-      @Nullable final Direction facing,
-      @NotNull final Block block,
-      final int itemDamage)
+            @NotNull final ICapabilityProvider provider,
+            @Nullable final Direction facing,
+            @NotNull final Block block,
+            final int itemDamage)
     {
         return findFirstSlotInProviderForSideWith(provider, facing, getItemFromBlock(block));
     }
 
     /**
-     * Returns the index of the first occurrence of the Item with the given ItemDamage in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中具有给定 ItemDamage 的项目的第一个出现的索引。
      *
-     * @param provider   {@link ICapabilityProvider} to check
-     * @param facing     The facing to check for.
-     * @param targetItem Item to find.
-     * @return Index of the first occurrence
+     * @param provider   要检查的 {@link ICapabilityProvider}。
+     * @param facing     要检查的方向。
+     * @param targetItem 要查找的项目。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderForSideWith(
-      @NotNull final ICapabilityProvider provider,
-      @Nullable final Direction facing,
-      @NotNull final Item targetItem)
+            @NotNull final ICapabilityProvider provider,
+            @Nullable final Direction facing,
+            @NotNull final Item targetItem)
     {
         return findFirstSlotInProviderForSideWith(provider, facing, (ItemStack stack) -> compareItems(stack, targetItem));
     }
 
     /**
-     * Returns the index of the first occurrence of an ItemStack that matches the given predicate in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中与给定断言匹配的 ItemStack 的第一个出现的索引。
      *
-     * @param provider                    Provider to check
-     * @param facing                      The facing to check for.
-     * @param itemStackSelectionPredicate The predicate to match.
-     * @return Index of the first occurrence
+     * @param provider                    要检查的提供者
+     * @param facing                      要检查的方向。
+     * @param itemStackSelectionPredicate 用于匹配的断言。
+     * @return 第一个出现的索引。
      */
     public static int findFirstSlotInProviderForSideWith(
       @NotNull final ICapabilityProvider provider,
@@ -1376,7 +1377,7 @@ public class InventoryUtils
         if (!provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).isPresent())
         {
             return -1;
-            //TODO: Later harden contract to remove compare on slot := -1
+            //TODO: 后续加强合同以删除对 slot 的比较 := -1
             //throw new IllegalStateException("Item "+targetItem.getTranslationKey() + " not found in ItemHandler!");
         }
 
@@ -1384,12 +1385,12 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中的项目数量。
      *
-     * @param provider {@link ICapabilityProvider} to scan.
-     * @param facing   The facing to count in.
-     * @param block    The block to count
-     * @return Amount of occurrences of stacks that match the given block and ItemDamage
+     * @param provider 要扫描的 {@link ICapabilityProvider}。
+     * @param facing   要计数的方向。
+     * @param block    要计数的块
+     * @return 匹配给定块和 ItemDamage 的堆栈的数量
      */
     public static int getItemCountInProviderForSide(
       @NotNull final ICapabilityProvider provider,
@@ -1400,12 +1401,12 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中的项目数量。
      *
-     * @param provider   {@link ICapabilityProvider} to scan.
-     * @param facing     The facing to count in.
-     * @param targetItem Item to count
-     * @return Amount of occurrences of stacks that match the given item and ItemDamage
+     * @param provider   要扫描的 {@link ICapabilityProvider}。
+     * @param facing     要计数的方向。
+     * @param targetItem 要计数的项目
+     * @return 匹配给定项目和 ItemDamage 的堆栈的数量
      */
     public static int getItemCountInProviderForSide(
       @NotNull final ICapabilityProvider provider,
@@ -1416,12 +1417,12 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of occurrences in the {@link ICapabilityProvider} for a given {@link Direction}.
+     * 返回给定 {@link Direction} 的 {@link ICapabilityProvider} 中的项目数量。
      *
-     * @param provider                    {@link ICapabilityProvider} to scan.
-     * @param facing                      The facing to count in.
-     * @param itemStackSelectionPredicate The predicate used to select the stacks to count.
-     * @return Amount of occurrences of stacks that match the given predicate.
+     * @param provider                    要扫描的 {@link ICapabilityProvider}。
+     * @param facing                      要计数的方向。
+     * @param itemStackSelectionPredicate 用于选择要计数的堆栈的断言。
+     * @return 匹配给定断言的堆栈的数量。
      */
     public static int getItemCountInProviderForSide(
       @NotNull final ICapabilityProvider provider,
@@ -1439,13 +1440,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has a block in the {@link ICapabilityProvider}, for a given {@link Direction}. Checked by {@link #getItemCountInProvider(ICapabilityProvider, Block)} &gt;
-     * 0;
+     * 检查玩家是否在 {@link ICapabilityProvider} 中有一个块，对于给定的 {@link Direction}。通过 {@link #getItemCountInProvider(ICapabilityProvider, Block)} > 0; 进行检查。
      *
-     * @param provider {@link ICapabilityProvider} to scan
-     * @param facing   The side to check for.
-     * @param block    Block to count
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param provider 要扫描的 {@link ICapabilityProvider}
+     * @param facing   要检查的侧面。
+     * @param block    要计数的块
+     * @return 如果在 {@link ICapabilityProvider} 中，则返回 true，否则返回 false
      */
     public static boolean hasItemInProviderForSide(@NotNull final ICapabilityProvider provider, @Nullable final Direction facing, @NotNull final Block block)
     {
@@ -1453,13 +1453,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has an item in the {@link ICapabilityProvider}, for a given {@link Direction}. Checked by {@link #getItemCountInProvider(ICapabilityProvider, Item)} &gt;
-     * 0;
+     * 检查玩家是否在 {@link ICapabilityProvider} 中有一个项目，对于给定的 {@link Direction}。通过 {@link #getItemCountInProvider(ICapabilityProvider, Item)} > 0; 进行检查。
      *
-     * @param provider {@link ICapabilityProvider} to scan
-     * @param facing   The side to check for.
-     * @param item     Item to count
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param provider 要扫描的 {@link ICapabilityProvider}
+     * @param facing   要检查的侧面。
+     * @param item     要计数的项目
+     * @return 如果在 {@link ICapabilityProvider} 中，则返回 true，否则返回 false
      */
     public static boolean hasItemInProviderForSide(@NotNull final ICapabilityProvider provider, @Nullable final Direction facing, @NotNull final Item item)
     {
@@ -1467,13 +1466,12 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if a player has an item in the {@link ICapabilityProvider}, for a given {@link Direction}. Checked by {@link InventoryUtils#getItemCountInProvider(ICapabilityProvider,
-     * Predicate)} &gt; 0;
+     * 检查玩家是否在 {@link ICapabilityProvider} 中有一个项目，对于给定的 {@link Direction}。通过 {@link InventoryUtils#getItemCountInProvider(ICapabilityProvider, Predicate)} > 0; 进行检查。
      *
-     * @param provider                    {@link ICapabilityProvider} to scan
-     * @param facing                      The side to check for.
-     * @param itemStackSelectionPredicate The predicate to match the ItemStack to.
-     * @return True when in {@link ICapabilityProvider}, otherwise false
+     * @param provider                    要扫描的 {@link ICapabilityProvider}
+     * @param facing                      要检查的侧面。
+     * @param itemStackSelectionPredicate 用于匹配 ItemStack 的断言。
+     * @return 如果在 {@link ICapabilityProvider} 中，则返回 true，否则返回 false
      */
     public static boolean hasItemInProviderForSide(
       @NotNull final ICapabilityProvider provider,
@@ -1489,11 +1487,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns if the {@link ICapabilityProvider} is full, for a given {@link Direction}.
+     * 返回 {@link ICapabilityProvider} 是否已满，对于给定的 {@link Direction}。
      *
-     * @param provider The {@link ICapabilityProvider}.
-     * @param facing   The side to check for.
-     * @return True if the {@link ICapabilityProvider} is full, false when not.
+     * @param provider 要检查的 {@link ICapabilityProvider}。
+     * @param facing   要检查的侧面。
+     * @return 如果 {@link ICapabilityProvider} 已满，则返回 true，否则返回 false。
      */
     public static boolean isProviderFull(@NotNull final ICapabilityProvider provider, @Nullable final Direction facing)
     {
@@ -1501,11 +1499,11 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the first open slot in the {@link ICapabilityProvider}, for a given {@link Direction}.
+     * 返回 {@link ICapabilityProvider} 中的第一个空槽位，对于给定的 {@link Direction}。
      *
-     * @param provider The {@link ICapabilityProvider} to check.
-     * @param facing   The side to check for.
-     * @return slot index or -1 if none found.
+     * @param provider 要检查的 {@link ICapabilityProvider}。
+     * @param facing   要检查的侧面。
+     * @return 插槽索引或如果没有找到则为 -1。
      */
     public static int getFirstOpenSlotFromProviderForSide(@NotNull final ICapabilityProvider provider, @Nullable final Direction facing)
     {
@@ -1516,20 +1514,19 @@ public class InventoryUtils
 
         return getFirstOpenSlotFromItemHandler(provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).orElse(null));
     }
-
     /**
-     * Checks if the {@link ICapabilityProvider} contains the following toolName with the given minimal Level, for a given {@link Direction}.
+     * 检查给定的 {@link ICapabilityProvider} 是否包含具有给定最小级别的指定工具名称，针对给定的 {@link Direction}。
      *
-     * @param provider     The {@link ICapabilityProvider} to scan.
-     * @param facing       The side to check for.
-     * @param toolType     The tool type to find.
-     * @param minimalLevel The minimal level to find.
-     * @param maximumLevel The maximum level to find.
-     * @return True if a Tool with the given toolTypeName was found in the given {@link ICapabilityProvider}, false when not.
+     * @param provider     要扫描的 {@link ICapabilityProvider}。
+     * @param facing       要检查的方向。
+     * @param toolType     要查找的工具类型。
+     * @param minimalLevel 要查找的最小级别。
+     * @param maximumLevel 要查找的最大级别。
+     * @return 如果在给定的 {@link ICapabilityProvider} 中找到具有给定工具类型名称的工具，则返回 true，否则返回 false。
      */
     public static boolean isToolInProviderForSide(
-      @NotNull final ICapabilityProvider provider, @Nullable final Direction facing, @NotNull final IToolType toolType,
-      final int minimalLevel, final int maximumLevel)
+            @NotNull final ICapabilityProvider provider, @Nullable final Direction facing, @NotNull final IToolType toolType,
+            final int minimalLevel, final int maximumLevel)
     {
         if (!provider.getCapability(ITEM_HANDLER_CAPABILITY, facing).isPresent())
         {
@@ -1540,24 +1537,24 @@ public class InventoryUtils
     }
 
     /**
-     * Checks if the {@link IItemHandler} contains the following toolName with the given minimal Level.
+     * 检查给定的 {@link IItemHandler} 是否包含具有给定最小级别的指定工具名称。
      *
-     * @param itemHandler  The {@link IItemHandler} to scan.
-     * @param toolType     The toolType of the tool to find.
-     * @param minimalLevel The minimal level to find.
-     * @param maximumLevel The maximum level to find.
-     * @return True if a Tool with the given toolTypeName was found in the given {@link IItemHandler}, false when not.
+     * @param itemHandler  要扫描的 {@link IItemHandler}。
+     * @param toolType     要查找的工具的工具类型。
+     * @param minimalLevel 要查找的最小级别。
+     * @param maximumLevel 要查找的最大级别。
+     * @return 如果在给定的 {@link IItemHandler} 中找到具有给定工具类型名称的工具，则返回 true，否则返回 false。
      */
     public static boolean isToolInItemHandler(@NotNull final IItemHandler itemHandler, @NotNull final IToolType toolType, final int minimalLevel, final int maximumLevel)
     {
         return hasItemInItemHandler(itemHandler, (ItemStack stack) ->
-                                                   ItemStackUtils.hasToolLevel(stack, toolType, minimalLevel, maximumLevel));
+                ItemStackUtils.hasToolLevel(stack, toolType, minimalLevel, maximumLevel));
     }
 
     /**
-     * Clears an entire {@link IItemHandler}.
+     * 清空整个 {@link IItemHandler}。
      *
-     * @param itemHandler {@link IItemHandler} to clear.
+     * @param itemHandler 要清空的 {@link IItemHandler}。
      */
     public static void clearItemHandler(@NotNull final IItemHandler itemHandler)
     {
@@ -1568,51 +1565,51 @@ public class InventoryUtils
     }
 
     /**
-     * Returns a slot number if an {@link IItemHandler} contains given tool type.
+     * 如果 {@link IItemHandler} 包含给定的工具类型，则返回槽位编号。
      *
-     * @param itemHandler  the {@link IItemHandler} to get the slot from.
-     * @param toolType     the tool type to look for.
-     * @param minimalLevel The minimal level to find.
-     * @param maximumLevel The maximum level to find.
-     * @return slot number if found, -1 if not found.
+     * @param itemHandler  要从中获取槽位的 {@link IItemHandler}。
+     * @param toolType     要查找的工具类型。
+     * @param minimalLevel 要查找的最小级别。
+     * @param maximumLevel 要查找的最大级别。
+     * @return 如果找到，则返回槽位编号；如果未找到，则返回 -1。
      */
     public static int getFirstSlotOfItemHandlerContainingTool(
-      @NotNull final IItemHandler itemHandler, @NotNull final IToolType toolType, final int minimalLevel,
-      final int maximumLevel)
+            @NotNull final IItemHandler itemHandler, @NotNull final IToolType toolType, final int minimalLevel,
+            final int maximumLevel)
     {
         return findFirstSlotInItemHandlerWith(itemHandler,
-          (ItemStack stack) -> ItemStackUtils.hasToolLevel(stack, toolType, minimalLevel, maximumLevel));
+                (ItemStack stack) -> ItemStackUtils.hasToolLevel(stack, toolType, minimalLevel, maximumLevel));
     }
 
     /**
-     * Verifies if there is one tool with an acceptable level in a worker's inventory.
+     * 验证工人的库存中是否有一个具有可接受级别的工具。
      *
-     * @param itemHandler   the worker's inventory
-     * @param toolType      the type of tool needed
-     * @param requiredLevel the minimum tool level
-     * @param maximumLevel  the worker's hut level
-     * @return true if tool is acceptable
+     * @param itemHandler   工人的库存。
+     * @param toolType      需要的工具类型。
+     * @param requiredLevel 最低工具级别。
+     * @param maximumLevel  工人的小屋级别。
+     * @return 如果工具可接受，则返回 true。
      */
     public static boolean hasItemHandlerToolWithLevel(@NotNull final IItemHandler itemHandler, final IToolType toolType, final int requiredLevel, final int maximumLevel)
     {
         return findFirstSlotInItemHandlerWith(itemHandler,
-          (ItemStack stack) -> (!ItemStackUtils.isEmpty(stack) && (ItemStackUtils.isTool(stack, toolType) && ItemStackUtils.verifyToolLevel(stack,
-            ItemStackUtils.getMiningLevel(stack, toolType),
-            requiredLevel, maximumLevel)))) > -1;
+                (ItemStack stack) -> (!ItemStackUtils.isEmpty(stack) && (ItemStackUtils.isTool(stack, toolType) && ItemStackUtils.verifyToolLevel(stack,
+                        ItemStackUtils.getMiningLevel(stack, toolType),
+                        requiredLevel, maximumLevel)))) > -1;
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link ICapabilityProvider}.
+     * 将给定源 {@link IItemHandler} 中的 ItemStack 与给定目标 {@link ICapabilityProvider} 中的 ItemStack 进行交换的方法。
      *
-     * @param sourceHandler  The {@link IItemHandler} that works as Source.
-     * @param sourceIndex    The index of the slot that is being extracted from.
-     * @param targetProvider The {@link ICapabilityProvider} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param sourceIndex   要提取的槽位的索引。
+     * @param targetProvider 作为目标的 {@link ICapabilityProvider}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferItemStackIntoNextFreeSlotInProvider(
-      @NotNull final IItemHandler sourceHandler,
-      @NotNull final int sourceIndex,
-      @NotNull final ICapabilityProvider targetProvider)
+            @NotNull final IItemHandler sourceHandler,
+            @NotNull final int sourceIndex,
+            @NotNull final ICapabilityProvider targetProvider)
     {
         for (final IItemHandler handler : getItemHandlersFromProvider(targetProvider))
         {
@@ -1626,17 +1623,17 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}.
+     * 将给定源 {@link IItemHandler} 中的 ItemStack 与给定目标 {@link IItemHandler} 中的 ItemStack 进行交换的方法。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param sourceIndex   The index of the slot that is being extracted from.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param sourceIndex   要提取的槽位的索引。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferItemStackIntoNextFreeSlotInItemHandler(
-      @NotNull final IItemHandler sourceHandler,
-      final int sourceIndex,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler sourceHandler,
+            final int sourceIndex,
+            @NotNull final IItemHandler targetHandler)
     {
         ItemStack sourceStack = sourceHandler.extractItem(sourceIndex, Integer.MAX_VALUE, true);
 
@@ -1677,19 +1674,19 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}.
+     * 将给定源 {@link IItemHandler} 中的 ItemStack 的一部分与给定目标 {@link IItemHandler} 中的 ItemStack 进行交换的方法。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param sourceIndex   The index of the slot that is being extracted from.
-     * @param count         the quantity.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param sourceIndex   要提取的槽位的索引。
+     * @param count         数量。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferXOfItemStackIntoNextFreeSlotInItemHandler(
-      @NotNull final IItemHandler sourceHandler,
-      final int sourceIndex,
-      final int count,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler sourceHandler,
+            final int sourceIndex,
+            final int count,
+            @NotNull final IItemHandler targetHandler)
     {
         ItemStack sourceStack = sourceHandler.extractItem(sourceIndex, count, true);
 
@@ -1730,17 +1727,17 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}. Trying to merge existing itemStacks if possible.
+     * 将给定源 {@link IItemHandler} 中的 ItemStack 与给定目标 {@link IItemHandler} 中的 ItemStack 进行交换的方法。尝试合并现有的 ItemStack。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param sourceIndex   The index of the slot that is being extracted from.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param sourceIndex   要提取的槽位的索引。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferItemStackIntoNextBestSlotInItemHandler(
-      @NotNull final IItemHandler sourceHandler,
-      final int sourceIndex,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler sourceHandler,
+            final int sourceIndex,
+            @NotNull final IItemHandler targetHandler)
     {
         ItemStack sourceStack = sourceHandler.extractItem(sourceIndex, Integer.MAX_VALUE, true);
 
@@ -1758,17 +1755,17 @@ public class InventoryUtils
     }
 
     /**
-     * Method to transfer an ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}.
+     * 从给定源 {@link IItemHandler} 中的 ItemStack 向给定目标 {@link IItemHandler} 中的 ItemStack 进行交换的方法。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param predicate     the predicate for the stack.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return true when the swap was successful, false when not.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param predicate     ItemStack 的断言。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferItemStackIntoNextBestSlotInItemHandler(
-      @NotNull final IItemHandler sourceHandler,
-      final Predicate<ItemStack> predicate,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler sourceHandler,
+            final Predicate<ItemStack> predicate,
+            @NotNull final IItemHandler targetHandler)
     {
         for (int i = 0; i < sourceHandler.getSlots(); i++)
         {
@@ -1787,11 +1784,11 @@ public class InventoryUtils
     }
 
     /**
-     * Method to put a given Itemstack in a given target {@link IItemHandler}. Trying to merge existing itemStacks if possible.
+     * 将给定的 ItemStack 放入给定目标 {@link IItemHandler} 中的下一个最佳槽位的方法。尝试合并现有的 ItemStack。
      *
-     * @param stack         the itemStack to transfer.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param stack         要传输的 ItemStack。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static boolean transferItemStackIntoNextBestSlotInItemHandler(final ItemStack stack, @NotNull final IItemHandler targetHandler)
     {
@@ -1799,11 +1796,11 @@ public class InventoryUtils
     }
 
     /**
-     * Method to put a given Itemstack in a given target {@link IItemHandler}. Trying to merge existing itemStacks if possible.
+     * 将给定的 ItemStack 放入给定目标 {@link IItemHandler} 中的下一个最佳槽位的方法。尝试合并现有的 ItemStack。
      *
-     * @param stack         the itemStack to transfer.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return the rest of the stack.
+     * @param stack         要传输的 ItemStack。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 剩余的 ItemStack。
      */
     public static ItemStack transferItemStackIntoNextBestSlotInItemHandlerWithResult(final ItemStack stack, @NotNull final IItemHandler targetHandler)
     {
@@ -1834,17 +1831,16 @@ public class InventoryUtils
     }
 
     /**
-     * Method to merge the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}. Trying to merge itemStacks or returning stack if not
-     * possible.
+     * 合并给定源 {@link IItemHandler} 中的 ItemStack 到给定目标 {@link IItemHandler} 中的方法。尝试合并 ItemStack，如果不可能则返回堆栈。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param sourceIndex   The index of the slot that is being extracted from.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
+     * @param sourceHandler 作为源的 {@link IItemHandler}。
+     * @param sourceIndex   要提取的槽位的索引。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
      */
     public static void mergeItemStackIntoNextBestSlotInItemHandlers(
-      @NotNull final IItemHandler sourceHandler,
-      final int sourceIndex,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler sourceHandler,
+            final int sourceIndex,
+            @NotNull final IItemHandler targetHandler)
     {
         ItemStack sourceStack = sourceHandler.extractItem(sourceIndex, Integer.MAX_VALUE, true);
         int amount = sourceStack.getCount();
@@ -1871,12 +1867,11 @@ public class InventoryUtils
     }
 
     /**
-     * Method to merge the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}. Trying to merge itemStacks or returning stack if not
-     * possible.
+     * 合并给定源 {@link IItemHandler} 中的 ItemStack 到给定目标 {@link IItemHandler} 中的方法。尝试合并 ItemStack，如果不可能则返回堆栈。
      *
-     * @param stack         the stack to add.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param stack         要添加的堆栈。
+     * @param targetHandler 作为目标的 {@link IItemHandler}。
+     * @return 如果交换成功，则返回 true；否则返回 false。
      */
     public static ItemStack mergeItemStackIntoNextBestSlotInItemHandlers(
       final ItemStack stack,
@@ -2000,32 +1995,31 @@ public class InventoryUtils
 
         return currentAmount;
     }
-
     /**
-     * Takes an item matching a predicate and moves it form one handler across multiple slots to the other to a specific slot.
+     * 接受与谓词匹配的项目并将其从一个处理器移动到另一个处理器的特定插槽。
      *
-     * @param sourceHandler               the source handler.
-     * @param itemStackSelectionPredicate the predicate.
-     * @param amount                      the max amount to extract
-     * @param targetHandler               the target.
-     * @param slot                        the slot to put it in.
-     * @return the count of items actually transferred
+     * @param sourceHandler               源处理器。
+     * @param itemStackSelectionPredicate 项目谓词。
+     * @param amount                      最大提取数量
+     * @param targetHandler               目标处理器。
+     * @param slot                        要放置的插槽。
+     * @return 实际转移的项目计数
      */
     public static int transferXInItemHandlerIntoSlotInItemHandler(
-      final IItemHandler sourceHandler,
-      final Predicate<ItemStack> itemStackSelectionPredicate,
-      final int amount,
-      final IItemHandler targetHandler, final int slot)
+            final IItemHandler sourceHandler,
+            final Predicate<ItemStack> itemStackSelectionPredicate,
+            final int amount,
+            final IItemHandler targetHandler, final int slot)
     {
         int actualTransferred = 0;
         while (actualTransferred < amount)
         {
             final int transferred = InventoryUtils.transferXOfFirstSlotInItemHandlerWithIntoInItemHandler(
-              sourceHandler,
-              itemStackSelectionPredicate,
-              amount - actualTransferred,
-              targetHandler,
-              slot);
+                    sourceHandler,
+                    itemStackSelectionPredicate,
+                    amount - actualTransferred,
+                    targetHandler,
+                    slot);
             if (transferred <= 0)
             {
                 break;
@@ -2036,23 +2030,23 @@ public class InventoryUtils
     }
 
     /**
-     * Takes an item matching a predicate and moves it form one handler to the other to a specific slot.
+     * 接受与谓词匹配的项目并将其从一个处理器移动到另一个处理器的特定插槽。
      *
-     * @param sourceHandler               the source handler.
-     * @param itemStackSelectionPredicate the predicate.
-     * @param amount                      the max amount to extract
-     * @param targetHandler               the target.
-     * @param slot                        the slot to put it in.
-     * @return the count of items actually transferred
+     * @param sourceHandler               源处理器。
+     * @param itemStackSelectionPredicate 项目谓词。
+     * @param amount                      最大提取数量
+     * @param targetHandler               目标处理器。
+     * @param slot                        要放置的插槽。
+     * @return 实际转移的项目计数
      */
     public static int transferXOfFirstSlotInItemHandlerWithIntoInItemHandler(
-      final IItemHandler sourceHandler,
-      final Predicate<ItemStack> itemStackSelectionPredicate,
-      final int amount,
-      final IItemHandler targetHandler, final int slot)
+            final IItemHandler sourceHandler,
+            final Predicate<ItemStack> itemStackSelectionPredicate,
+            final int amount,
+            final IItemHandler targetHandler, final int slot)
     {
         final int desiredItemSlot = InventoryUtils.findFirstSlotInItemHandlerNotEmptyWith(sourceHandler,
-          itemStackSelectionPredicate);
+                itemStackSelectionPredicate);
 
         if (desiredItemSlot == -1)
         {
@@ -2074,17 +2068,17 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link ICapabilityProvider} to the given target {@link IItemHandler}.
+     * 从给定的源{@link ICapabilityProvider}向给定的目标{@link IItemHandler}交换ItemStacks的方法。
      *
-     * @param sourceProvider The {@link ICapabilityProvider} that works as Source.
-     * @param sourceIndex    The index of the slot that is being extracted from.
-     * @param targetHandler  The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceProvider 源。
+     * @param sourceIndex    正在提取的插槽的索引。
+     * @param targetHandler  目标。
+     * @return 成功时为true，否则为false。
      */
     public static boolean transferItemStackIntoNextFreeSlotFromProvider(
-      @NotNull final ICapabilityProvider sourceProvider,
-      @NotNull final int sourceIndex,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final ICapabilityProvider sourceProvider,
+            @NotNull final int sourceIndex,
+            @NotNull final IItemHandler targetHandler)
     {
         for (final IItemHandler handler : getItemHandlersFromProvider(sourceProvider))
         {
@@ -2098,19 +2092,19 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}.
+     * 从给定的源{@link IItemHandler}向给定的目标{@link IItemHandler}交换ItemStacks的方法。
      *
-     * @param handler The {@link IItemHandler} that works as Source.
-     * @param stackPredicate The type of stack to pickup.
-     * @param count how much to pick up.
-     * @param targetHandler  The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param handler            源。
+     * @param stackPredicate     要提取的堆栈类型。
+     * @param count              要提取的数量。
+     * @param targetHandler      目标。
+     * @return 成功时为true，否则为false。
      */
     public static boolean transferItemStackIntoNextFreeSlotFromItemHandler(
-      @NotNull final IItemHandler handler,
-      @NotNull final Predicate<ItemStack> stackPredicate,
-      final int count,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final IItemHandler handler,
+            @NotNull final Predicate<ItemStack> stackPredicate,
+            final int count,
+            @NotNull final IItemHandler targetHandler)
     {
         int totalCount = count;
 
@@ -2134,19 +2128,19 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link ICapabilityProvider} to the given target {@link IItemHandler}.
+     * 从给定的源{@link ICapabilityProvider}向给定的目标{@link IItemHandler}交换指定数量的ItemStacks的方法。
      *
-     * @param sourceProvider The {@link ICapabilityProvider} that works as Source.
-     * @param sourceIndex    The index of the slot that is being extracted from.
-     * @param count          the quantity.
-     * @param targetHandler  The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceProvider 源。
+     * @param sourceIndex    正在提取的插槽的索引。
+     * @param count          数量。
+     * @param targetHandler  目标。
+     * @return 成功时为true，否则为false。
      */
     public static boolean transferXOfItemStackIntoNextFreeSlotFromProvider(
-      @NotNull final ICapabilityProvider sourceProvider,
-      final int sourceIndex,
-      final int count,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final ICapabilityProvider sourceProvider,
+            final int sourceIndex,
+            final int count,
+            @NotNull final IItemHandler targetHandler)
     {
         for (final IItemHandler handler : getItemHandlersFromProvider(sourceProvider))
         {
@@ -2160,17 +2154,17 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link ICapabilityProvider} to the given target {@link IItemHandler}.
+     * 从给定的源{@link ICapabilityProvider}向给定的目标{@link IItemHandler}交换ItemStacks的方法。
      *
-     * @param sourceProvider The {@link ICapabilityProvider} that works as Source.
-     * @param sourceIndex    The index of the slot that is being extracted from.
-     * @param targetHandler  The {@link IItemHandler} that works as Target.
-     * @return True when the swap was successful, false when not.
+     * @param sourceProvider 源。
+     * @param sourceIndex    正在提取的插槽的索引。
+     * @param targetHandler  目标。
+     * @return 成功时为true，否则为false。
      */
     public static boolean transferItemStackIntoNextBestSlotFromProvider(
-      @NotNull final ICapabilityProvider sourceProvider,
-      final int sourceIndex,
-      @NotNull final IItemHandler targetHandler)
+            @NotNull final ICapabilityProvider sourceProvider,
+            final int sourceIndex,
+            @NotNull final IItemHandler targetHandler)
     {
         for (final IItemHandler handler : getItemHandlersFromProvider(sourceProvider))
         {
@@ -2184,19 +2178,19 @@ public class InventoryUtils
     }
 
     /**
-     * Method to swap the ItemStacks from the given source {@link IItemHandler} to the given target {@link IItemHandler}.
+     * 从给定的源{@link IItemHandler}向给定的目标{@link IItemHandler}交换ItemStacks的方法。
      *
-     * @param sourceHandler The {@link IItemHandler} that works as Source.
-     * @param sourceIndex   The index of the slot that is being extracted from.
-     * @param targetHandler The {@link IItemHandler} that works as Target.
-     * @param targetIndex   The index of the slot that is being inserted into.
-     * @return True when the swap was successful, false when not.
+     * @param sourceHandler  源。
+     * @param sourceIndex    正在提取的插槽的索引。
+     * @param targetHandler  目标。
+     * @param targetIndex    正在插入的插槽的索引。
+     * @return 成功时为true，否则为false。
      */
     public static boolean swapItemStacksInItemHandlers(
-      @NotNull final IItemHandler sourceHandler,
-      @NotNull final int sourceIndex,
-      @NotNull final IItemHandler targetHandler,
-      @NotNull final int targetIndex)
+            @NotNull final IItemHandler sourceHandler,
+            @NotNull final int sourceIndex,
+            @NotNull final IItemHandler targetHandler,
+            @NotNull final int targetIndex)
     {
         final ItemStack targetStack = targetHandler.extractItem(targetIndex, Integer.MAX_VALUE, false);
         final ItemStack sourceStack = sourceHandler.extractItem(sourceIndex, Integer.MAX_VALUE, true);
@@ -2219,11 +2213,11 @@ public class InventoryUtils
     }
 
     /**
-     * Remove a list of stacks from a given provider
+     * 从给定提供者中移除一组堆栈。
      *
-     * @param provider the provider.
-     * @param input    the list of stacks.
-     * @return true if succesful.
+     * @param provider 提供者。
+     * @param input    堆栈列表。
+     * @return 如果成功则为true。
      */
     public static boolean removeStacksFromProvider(final ICapabilityProvider provider, final List<ItemStack> input)
     {
@@ -2239,11 +2233,11 @@ public class InventoryUtils
     }
 
     /**
-     * Remove a list of stacks from a given Itemhandler
+     * 从给定的Itemhandler中移除一组堆栈。
      *
-     * @param handler the itemHandler.
-     * @param input   the list of stacks.
-     * @return true if succesful.
+     * @param handler Itemhandler。
+     * @param input   堆栈列表。
+     * @return 如果成功则为true。
      */
     public static boolean removeStacksFromItemHandler(final IItemHandler handler, final List<ItemStack> input)
     {
@@ -2287,11 +2281,11 @@ public class InventoryUtils
     }
 
     /**
-     * Tries to remove a stack with its size from a given Itemhandler. Only removes sth if the whole size can be removed.
+     * 尝试从给定的Itemhandler中移除一个堆栈及其大小。仅在可以完全移除整个大小时才会移除。
      *
-     * @param handler the itemHandler.
-     * @param input   the stack to remove.
-     * @return true if removed the stack
+     * @param handler Itemhandler。
+     * @param input   要移除的堆栈。
+     * @return 如果已移除堆栈则为true。
      */
     public static boolean tryRemoveStackFromItemHandler(final IItemHandler handler, final ItemStack input)
     {
@@ -2317,11 +2311,11 @@ public class InventoryUtils
     }
 
     /**
-     * Force remove a stack with a certain amount from a given Itemhandler
+     * 强制从给定的Itemhandler中移除一个堆栈的特定数量。
      *
-     * @param handler the itemHandler.
-     * @param input   the stack to remove.
-     * @param count   the amount to remove.
+     * @param handler Itemhandler。
+     * @param input   要移除的堆栈。
+     * @param count   要移除的数量。
      */
     public static void removeStackFromItemHandler(final IItemHandler handler, final ItemStack input, final int count)
     {
@@ -2351,19 +2345,19 @@ public class InventoryUtils
     }
 
     /**
-     * Check if a certain item is in the provider but without the provider being full.
+     * 检查提供者中是否存在某个项目，但提供者未满。
      *
-     * @param provider the provider to check.
-     * @param item     the item.
-     * @param amount   stack size to be considered.
-     * @return the slot or -1.
+     * @param provider 提供者。
+     * @param item     项目。
+     * @param amount   要考虑的堆叠大小。
+     * @return 插槽或-1。
      */
     public static int findSlotInProviderNotFullWithItem(final ICapabilityProvider provider, final Item item, final int amount)
     {
         for (final IItemHandler handler : getItemHandlersFromProvider(provider))
         {
             final int foundSlot = findSlotInItemHandlerNotFullWithItem(handler, (ItemStack stack) -> compareItems(stack, item), amount);
-            //TODO: When contract is hardened later: Replace this -1 check with a try-catch block.
+            //TODO: 当合同稍后变得更加坚固时，将此-1检查替换为try-catch块。
             if (foundSlot > -1)
             {
                 return foundSlot;
@@ -2374,13 +2368,12 @@ public class InventoryUtils
     }
 
     /**
-     * Check if a certain item is in the handler but without the provider being full. Return as soon as an empty slot and a matching slot has been found. Returns the last matching
-     * slot it found.
+     * 检查处理器中是否存在某个项目，但处理器未满。一旦找到空插槽和匹配的插槽，立即返回。返回最后找到的匹配插槽。
      *
-     * @param handler                     the handler to check.
-     * @param itemStackSelectionPredicate the selection predicate..
-     * @param amount                      stack size to be considered.
-     * @return the slot or -1.
+     * @param handler                     处理器。
+     * @param itemStackSelectionPredicate 选择谓词。
+     * @param amount                      要考虑的堆叠大小。
+     * @return 插槽或-1。
      */
     public static int findSlotInItemHandlerNotFullWithItem(
       final IItemHandler handler,

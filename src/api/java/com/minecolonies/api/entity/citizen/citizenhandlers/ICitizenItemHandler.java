@@ -10,93 +10,93 @@ import org.jetbrains.annotations.Nullable;
 public interface ICitizenItemHandler
 {
     /**
-     * Citizen will try to pick up a certain item.
+     * 市民将尝试拾取特定物品。
      *
-     * @param ItemEntity the item he wants to pickup.
+     * @param ItemEntity 他想要拾取的物品。
      */
     void tryPickupItemEntity(@NotNull ItemEntity ItemEntity);
 
     /**
-     * Removes the currently held item.
+     * 移除当前持有的物品。
      */
     void removeHeldItem();
 
     /**
-     * Sets the currently held item.
+     * 设置当前持有的物品。
      *
-     * @param hand what hand we're setting
-     * @param slot from the inventory slot.
+     * @param hand 手的位置
+     * @param slot 来自背包的槽位。
      */
     void setHeldItem(InteractionHand hand, int slot);
 
     /**
-     * Sets the currently held for mainHand item.
+     * 设置主手当前持有的物品。
      *
-     * @param slot from the inventory slot.
+     * @param slot 来自背包的槽位。
      */
     void setMainHeldItem(int slot);
 
     /**
-     * Swing entity arm, create sound and particle effects.
+     * 摆动实体手臂，创建声音和粒子效果。
      * <p>
-     * Will not break the block.
+     * 不会破坏方块。
      *
-     * @param blockPos Block position.
+     * @param blockPos 方块位置。
      */
     void hitBlockWithToolInHand(@Nullable BlockPos blockPos);
 
     /**
-     * Swing entity arm, create sound and particle effects.
+     * 摆动实体手臂，创建声音和粒子效果。
      * <p>
-     * If breakBlock is true then it will break the block (different sound and particles), and damage the tool in the citizens hand.
+     * 如果breakBlock为true，则会破坏方块（不同的声音和粒子效果），并损坏市民手中的工具。
      *
-     * @param blockPos   Block position.
-     * @param breakBlock if we want to break this block.
+     * @param blockPos   方块位置。
+     * @param breakBlock 是否要破坏此方块。
      */
     void hitBlockWithToolInHand(@Nullable BlockPos blockPos, boolean breakBlock);
 
     /**
-     * Damage the current held item.
+     * 损坏当前持有的物品。
      *
-     * @param hand   hand the item is in.
-     * @param damage amount of damage.
+     * @param hand   物品所在的手。
+     * @param damage 损坏的数量。
      */
     void damageItemInHand(InteractionHand hand, int damage);
 
     /**
-     * Pick up all items in a range around the citizen.
+     * 拾取市民周围范围内的所有物品。
      */
     void pickupItems();
 
     /**
-     * Swing entity arm, create sound and particle effects.
+     * 摆动实体手臂，创建声音和粒子效果。
      * <p>
-     * This will break the block (different sound and particles), and damage the tool in the citizens hand.
+     * 这将破坏方块（不同的声音和粒子效果），并损坏市民手中的工具。
      *
-     * @param blockPos Block position.
+     * @param blockPos 方块位置。
      */
     void breakBlockWithToolInHand(@Nullable BlockPos blockPos);
 
     /**
-     * Handles the dropping of items from the entity.
+     * 处理实体掉落物品。
      *
-     * @param itemstack to drop.
-     * @return the dropped item.
+     * @param itemstack 要掉落的物品。
+     * @return 掉落的物品实体。
      */
     ItemEntity entityDropItem(@NotNull ItemStack itemstack);
 
     /**
-     * Updates the armour damage after being hit.
+     * 在受到打击后更新装甲损伤。
      *
-     * @param damage damage dealt.
+     * @param damage 造成的伤害。
      */
     void updateArmorDamage(double damage);
 
     /**
-     * Apply mending to the armour.
+     * 对装甲进行修复。
      *
-     * @param localXp the xp to add.
-     * @return the remaining xp.
+     * @param localXp 要添加的经验值。
+     * @return 剩余的经验值。
      */
     double applyMending(final double localXp);
 }

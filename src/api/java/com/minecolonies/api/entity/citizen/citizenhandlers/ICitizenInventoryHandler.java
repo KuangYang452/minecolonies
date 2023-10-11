@@ -6,57 +6,57 @@ import net.minecraft.world.item.Item;
 public interface ICitizenInventoryHandler
 {
     /**
-     * Returns the first slot in the inventory with a specific item.
+     * 返回包含特定物品的库存中的第一个槽位。
      *
-     * @param targetItem the item.
-     * @return the slot.
+     * @param targetItem 物品。
+     * @return 槽位。
      */
     int findFirstSlotInInventoryWith(Item targetItem);
 
     /**
-     * Returns the first slot in the inventory with a specific block.
+     * 返回包含特定方块的库存中的第一个槽位。
      *
-     * @param block the block.
-     * @return the slot.
+     * @param block 方块。
+     * @return 槽位。
      */
     int findFirstSlotInInventoryWith(Block block);
 
     /**
-     * Returns the amount of a certain block in the inventory.
+     * 返回库存中特定方块的数量。
      *
-     * @param block the block.
-     * @return the quantity.
+     * @param block 方块。
+     * @return 数量。
      */
     int getItemCountInInventory(Block block);
 
     /**
-     * Returns the amount of a certain item in the inventory.
+     * 返回库存中特定物品的数量。
      *
-     * @param targetItem the block.
-     * @return the quantity.
+     * @param targetItem 物品。
+     * @return 数量。
      */
     int getItemCountInInventory(Item targetItem);
 
     /**
-     * Checks if citizen has a certain block in the inventory.
+     * 检查市民库存中是否有特定方块。
      *
-     * @param block the block.
-     * @return true if so.
+     * @param block 方块。
+     * @return 如果有则为true。
      */
     boolean hasItemInInventory(Block block);
 
     /**
-     * Checks if citizen has a certain item in the inventory.
+     * 检查市民库存中是否有特定物品。
      *
-     * @param item the item.
-     * @return true if so.
+     * @param item 物品。
+     * @return 如果有则为true。
      */
     boolean hasItemInInventory(Item item);
 
     /**
-     * Checks whether or not the inventory is full
+     * 检查库存是否已满。
      *
-     * @return true if the inventory is full
+     * @return 如果库存已满则为true。
      */
     boolean isInventoryFull();
 }

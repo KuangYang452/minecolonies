@@ -9,95 +9,95 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Interface which defines the walkToProxy.
+ * 定义了 walkToProxy 的接口。
  */
 public interface IWalkToProxy
 {
     /**
-     * Leads the entity to a certain position due to proxies.
+     * 通过代理引导实体到特定位置。
      *
-     * @param target the position.
-     * @param range  the range.
-     * @return true if arrived.
+     * @param target 目标位置。
+     * @param range  范围。
+     * @return 如果到达则返回 true。
      */
     boolean walkToBlock(@NotNull final BlockPos target, final int range);
 
     /**
-     * Leads the entity to a certain position due to proxies.
+     * 通过代理将实体引导到特定位置。
      *
-     * @param target the target position.
-     * @param range  the range.
-     * @param onMove entity on move or not?
-     * @return true if arrived.
+     * @param target 目标位置。
+     * @param range  范围。
+     * @param onMove 实体是否在移动？
+     * @return 如果到达目标位置则返回true。
      */
     boolean walkToBlock(@NotNull final BlockPos target, final int range, final boolean onMove);
 
     /**
-     * Get a list of waypoints depending on the entity.
+     * 根据实体获取路点列表。
      *
-     * @return the set of waypoints.
+     * @return 路点集合。
      */
     Set<BlockPos> getWayPoints();
 
     /**
-     * Check if for distance calculation the y level should be taken into account.
+     * 检查是否在距离计算中应考虑Y轴级别。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     boolean careAboutY();
 
     /**
-     * Try to get a specialized proxy to a certain target.
+     * 尝试获取到特定目标的专用代理。
      *
-     * @param target         the target.
-     * @param distanceToPath the distance to it.
-     * @return a special proxy point of existent, else null.
+     * @param target         目标。
+     * @param distanceToPath 到目标的距离。
+     * @return 如果存在，则返回特殊代理点，否则返回 null。
      */
     @Nullable
     BlockPos getSpecializedProxy(final BlockPos target, final double distanceToPath);
 
     /**
-     * Getter for the proxyList.
+     * 获取代理列表的方法。
      *
-     * @return a copy of the list
+     * @return 列表的副本
      */
     List<BlockPos> getProxyList();
 
     /**
-     * Add an entry to the proxy list.
+     * 向代理列表添加一个条目。
      *
-     * @param pos the position to add.
+     * @param pos 要添加的位置。
      */
     void addToProxyList(final BlockPos pos);
 
     /**
-     * Method to call to detect if an entity living is at site with move.
+     * 用于检测生物实体是否在具有移动的位置。
      *
-     * @param entity the entity to check.
-     * @param x      the x value.
-     * @param y      the y value.
-     * @param z      the z value.
-     * @param range  the range.
-     * @return true if so.
+     * @param entity 要检查的实体。
+     * @param x      x 值。
+     * @param y      y 值。
+     * @param z      z 值。
+     * @param range  范围。
+     * @return 如果是，则返回 true。
      */
     boolean isLivingAtSiteWithMove(final Mob entity, final int x, final int y, final int z, final int range);
 
     /**
-     * Getter for the entity accociated with the proxy.
+     * 获取与代理相关联的实体的getter方法。
      *
-     * @return the entity.
+     * @return 实体。
      */
     Mob getEntity();
 
     /**
-     * Getter for the current proxy.
+     * 获取当前代理对象的方法。
      *
-     * @return the current proxy.
+     * @return 当前代理对象。
      */
     BlockPos getCurrentProxy();
 
     /**
-     * Reset the target of the proxy.
+     * 重置代理的目标。
      */
     void reset();
 }

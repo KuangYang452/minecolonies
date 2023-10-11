@@ -23,101 +23,100 @@ import static com.minecolonies.api.util.constant.HappinessConstants.IDLE_AT_JOB_
 public interface IJob<AI extends Goal> extends INBTSerializable<CompoundTag>
 {
     /**
-     * The {@link JobEntry} for this job.
+     * 获取此工作的{@link JobEntry}。
      *
-     * @return The {@link JobEntry}.
+     * @return {@link JobEntry}。
      */
     JobEntry getJobRegistryEntry();
 
     /**
-     * Get the RenderBipedCitizen.Model to use when the Citizen performs this job role.
+     * 获取市民执行此工作角色时要使用的RenderBipedCitizen.Model。
      *
-     * @return Model of the citizen.
+     * @return 市民的模型。
      */
     ResourceLocation getModel();
 
     /**
-     * Get the Colony that this Job is associated with (shortcut for getAssignedCitizen().getColonyByPosFromWorld()).
+     * 获取与此工作关联的殖民地（快捷方式为getAssignedCitizen().getColonyByPosFromWorld()）。
      *
-     * @return {@link com.minecolonies.api.colony.IColony} of the citizen.
+     * @return 市民的{@link com.minecolonies.api.colony.IColony}。
      */
     IColony getColony();
 
     /**
-     * Get a set of async requests connected to this job.
+     * 获取与此工作相关联的一组异步请求。
      *
-     * @return a set of ITokens.
+     * @return 一组ITokens。
      */
     Set<IToken<?>> getAsyncRequests();
 
     /**
-     * Override to add Job-specific AI tasks to the given EntityAITask list.
+     * 重写以向给定的EntityAITask列表添加特定于工作的AI任务。
      *
-     * @param tasks EntityAITasks list to add tasks to.
+     * @param tasks 要添加任务的EntityAITasks列表。
      */
     void addWorkerAIToTaskList(@NotNull GoalSelector tasks);
 
     /**
-     * Generate your AI class to register.
+     * 生成要注册的AI类。
      * <p>
-     * Suppressing Sonar Rule squid:S1452 This rule does "Generic wildcard types should not be used in return parameters" But in this case the rule does not apply because We are
-     * fine with all AbstractJob implementations and need generics only for java
+     * 抑制Sonar规则squid:S1452，此规则执行“不应在返回参数中使用通用通配符类型”，但在这种情况下不适用，因为我们对所有AbstractJob实现都满意，并且仅需要泛型用于Java。
      *
-     * @return your personal AI instance.
+     * @return 您的个人AI实例。
      */
     @SuppressWarnings("squid:S1452")
     AI generateAI();
 
     /**
-     * Check if the citizen already checked for food in his chest today.
+     * 检查市民今天是否已经检查了他的储物柜中的食物。
      *
-     * @return true if so.
+     * @return 如果是，则为true。
      */
     boolean hasCheckedForFoodToday();
 
     /**
-     * Sets that the citizen on this day already searched for food in his chest.
+     * 设置市民今天已经在他的储物柜中搜寻食物。
      */
     void setCheckedForFood();
 
     /**
-     * This method can be used to display the current status. That a citizen is having.
+     * 此方法可用于显示当前状态。市民拥有。
      *
-     * @return Small string to display info in name tag
+     * @return 在名牌中显示信息的小字符串
      */
     String getNameTagDescription();
 
     /**
-     * Used by the AI skeleton to change a citizens name. Mostly used to update debugging information.
+     * 由AI骨架使用的方法来更改市民的名称。主要用于更新调试信息。
      *
-     * @param nameTag The name tag to display.
+     * @param nameTag 要显示的名称标签。
      */
     void setNameTag(String nameTag);
 
     /**
-     * Override this to implement Job specific death achievements.
+     * 重写此方法以实现特定于工作的死亡成就。
      *
-     * @param source  of the death
-     * @param citizen which just died
+     * @param source  死亡的来源
+     * @param citizen 刚刚死亡的市民
      */
     void triggerDeathAchievement(DamageSource source, AbstractEntityCitizen citizen);
 
     /**
-     * Method called when a stack is pickup by the entity.
+     * 当实体拾取堆栈时调用的方法。
      *
-     * @param pickedUpStack The stack that is being picked up.
-     * @return true when the stack has been used to resolve a request, false when not.
+     * @param pickedUpStack 正在拾取的堆栈。
+     * @return 当堆栈已用于解决请求时为true，否则为false。
      */
     boolean onStackPickUp(@NotNull ItemStack pickedUpStack);
 
     /**
-     * Levelup actions on citizen levelup, allows custom actions based on Jobs
+     * 市民升级时的级别上升操作，允许基于工作的自定义操作。
      */
     default void onLevelUp()
     {}
 
     /**
-     * Initizalizes values for an entity when the entity is spawned/assigned to the job
+     * 当实体生成/分配给工作时，初始化实体的值。
      *
      * @param citizen
      */
@@ -125,121 +124,121 @@ public interface IJob<AI extends Goal> extends INBTSerializable<CompoundTag>
     {}
 
     /**
-     * Get the CitizenData that this Job belongs to.
+     * 获取此工作所属的CitizenData。
      *
-     * @return CitizenData that owns this Job.
+     * @return 拥有此工作的CitizenData。
      */
     ICitizenData getCitizen();
 
     /**
-     * Executed every time the colony woke up.
+     * 在每次殖民地醒来时执行。
      */
     void onWakeUp();
 
     /**
-     * Check if it is okay to eat
+     * 检查是否可以进食。
      *
-     * @return true if so.
+     * @return 如果可以，则为true。
      */
     boolean canAIBeInterrupted();
 
     /**
-     * Getter for the amount of actions done.
+     * 获取已执行的操作数量的getter。
      *
-     * @return the quantity.
+     * @return 数量。
      */
     int getActionsDone();
 
     /**
-     * Increase the actions done since the last reset by 1 Used for example to detect if and when the inventory has to be dumped.
+     * 将自上次重置以来已完成的操作数增加1。例如，用于检测何时必须倾倒库存。
      */
     void incrementActionsDone();
 
     /**
-     * Increase the actions done since the last reset by numberOfActions Used for example to detect if and when the inventory has to be dumped.
+     * 将自上次重置以来已完成的操作数增加numberOfActions。例如，用于检测何时必须倾倒库存。
      */
     void incrementActionsDone(int numberOfActions);
 
     /**
-     * Clear the actions done counter. Call this when dumping into the chest.
+     * 清除已完成的操作计数器。在倾倒进储物柜时调用此方法。
      */
     void clearActionsDone();
 
     /**
-     * Get the worker AI associated to this job
+     * 获取与此工作关联的工人AI。
      *
-     * @return worker AI
+     * @return 工人AI。
      */
     AI getWorkerAI();
 
     /**
-     * Check if the citizen is in an idle state.
+     * 检查市民是否处于空闲状态。
      *
-     * @return true if so.
+     * @return 如果是，则为true。
      */
     boolean isIdling();
 
     /**
-     * Reset the AI.
+     * 重置AI。
      */
     void resetAI();
 
     /**
-     * Method to check if the colony job allows avoidance.
+     * 检查工作是否允许回避。
      *
-     * @return true if so.
+     * @return 如果是，则为true。
      */
     boolean allowsAvoidance();
 
     /**
-     * Disease modifier of the job.
+     * 工作的疾病修饰符。
      *
-     * @return the modifier of the job.
+     * @return 工作的修饰符。
      */
     int getDiseaseModifier();
 
     /**
-     * When job removed (death of citizen or job change).
+     * 当工作被移除（市民死亡或工作变更）时。
      */
     void onRemoval();
 
     /**
-     * Check if the particular job ignores a particular damage type.
+     * 检查特定工作是否忽略特定伤害类型的方法。
      *
-     * @param damageSource the damage source to check.
-     * @return true if so.
+     * @param damageSource 要检查的伤害来源。
+     * @return 如果是，则为true。
      */
     boolean ignoresDamage(@NotNull final DamageSource damageSource);
 
     /**
-     * Mark a request as a synchronous (blocking request).
+     * 将请求标记为同步请求（阻塞请求）。
      *
-     * @param id the id.
+     * @param id id。
      */
     void markRequestSync(IToken<?> id);
 
     /**
-     * If the worker can pick up the stack.
-     * @param pickedUpStack the stack to check.
-     * @return true if so.
+     * 如果工人可以拾取堆栈。
+     * @param pickedUpStack 要检查的堆栈。
+     * @return 如果是，则为true。
      */
     boolean pickupSuccess(@NotNull ItemStack pickedUpStack);
 
     /**
-     * Process time the colony was offline.
-     * @param time the time in seconds.
+     * 处理殖民地离线时间。
+     * @param time 时间（秒）。
      */
     void processOfflineTime(long time);
 
     /**
-     * Serialize the job to a buffer.
-     * @param buffer the buffer to serialize it to.
+     * 将工作序列化到缓冲区。
+     * @param buffer 要序列化到的缓冲区。
      */
     void serializeToView(final FriendlyByteBuf buffer);
 
     /**
-     * Get the time limit in seconds after which the job considers itself inactive.
-     * @return the limit, or -1 if not applicable.
+     * 获取工作在多少秒后认为自己处于不活跃状态的时间限制。
+     * @return 限制，如果不适用则为-1。
      */
     default int getInactivityLimit()
     {
@@ -247,9 +246,9 @@ public interface IJob<AI extends Goal> extends INBTSerializable<CompoundTag>
     }
 
     /**
-     * Get the days before complaining or demanding solution for being idle
-     * @param isDemand true if looking for the demand time
-     * @return number of days
+     * 获取投诉或要求解决闲置状态的天数
+     * @param isDemand 如果要查找要求时间则为true
+     * @return 天数
      */
     default int getIdleSeverity(boolean isDemand)
     {
@@ -264,8 +263,8 @@ public interface IJob<AI extends Goal> extends INBTSerializable<CompoundTag>
     }
 
     /**
-     * Trigger a job based action on activity change (active to inactive, or inactive to active).
-     * @param newState the new state (true for active, false for inactive).
+     * 在活动状态更改时触发基于工作的操作（从活动到非活动，或从非活动到活动）。
+     * @param newState 新状态（true表示活动，false表示非活动）。
      */
     default void triggerActivityChangeAction(boolean newState)
     {
@@ -273,14 +272,14 @@ public interface IJob<AI extends Goal> extends INBTSerializable<CompoundTag>
     }
 
     /**
-     * Set the registry entry of the job.
+     * 设置工作的注册条目。
      *
-     * @param jobEntry the job entry belonging to it.
+     * @param jobEntry 属于它的工作条目。
      */
     void setRegistryEntry(JobEntry jobEntry);
 
     /**
-     * Whether the job is a guard
+     * 工作是否为守卫。
      *
      * @return
      */

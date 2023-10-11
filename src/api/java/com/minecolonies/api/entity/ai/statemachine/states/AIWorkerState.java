@@ -1,7 +1,7 @@
 package com.minecolonies.api.entity.ai.statemachine.states;
 
 /**
- * Basic state enclosing states all ai's use. Please extend this class with the states your ai needs. And please document each state on what it does.
+ * 基本状态，包含所有 AI 使用的状态。请通过扩展此类创建您的 AI 需要的状态，并请对每个状态进行文档记录其功能。
  */
 public enum AIWorkerState implements IAIState
 {
@@ -10,74 +10,86 @@ public enum AIWorkerState implements IAIState
 ###GENERAL###
      */
     /**
-     * this is the idle state for the ai. From here on it will start working. Use this state in your ai to start your code.
+     * 这是ai的空闲状态。从这里开始，它将开始工作。在你的ai中使用这个状态来启动你的代码。
      */
     IDLE(true),
     /**
-     * This state is only used on ai initialization. It checks if any important things are null.
+     * 此状态仅用于ai初始化。它检查是否有任何重要的东西为空。
      */
     INIT(true),
     /**
-     * Inventory has to be dumped.
+     * 库存必须转储。
      */
     INVENTORY_FULL(false),
     /**
-     * Check for all required items.
+     * 检查所有必需的项目。
      */
     PREPARING(true),
     /**
-     * Start working by walking to the building.
+     * 步行到大楼开始工作。
      */
     START_WORKING(true),
     /**
-     * The ai needs some items it is waiting for.
+     * 人工智能需要一些它正在等待的项目。
      */
     NEEDS_ITEM(true),
     /**
-     * Start building a StructureIterator.
+     * 开始构建结构迭代器。
      */
     START_BUILDING(false),
     /**
-     * Mine a block.
+     * 挖掘一个方块。
      */
     MINE_BLOCK(false),
     /**
-     * Load the structure and requirements.
+     * 加载结构和要求。
      */
     LOAD_STRUCTURE(false),
     /**
-     * Creates the solid structure.
+     * 创建实体结构。
      */
     BUILDING_STEP(false),
     /**
-     * Completes the building.
+     * 完成建筑。
      */
     COMPLETE_BUILD(false),
     /**
-     * Pick up left over items after building.
+     * 建筑后捡拾剩余的物品。
      */
     PICK_UP_RESIDUALS(true),
     /**
-     * Decide what AIstate to go to next.
+     * 决定下一个AI状态。
      */
     DECIDE(true),
     /**
-     * Do not work, can be used for freetime activities.
+     * 不工作，可以用于业余活动。
      */
     PAUSED(true),
     /**
-     * Walk to goal for debugging.
+     * 步行到调试目标。
      */
     WALK_TO(true),
+    /**
+     * 整理库存。
+     */
+    ORGANIZE_INVENTORY(false),
+    /**
+     * 向仓库移交多余物品。
+     */
+    TRANSFER_TO_WAREHOUSE(true),
+    /**
+     * 从仓库提货。
+     */
+    PICK_UP_FROM_WAREHOUSE(true),
     /*
 ###FISHERMAN###
      */
     /**
-     * The fisherman is looking for water.
+     * 渔夫正在找水。
      */
     FISHERMAN_SEARCHING_WATER(true),
     /**
-     * The fisherman has found water and can start fishing.
+     * 渔夫找到了水，可以开始捕鱼了。
      */
     FISHERMAN_WALKING_TO_WATER(true),
     FISHERMAN_CHECK_WATER(true),
@@ -87,19 +99,19 @@ public enum AIWorkerState implements IAIState
 ###Lumberjack###
      */
     /**
-     * The lumberjack is starting up his/her routine.
+     * 伐木工人正在开始他/她的日常工作。
      */
     LUMBERJACK_START_WORKING(true),
     /**
-     * The lumberjack is looking for trees.
+     * 伐木工人正在找树。
      */
     LUMBERJACK_SEARCHING_TREE(true),
     /**
-     * The lumberjack has found trees and can start cutting them.
+     * 伐木工人找到了树，可以开始砍伐了。
      */
     LUMBERJACK_CHOP_TREE(false),
     /**
-     * The Lumberjack is gathering saplings.
+     * 伐木工人正在采集树苗。
      */
     LUMBERJACK_GATHERING(true),
     /**
@@ -111,27 +123,27 @@ public enum AIWorkerState implements IAIState
 ###Miner###
      */
     /**
-     * Check if there is a mineshaft.
+     * 检查是否有矿井。
      */
     MINER_CHECK_MINESHAFT(true),
     /**
-     * The Miner walks to the ladder.
+     * 矿工走向梯子。
      */
     MINER_WALKING_TO_LADDER(true),
     /**
-     * The Miner repairs its ladder.
+     * 矿工修理梯子。
      */
     MINER_REPAIRING_LADDER(true),
     /**
-     * The Miner mines his shaft.
+     * 矿工挖掘他的竖井。
      */
     MINER_MINING_SHAFT(true),
     /**
-     * The Miner builds his shaft.
+     * 矿工建造了他的竖井。
      */
     MINER_BUILDING_SHAFT(true),
     /**
-     * The Miner mines one node.
+     * 矿工挖掘一个节点。
      */
     MINER_MINING_NODE(true),
 
@@ -140,7 +152,7 @@ public enum AIWorkerState implements IAIState
      */
 
     /**
-     * Pick up all materials he might need.
+     * 捡起他可能需要的所有材料。
      */
     PICK_UP(false),
 
@@ -149,17 +161,17 @@ public enum AIWorkerState implements IAIState
     */
 
     /**
-     * Hoe the field.
+     * 锄地。
      */
     FARMER_HOE(false),
 
     /**
-     * Plant the seeds.
+     * 播种。
      */
     FARMER_PLANT(false),
 
     /**
-     * Harvest the crops.
+     * 收割庄稼。
      */
     FARMER_HARVEST(false),
 
@@ -251,22 +263,22 @@ public enum AIWorkerState implements IAIState
     */
 
     /**
-     * Get stuff from the warehouse.
+     * 从仓库拿东西。
      */
     PREPARE_DELIVERY(true),
 
     /**
-     * Delivery required items or tools.
+     * 交付所需的物品或工具。
      */
     DELIVERY(true),
 
     /**
-     * Pickup unneeded items from buildings.
+     * 从建筑物中拾取不需要的物品。
      */
     PICKUP(true),
 
     /**
-     * Dump inventory over chests in warehouse.
+     * 将存货倾倒在仓库的箱子上。
      */
     DUMPING(false),
 

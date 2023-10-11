@@ -7,172 +7,171 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Set;
-
-public interface ISchematicProvider extends INBTSerializable<CompoundTag>
-{
+public interface ISchematicProvider extends INBTSerializable<CompoundTag> {
     /**
-     * Returns the {@code BlockPos} of the current object, also used as ID.
+     * 返回当前对象的 {@code BlockPos}，也用作ID。
      *
-     * @return {@code BlockPos} of the current object.
+     * @return 当前对象的 {@code BlockPos}。
      */
     BlockPos getPosition();
 
     /**
-     * Sets the corners of the building based on the schematic.
+     * 根据示意图设置建筑的角落。
      *
-     * @param corner1 the first corner.
-     * @param corner2 the second corner.
+     * @param corner1 第一个角落。
+     * @param corner2 第二个角落。
      */
     void setCorners(final BlockPos corner1, final BlockPos corner2);
 
     /**
-     * Get all the corners of the building based on the schematic.
-     * This is the lowest corner (x,y,z) and the highest corner (x,y,z).
+     * 获取基于示意图的建筑的所有角落。
+     * 这是最低角落 (x, y, z) 和最高角落 (x, y, z)。
      *
-     * @return the corners.
+     * @return 角落的元组。
      */
     Tuple<BlockPos, BlockPos> getCorners();
 
     /**
-     * Returns the {@code BlockPos} of the current object, also used as ID.
+     * 返回当前对象的 {@code BlockPos}，也用作ID。
      *
-     * @return {@code BlockPos} of the current object.
+     * @return 当前对象的 {@code BlockPos}。
      */
     BlockPos getID();
 
     /**
-     * Get the parent building position
+     * 获取父建筑的位置。
      *
-     * @return
+     * @return 父建筑的位置。
      */
     BlockPos getParent();
 
     /**
-     * Whether we have a parent
+     * 是否有父建筑。
      *
-     * @return true if there is a parent building
+     * @return 如果有父建筑则返回true。
      */
     boolean hasParent();
 
     /**
-     * Set the parent building position
+     * 设置父建筑的位置。
      * @param pos
      */
     void setParent(BlockPos pos);
 
     /**
-     * Get the child building positions
+     * 获取子建筑的位置集合。
      * @return
      */
     Set<BlockPos> getChildren();
 
     /**
-     * Add a child building position
+     * 添加一个子建筑的位置。
      * @param pos
      */
     void addChild(BlockPos pos);
 
     /**
-     * Remove a child building position
+     * 移除一个子建筑的位置。
      * @param pos
      */
     void removeChild(BlockPos pos);
 
     /**
-     * Returns the rotation of the current building.
+     * 返回当前建筑的旋转值。
      *
-     * @return integer value of the rotation.
+     * @return 旋转值的整数表示。
      */
     int getRotation();
 
     /**
-     * Returns the style of the current building.
+     * 返回当前建筑的风格。
      *
-     * @return String representation of the current building-style
+     * @return 当前建筑风格的字符串表示。
      */
     String getStyle();
 
     /**
-     * Sets the style of the building.
+     * 设置建筑的风格。
      *
-     * @param style String value of the style.
+     * @param style 风格的字符串值。
      */
     void setStyle(String style);
 
     /**
-     * Returns the level of the current object.
+     * 返回当前对象的级别。
      *
-     * @return Level of the current object.
+     * @return 当前对象的级别。
      */
     int getBuildingLevel();
 
     /**
-     * Sets the current level of the building.
+     * 设置建筑的当前级别。
      *
-     * @param level Level of the building.
+     * @param level 建筑的级别。
      */
     void setBuildingLevel(int level);
 
     /**
-     * Returns whether the instance is dirty or not.
+     * 返回实例是否被标记为脏的状态。
      *
-     * @return true if dirty, false if not.
+     * @return 如果脏则返回true，否则返回false。
      */
     boolean isDirty();
 
     /**
-     * Sets {@code #dirty} to false, meaning that the instance is up to date.
+     * 将 {@code #dirty} 设置为false，表示实例已经是最新的。
      */
     void clearDirty();
 
     /**
-     * Marks the instance and the building dirty.
+     * 标记实例和建筑为脏的状态。
      */
     void markDirty();
 
     /**
-     * Sets the mirror of the current building.
+     * 设置当前建筑是否镜像。
      */
     void setIsMirrored(final boolean isMirrored);
 
     /**
-     * Returns the mirror of the current building.
+     * 返回当前建筑是否镜像。
      *
-     * @return boolean value of the mirror.
+     * @return 镜像的布尔值。
      */
     boolean isMirrored();
 
     /**
-     * Children must return the name of their structure.
+     * 子类必须返回它们的结构名称。
      *
-     * @return StructureProxy name.
+     * @return StructureProxy 的名称。
      */
     String getSchematicName();
 
     /**
-     * Children must return their max building level.
+     * 子类必须返回它们的最大建筑级别。
      *
-     * @return Max building level.
+     * @return 最大建筑级别。
      */
     int getMaxBuildingLevel();
 
     /**
-     * Check if the building was deconstructed.
+     * 检查建筑是否已被拆解。
      *
-     * @return true if so.
+     * @return 如果已拆解则返回true。
      */
     boolean isDeconstructed();
 
     /**
-     * Set the building as deconstructed.
+     * 设置建筑为已拆解状态。
      */
     void setDeconstructed();
 
     /**
-     * Called when the old schematic is updated to a new one
+     * 当旧示意图更新到新示意图时调用。
      *
-     * @param oldSchematic
-     * @param newSchematic
+     * @param oldSchematic 旧示意图
+     * @param newSchematic 新示意图
+     * @param blueprintDataProvider 蓝图数据提供者
      */
     void onUpgradeSchematicTo(final String oldSchematic, final String newSchematic, final IBlueprintDataProvider blueprintDataProvider);
 }

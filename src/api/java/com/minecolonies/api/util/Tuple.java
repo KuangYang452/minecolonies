@@ -5,10 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * Our own tuple implementation with hashcode and equals.
+ * 使用自定义哈希码和相等性实现的元组。
  *
- * @param <A> The first obj.
- * @param <B> The second obj.
+ * @param <A> 第一个对象。
+ * @param <B> 第二个对象。
  */
 public class Tuple<A, B>
 {

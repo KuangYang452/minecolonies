@@ -38,139 +38,139 @@ import static com.minecolonies.api.util.constant.ToolLevelConstants.TOOL_LEVEL_W
 public interface IBuilding extends IBuildingContainer, IRequestResolverProvider, IRequester, ISchematicProvider
 {
     /**
-     * Minimal level to ask for wood tools. (WOOD_HUT_LEVEL + 1 == stone)
+     * 询问木制工具的最低等级。 (WOOD_HUT_LEVEL + 1 == 石制工具)
      */
     int WOOD_HUT_LEVEL = 0;
 
     /**
-     * Check if the building has a particular module.
-     * @param clazz the class or interface of the module to check.
-     * @return true if so.
+     * 检查建筑是否具有特定模块。
+     * @param clazz 要检查的模块的类或接口。
+     * @return 如果是，则返回true。
      */
     boolean hasModule(final Class<? extends IBuildingModule> clazz);
 
     /**
-     * Get the first module with a particular class or interface.
-     * @param clazz the module's class or interface.
-     * @return the module or empty if not existent.
+     * 获取具有特定类或接口的第一个模块。
+     * @param clazz 模块的类或接口。
+     * @return 模块，如果不存在则为空。
      */
     @NotNull
     <T extends IBuildingModule> T getFirstModuleOccurance(Class<T> clazz);
 
     /**
-     * Get the first module with a particular class or interface.
-     * @param clazz the module's class or interface.
-     * @return the module or empty if not existent.
+     * 获取具有特定类或接口的第一个模块。
+     * @param clazz 模块的类或接口。
+     * @return 模块，如果不存在则为空。
      */
     @NotNull
     <T extends IBuildingModule> Optional<T> getFirstOptionalModuleOccurance(Class<T> clazz);
 
     /**
-     * Get all modules with a particular class or interface.
-     * @param clazz the module's interface (or class, but prefer getModule in that case)
-     * @return the list of modules or empty if none match.
+     * 获取具有特定类或接口的所有模块。
+     * @param clazz 模块的接口（或类，但在这种情况下更喜欢使用getModule）
+     * @return 模块列表，如果没有匹配项则为空。
      */
     @NotNull
     <T extends IBuildingModule> List<T> getModules(Class<T> clazz);
 
     /**
-     * Get a module matching a certain predicate.
-     * @param clazz the class of the module.
-     * @param modulePredicate the predicate to match.
-     * @param <T> the module type.
-     * @return the first matching module.
-     * @throws IllegalArgumentException if your condition does not match any modules
+     * 获取与特定谓词匹配的模块。
+     * @param clazz 模块的类。
+     * @param modulePredicate 要匹配的谓词。
+     * @param <T> 模块类型。
+     * @return 第一个匹配的模块。
+     * @throws IllegalArgumentException 如果您的条件不匹配任何模块
      */
     @NotNull
     <T extends IBuildingModule> T getModuleMatching(Class<T> clazz, Predicate<? super T> modulePredicate);
 
     /**
-     * Register a specific module to the building.
-     * @param module the module to register.
+     * 注册建筑的特定模块。
+     * @param module 要注册的模块。
      */
     void registerModule(@NotNull final IBuildingModule module);
 
     /**
-     * Getter for the custom name of a building.
+     * 获取建筑的自定义名称。
      *
-     * @return the custom name.
+     * @return 自定义名称。
      */
     @NotNull
     String getCustomName();
 
     /**
-     * Getter for the display name of a building.
-     * Returns either the custom name (if any) or the schematic name.
+     * 获取建筑的显示名称。
+     * 返回自定义名称（如果有）或原理图名称。
      *
-     * @return the display name.
+     * @return 显示名称。
      */
     @NotNull
     String getBuildingDisplayName();
 
     /**
-     * Executed when a new day start.
+     * 在新的一天开始时执行。
      */
     default void onWakeUp() { }
 
     /**
-     * Executed every time when citizen finish inventory cleanup called after citizen got paused. Use for cleaning a state only.
+     * 在市民完成清理库存后调用，当市民暂停后调用。仅用于清理状态。
      *
-     * @param citizen cleanup for citizen.
+     * @param citizen 清理的市民。
      */
     void onCleanUp(ICitizenData citizen);
 
     /**
-     * Executed when RestartCitizenMessage is called and worker is paused. Use for reseting, onCleanUp is called before this
+     * 在调用RestartCitizenMessage时并且工人已暂停时执行。用于重置，onCleanUp在此之前调用
      *
-     * @param citizen the citizen assigned to the building.
+     * @param citizen 分配给建筑的市民。
      */
     void onRestart(ICitizenData citizen);
 
     /**
-     * Called when the building is placed in the world.
+     * 当建筑放置在世界中时调用。
      */
     void onPlacement();
 
     /**
-     * Called when a player comes close to the building.
+     * 当玩家靠近建筑时调用。
      *
-     * @param player entering player
+     * @param player 进入的玩家
      */
     default void onPlayerEnterNearby(final Player player) {}
 
     /**
-     * Called when a player enters the building area
+     * 当玩家进入建筑区域时调用。
      *
-     * @param player entering player
+     * @param player 进入的玩家
      */
     default void onPlayerEnterBuilding(final Player player) {}
 
     /**
-     * Checks if a block matches the current object.
+     * 检查块是否与当前对象匹配。
      *
-     * @param block Block you want to know whether it matches this class or not.
-     * @return True if the block matches this class, otherwise false.
+     * @param block 您要知道它是否与此类匹配的块。
+     * @return 如果块与此类匹配，则为true，否则为false。
      */
     boolean isMatchingBlock(@NotNull Block block);
 
     /**
-     * Destroys the block. Calls {@link #onDestroyed()}.
+     * 摧毁块。调用onDestroyed（）。
      */
     void destroy();
 
     void onDestroyed();
 
     /**
-     * Get the colony from a building.
-     * @return the colony it belongs to.
+     * 从建筑中获取殖民地。
+     * @return 它所属的殖民地。
      */
     IColony getColony();
 
     /**
-     * Method to define if a builder can build this although the builder is not level 1 yet.
+     * 用于定义建筑是否可以由等级不到1的建筑师建造。
      *
-     * @param newLevel the new level of the building.
-     * @return true if so.
+     * @param newLevel 建筑的新等级。
+     * @return 如果可以，则返回true。
      */
     boolean canBeBuiltByBuilder(int newLevel);
 
@@ -178,164 +178,162 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
     void markDirty();
 
     /**
-     * Checks if this building have a work order.
+     * 检查此建筑是否有工作订单。
      *
-     * @return true if the building is building, upgrading or repairing.
+     * @return 如果建筑正在建设、升级或维修，则返回true。
      */
     boolean hasWorkOrder();
 
     /**
-     * Remove the work order for the building.
+     * 删除建筑的工作订单。
      * <p>
-     * Remove either the upgrade or repair work order
+     * 删除升级或维修工作订单
      */
     void removeWorkOrder();
 
     /**
-     * Method to calculate the radius to be claimed by this building depending on the level.
+     * 计算根据等级计算的建筑的索赔半径。
      *
-     * @param buildingLevel the building level.
-     * @return the radius.
+     * @param buildingLevel 建筑等级。
+     * @return 半径。
      */
     int getClaimRadius(int buildingLevel);
 
     /**
-     * Serializes to view. Sends 3 integers. 1) hashcode of the name of the class. 2) building level. 3) max building level.
+     * 序列化为视图。发送3个整数。 1）类名称的哈希码。 2）建筑等级。 3）最大建筑等级。
      *
-     * @param buf FriendlyByteBuf to write to.
+     * @param buf 用于写入的FriendlyByteBuf。
      */
     void serializeToView(@NotNull FriendlyByteBuf buf);
 
     /**
-     * Set the custom building name of the building.
+     * 设置建筑的自定义名称。
      *
-     * @param name the name to set.
+     * @param name 要设置的名称。
      */
     void setCustomBuildingName(String name);
 
     /**
-     * Check if the building should be gathered by the dman.
+     * 检查建筑是否应由dman收集。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     boolean canBeGathered();
 
     /**
-     * Requests an upgrade for the current building.
+     * 为当前建筑请求升级。
      *
-     * @param player  the requesting player.
-     * @param builder the assigned builder.
+     * @param player  发出请求的玩家。
+     * @param builder 分配的建筑师。
      */
     void requestUpgrade(Player player, BlockPos builder);
 
     /**
-     * Requests a removal for the current building.
+     * 为当前建筑请求移除。
      *
-     * @param player  the requesting player.
-     * @param builder the assigned builder.
+     * @param player  发出请求的玩家。
+     * @param builder 分配的建筑师。
      */
     void requestRemoval(Player player, BlockPos builder);
 
     /**
-     * Requests a repair for the current building.
+     * 为当前建筑请求维修。
      *
-     * @param builder the assigned builder.
+     * @param builder 分配的建筑师。
      */
     void requestRepair(BlockPos builder);
 
     /**
-     * Check if the building was built already.
+     * 检查建筑是否已经建造。
      *
-     * @return true if so.
+     * @return 如果是，则返回true。
      */
     boolean isBuilt();
 
     /**
-     * Deconstruct the building on destroyed.
+     * 拆解建筑。
      */
     void deconstruct();
 
     /**
-     * Called upon completion of an upgrade process. We suppress this warning since this parameter will be used in child classes which override this method.
+     * 在升级过程完成时调用。我们抑制了此警告，因为此参数将在覆盖此方法的子类中使用。
      *
-     * @param newLevel The new level.
+     * @param newLevel 新等级。
      */
     void onUpgradeComplete(int newLevel);
 
     /**
-     * Whether this building has a guard building nearby
+     * 此建筑附近是否有警卫建筑
      *
      * @return true/false
      */
     boolean isGuardBuildingNear();
 
     /**
-     * Requests recalculation of whether this building has a guard building nearby
+     * 请求重新计算此建筑是否附近有警卫建筑
      */
     void resetGuardBuildingNear();
 
     /**
-     * Check if the worker requires a certain amount of that item and the alreadykept list contains it.
-     * Always leave one stack behind if the worker requires a certain amount of it. Just to be sure.
+     * 检查工人是否需要某种物品的一定数量，已经保留了该物品。
+     * 如果工人需要某种物品的一定数量，则始终保留一个堆栈。 以确保安全。
      *
-     * @param stack            the stack to check it with.
-     * @param localAlreadyKept already kept items.
-     * @param inventory        if it should be in the inventory or in the building.
-     * @param jobEntry the job entry trying to dump.
-     * @return the amount which can get dumped or 0 if not.
+     * @param stack            要检查的堆栈。
+     * @param localAlreadyKept 已经保留的物品。
+     * @param inventory        它应该在库存中还是在建筑中。
+     * @param jobEntry 尝试倾倒的工作条目。
+     * @return 可以倾倒的数量，或者如果不能则为0。
      */
     int buildingRequiresCertainAmountOfItem(ItemStack stack, List<ItemStorage> localAlreadyKept, boolean inventory, @Nullable final JobEntry jobEntry);
 
     /**
-     * Check if the building requires a certain amount of that item and the alreadykept list contains it.
-     * Always leave one stack behind if the worker requires a certain amount of it. Just to be sure.
+     * 检查建筑是否需要某种物品的一定数量，已经保留了该物品。
+     * 如果工人需要某种物品的一定数量，则始终保留一个堆栈。 以确保安全。
      *
-     * @param stack            the stack to check it with.
-     * @param localAlreadyKept already kept items.
-     * @param inventory        if it should be in the inventory or in the building.
-     * @return the amount which can get dumped or 0 if not.
+     * @param stack            要检查的堆栈。
+     * @param localAlreadyKept 已经保留的物品。
+     * @param inventory        它应该在库存中还是在建筑中。
+     * @return 可以倾倒的数量，或者如果不能则为0。
      */
     default int buildingRequiresCertainAmountOfItem(ItemStack stack, List<ItemStorage> localAlreadyKept, boolean inventory)
     {
         return buildingRequiresCertainAmountOfItem(stack, localAlreadyKept, inventory, null);
     }
-
     /**
-     * Override this method if you want to keep an amount of items in inventory. When the inventory is full, everything get's dumped into the building chest. But you can use this
-     * method to hold some stacks back.
+     * 如果要在库存中保留一定数量的物品，请覆盖此方法。当库存已满时，所有物品都会被倒入建筑物的储物箱。但您可以使用此方法保留一些堆栈。
      *
-     * @return a list of objects which should be kept.
+     * @return 应该保留的对象列表。
      */
     Map<Predicate<ItemStack>, Tuple<Integer, Boolean>> getRequiredItemsAndAmount();
 
     /**
-     * Try to transfer a stack to one of the inventories of the building and force the transfer.
+     * 尝试将一个堆栈传输到建筑物的一个库存中并强制传输。
      *
-     * @param stack the stack to transfer.
-     * @param world the world to do it in.
-     * @return the itemStack which has been replaced or the itemStack which could not be transfered
+     * @param stack 堆栈要传输。
+     * @param world 要执行的世界。
+     * @return 已替换的物品堆栈或无法传输的物品堆栈
      */
     @Nullable
     ItemStack forceTransferStack(ItemStack stack, Level world);
 
     /**
-     * Create a request for a citizen.
+     * 为市民创建一个请求。
      *
-     * @param citizenData the data of the citizen.
-     * @param requested   the request to create.
-     * @param async       if async or not.
-     * @param <R>         the type of the request.
-     * @return the Token of the request.
+     * @param citizenData 市民的数据。
+     * @param requested   要创建的请求。
+     * @param async       是否异步。
+     * @param <R>         请求的类型。
+     * @return 请求的令牌。
      */
     <R extends IRequestable> IToken<?> createRequest(@NotNull ICitizenData citizenData, @NotNull R requested, boolean async);
 
     /**
-     * Create a request for the building.
+     * 为建筑物创建一个请求。
      *
-     * @param requested the request to create.
-     * @param async     if async or not.
-     * @param <R>       the type of the request.
-     * @return the Token of the request.
+     * @param requested 要创建的请求。
+     * @param async     是否异步。
+     * @param <R>       请求的类型。
+     * @return 请求的令牌。
      */
     <R extends IRequestable> IToken<?> createRequest(@NotNull R requested, boolean async);
 
@@ -346,10 +344,10 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
     boolean hasWorkerOpenRequestsFiltered(final int citizenid, @NotNull Predicate<IRequest<?>> selectionPredicate);
 
     /**
-     * Checks whether the citizen has an open sync request, preventing it from working
+     * 检查市民是否有未完成的同步请求，阻止其工作。
      *
-     * @param citizen citizen data to check
-     * @return true if an open non async request exists
+     * @param citizen 要检查的市民数据。
+     * @return 如果存在未完成的非异步请求，则返回true。
      */
     boolean hasOpenSyncRequest(@NotNull ICitizenData citizen);
 
@@ -357,8 +355,8 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
 
     @SuppressWarnings(GENERIC_WILDCARD)
     <R> ImmutableList<IRequest<? extends R>> getOpenRequestsOfType(
-      final int citizenid,
-      TypeToken<R> requestType);
+            final int citizenid,
+            TypeToken<R> requestType);
 
     boolean hasCitizenCompletedRequests(@NotNull ICitizenData data);
 
@@ -371,38 +369,37 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
 
     @SuppressWarnings(GENERIC_WILDCARD)
     <R> ImmutableList<IRequest<? extends R>> getCompletedRequestsOfTypeFiltered(
-      @NotNull ICitizenData citizenData,
-      TypeToken<R> requestType,
-      Predicate<IRequest<? extends R>> filter);
+            @NotNull ICitizenData citizenData,
+            TypeToken<R> requestType,
+            Predicate<IRequest<? extends R>> filter);
 
     void markRequestAsAccepted(@NotNull ICitizenData data, @NotNull IToken<?> token);
 
     void cancelAllRequestsOfCitizen(@NotNull ICitizenData data);
 
     /**
-     * Overrule the next open request with a give stack.
+     * 用给定的堆栈覆盖下一个打开的请求。
      * <p>
-     * We squid:s135 which takes care that there are not too many continue statements in a loop since it makes sense here out of performance reasons.
+     * 我们使用squid:s135来处理循环中的不要有太多的continue语句，因为出于性能原因，这里是有意义的。
      *
-     * @param stack the stack.
+     * @param stack 堆栈。
      */
     @SuppressWarnings("squid:S135")
     void overruleNextOpenRequestWithStack(@NotNull ItemStack stack);
 
     @SuppressWarnings(GENERIC_WILDCARD)
     <R> ImmutableList<IRequest<? extends R>> getOpenRequestsOfTypeFiltered(
-      @NotNull ICitizenData citizenData,
-      TypeToken<R> requestType,
-      Predicate<IRequest<? extends R>> filter);
+            @NotNull ICitizenData citizenData,
+            TypeToken<R> requestType,
+            Predicate<IRequest<? extends R>> filter);
 
     boolean overruleNextOpenRequestOfCitizenWithStack(@NotNull ICitizenData citizenData, @NotNull ItemStack stack);
 
     /**
-     * Creates a pickup request for the building. It will make sure that only one pickup request exists per building, so it's safe to call multiple times. The call will return
-     * false if a pickup request already exists, or if the priority is not within the proper range, or if the pickup priority is set to NEVER (0).
+     * 为建筑物创建一个取货请求。它将确保每个建筑物只存在一个取货请求，因此可以多次调用它是安全的。如果已经存在取货请求，或者优先级不在适当范围内，或者取货优先级设置为NEVER（0），则调用将返回false。
      *
-     * @param scaledPriority The priority of the pickup request. This value is considered already scaled!
-     * @return true if a pickup request could be created, false if not.
+     * @param scaledPriority 取货请求的优先级。此值已被考虑为已经缩放！
+     * @return 如果可以创建取货请求，则返回true，否则返回false。
      */
     boolean createPickupRequest(final int scaledPriority);
 
@@ -416,77 +413,77 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
     Optional<ICitizenData> getCitizenForRequest(@NotNull IToken<?> token);
 
     /**
-     * Calculate the number of reserved stacks the resolver can't touch.
-     * @return a list of itemstorages.
+     * 计算解决程序无法触及的保留堆栈数量。
+     * @return 物品存储的映射。
      */
     Map<ItemStorage, Integer> reservedStacks();
 
     /**
-     * Process time the colony was offline.
-     * @param time the time in seconds.
+     * 处理离线时间。
+     * @param time 时间（以秒为单位）。
      */
     void processOfflineTime(long time);
 
     /**
-     * Calculate all building corners from the schematic data.
+     * 从原理图数据计算所有建筑物角落。
      */
     void calculateCorners();
 
     /**
-     * Check if a certain vec is within this building.
-     * @param pos the pos to check.
-     * @return true if so.
+     * 检查某个位置是否位于建筑物内。
+     * @param pos 要检查的位置。
+     * @return 如果是，则返回true。
      */
     boolean isInBuilding(@NotNull final BlockPos pos);
 
     /**
-     * Upgrades the buildings level to fit its schematic data
+     * 将建筑物的级别升级到适合其原理图数据的级别
      */
     void upgradeBuildingLevelToSchematicData();
 
     /**
-     * Get a map of all open requests by type.
-     * @return the map.
+     * 获取按类型分类的所有打开请求的映射。
+     * @return 映射。
      */
     Map<TypeToken<?>, Collection<IToken<?>>> getOpenRequestsByRequestableType();
 
     /**
-     * Pickup the building including the level and put it in the players inv.
-     * @param player the player picking it up.
+     * 拾取建筑，包括级别，并将其放入玩家的库存中。
+     * @param player 进行拾取的玩家。
      */
     void pickUp(final Player player);
 
     /**
-     * Get the Building type
+     * 获取建筑类型
      *
-     * @return building type
+     * @return 建筑类型
      */
     BuildingEntry getBuildingType();
 
     /**
-     * Set the building type
+     * 设置建筑类型
      *
-     * @param buildingType
+     * @param buildingType 建筑类型
      */
     void setBuildingType(BuildingEntry buildingType);
 
     /**
-     * On tick of the colony.
+     * 殖民地滴答声。
      */
     void onColonyTick(IColony colony);
 
     /**
-     * Check if a certain ItemStack is in the request of a worker.
+     * 检查市民是否在工作请求中包含特定的堆栈。
      *
-     * @param stack the stack to chest.
-     * @return true if so.
+     * @param stack 要检查的堆栈。
+     * @return 如果是，则返回true。
      */
     boolean isItemStackInRequest(@Nullable ItemStack stack);
 
     /**
-     * Get the max tool level useable by the worker.
+     * 获取工人可用的最大工具等级。
      *
-     * @return the integer.
+     * @return 整数。
      */
     default int getMaxToolLevel()
     {
@@ -502,40 +499,40 @@ public interface IBuilding extends IBuildingContainer, IRequestResolverProvider,
     }
 
     /**
-     * Get the set of all assigned citizens in the colony.
-     * @return the list
+     * 获取殖民地中的所有分配市民的集合。
+     * @return 列表
      */
     Set<ICitizenData> getAllAssignedCitizen();
 
     /**
-     * Get all handlers associated with this building.
+     * 获取与此建筑相关的所有处理程序。
      *
-     * @return the handlers of the building + citizen.
+     * @return 建筑+市民的处理程序。
      */
     List<IItemHandler> getHandlers();
 
     /**
-     * Get setting for key. Utility function.
-     * @param key the key.
-     * @param <T> the key type.
-     * @return the setting.
+     * 获取键的设置。实用函数。
+     * @param key 键。
+     * @param <T> 键类型。
+     * @return 设置。
      */
     <T extends ISetting> T getSetting(@NotNull final ISettingKey<T> key);
 
     /**
-     * Get setting for key. Utility function.
-     * @param key the key.
-     * @param <T> the key type.
-     * @return the optional wrapping the value.
+     * 获取键的设置。实用函数。
+     * @param key 键。
+     * @param <T> 键类型。
+     * @return 包装值的可选项。
      */
     @NotNull
     <T extends ISetting> Optional<T> getOptionalSetting(@NotNull final ISettingKey<T> key);
 
     /**
-     * Check if the assigned citizens are allowed to eat the following stack.
+     * 检查分配的市民是否允许食用以下堆栈。
      *
-     * @param stack the stack to test.
-     * @return true if so.
+     * @param stack 要测试的堆栈。
+     * @return 如果允许，则返回true。
      */
     boolean canEat(final ItemStack stack);
 }

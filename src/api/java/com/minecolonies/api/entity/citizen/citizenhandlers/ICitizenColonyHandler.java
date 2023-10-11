@@ -8,9 +8,9 @@ import org.jetbrains.annotations.Nullable;
 public interface ICitizenColonyHandler
 {
     /**
-     * calculate this worker building.
+     * 计算该工人的建筑物。
      *
-     * @return the building or null if none present.
+     * @return 建筑物或null（如果没有）。
      */
     @Nullable
     IBuilding getWorkBuilding();
@@ -19,49 +19,49 @@ public interface ICitizenColonyHandler
     IBuilding getHomeBuilding();
 
     /**
-     * Server-specific update for the EntityCitizen.
+     * EntityCitizen的服务器特定更新。
      *
-     * @param colonyID  the colony id.
-     * @param citizenID the citizen id.
+     * @param colonyID  殖民地ID。
+     * @param citizenID 市民ID。
      */
     void registerWithColony(final int colonyID, final int citizenID);
 
     /**
-     * Update the client side of the citizen entity.
+     * 更新市民实体的客户端部分。
      */
     void updateColonyClient();
 
     /**
-     * Get the amount the worker should decrease its saturation by each action done or x blocks traveled.
+     * 获取工人每次执行的动作或行进x个方块时应减少其饱和度的数量。
      *
-     * @return the double describing it.
+     * @return 描述它的double。
      */
     double getPerBuildingFoodCost();
 
     /**
-     * Getter for the colony.
+     * 获取市民所属的殖民地。
      *
-     * @return the colony of the citizen or null.
+     * @return 市民所属的殖民地或null。
      */
     @Nullable
     IColony getColony();
 
     /**
-     * Getter for the colony id.
+     * 获取殖民地ID。
      *
-     * @return the colony id.
+     * @return 殖民地ID。
      */
     int getColonyId();
 
     /**
-     * Setter for the colony id.
+     * 设置殖民地ID。
      *
-     * @param colonyId the new colonyId.
+     * @param colonyId 新的殖民地ID。
      */
     void setColonyId(int colonyId);
 
     /**
-     * Actions when the entity is removed.
+     * 在实体被移除时执行的操作。
      */
     void onCitizenRemoved();
 }

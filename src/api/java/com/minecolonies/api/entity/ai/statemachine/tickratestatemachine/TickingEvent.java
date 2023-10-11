@@ -9,22 +9,22 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * Event with a tickrate for a statemachine using a tickrate.
+ * 具有节拍率的状态机事件。
  */
 public class TickingEvent<S extends IState> extends TickingTransition<S> implements IStateMachineEvent<S>
 {
     /**
-     * The type of this Event
+     * 此事件的类型
      */
     private final IStateEventType eventType;
 
     /**
-     * Creates a new TickingEvent
+     * 创建一个新的 TickingEvent
      *
-     * @param eventType The type of the event
-     * @param condition condition when the event applies
-     * @param nextState state the event transitions into
-     * @param tickRate  tickrate at which the event is checked
+     * @param eventType 事件的类型
+     * @param condition 事件适用的条件
+     * @param nextState 事件过渡到的状态
+     * @param tickRate  检查事件的节拍率
      */
     protected TickingEvent(
       @NotNull final IStateEventType eventType,
@@ -37,7 +37,7 @@ public class TickingEvent<S extends IState> extends TickingTransition<S> impleme
     }
 
     /**
-     * Get the type of this event
+     * 获取此事件的类型
      */
     @Override
     public IStateEventType getEventType()

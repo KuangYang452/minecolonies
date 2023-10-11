@@ -30,30 +30,30 @@ import org.jetbrains.annotations.NotNull;
 import static com.ldtteam.structurize.placement.handlers.placement.PlacementHandlers.handleTileEntityPlacement;
 
 /**
- * Class of the warehouse building.
+ * 仓库建筑的类。
  */
 public class BuildingWareHouse extends AbstractBuilding implements IWareHouse
 {
     /**
-     * String describing the Warehouse.
+     * 描述仓库的字符串。
      */
     private static final String WAREHOUSE = "warehouse";
 
     /**
-     * Max level of the building.
+     * 建筑的最大级别。
      */
     private static final int MAX_LEVEL = 5;
 
     /**
-     * Max storage upgrades.
+     * 最大存储升级。
      */
     public static final int MAX_STORAGE_UPGRADE = 3;
 
     /**
-     * Instantiates a new warehouse building.
+     * 实例化一个新的仓库建筑。
      *
-     * @param c the colony.
-     * @param l the location
+     * @param c 城邦。
+     * @param l 位置
      */
     public BuildingWareHouse(final IColony c, final BlockPos l)
     {
@@ -63,7 +63,7 @@ public class BuildingWareHouse extends AbstractBuilding implements IWareHouse
     @Override
     public void requestRepair(final BlockPos builder)
     {
-        //To ensure that the racks are all set to in the warehouse when repaired.
+        // 确保修复时所有货架都设置为在仓库中。
         for (final BlockPos pos : containerList)
         {
             if (getColony().getWorld() != null)
@@ -93,9 +93,9 @@ public class BuildingWareHouse extends AbstractBuilding implements IWareHouse
     }
 
     /**
-     * Returns the tile entity that belongs to the colony building.
+     * 返回属于城邦建筑的方块实体。
      *
-     * @return {@link TileEntityColonyBuilding} object of the building.
+     * @return 建筑的{@link TileEntityColonyBuilding}对象。
      */
     @Override
     public AbstractTileEntityWareHouse getTileEntity()
@@ -156,9 +156,9 @@ public class BuildingWareHouse extends AbstractBuilding implements IWareHouse
     }
 
     /**
-     * Upgrade all containers by 9 slots.
+     * 升级所有容器，每个容器增加9个槽位。
      *
-     * @param world the world object.
+     * @param world 世界对象。
      */
     @Override
     public void upgradeContainers(final Level world)
@@ -185,15 +185,15 @@ public class BuildingWareHouse extends AbstractBuilding implements IWareHouse
     }
 
     /**
-     * BuildWarehouse View.
+     * 仓库视图。
      */
     public static class View extends AbstractBuildingView
     {
         /**
-         * Instantiate the warehouse view.
+         * 实例化仓库视图。
          *
-         * @param c the colonyview to put it in
-         * @param l the positon
+         * @param c     要放置的城邦视图
+         * @param l     位置
          */
         public View(final IColonyView c, final BlockPos l)
         {

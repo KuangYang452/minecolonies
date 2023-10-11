@@ -82,7 +82,7 @@ public class FarmerFieldsModuleWindow extends AbstractModuleWindow
     /**
      * String which displays adding a field.
      */
-    private static final String APPROVE = "✓";
+    private static final String APPROVE = "y";
 
     /**
      * Id of the icon inside the GUI.

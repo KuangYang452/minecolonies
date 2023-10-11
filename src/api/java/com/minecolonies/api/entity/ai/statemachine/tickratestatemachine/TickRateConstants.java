@@ -1,17 +1,17 @@
 package com.minecolonies.api.entity.ai.statemachine.tickratestatemachine;
 
 /**
- * Constants for tickrate limited Transitions and statemachines.
+ * 用于限制 tick 率的转换和状态机的常量。
  */
 public class TickRateConstants
 {
     /**
-     * The max delay one can set upon AITarget creation
+     * 在 AITarget 创建时可以设置的最大延迟
      */
     public static final int MAX_TICKRATE = 500;
 
     /**
-     * Maximum of the random offset for AI Ticks, to not activate on the same tick.
+     * AI Tick 的随机偏移的最大值，以避免在同一个 tick 上激活。
      */
     public static final int MAX_TICKRATE_VARIANT = 50;
 }

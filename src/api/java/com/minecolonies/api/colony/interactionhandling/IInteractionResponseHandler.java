@@ -16,114 +16,114 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Response handler for all kind of GUI interactions.
+ * 用于处理各种GUI交互的响应处理程序。
  */
 public interface IInteractionResponseHandler extends INBTSerializable<CompoundTag>
 {
     /**
-     * The inquiry of the GUI to the player. This is the key for the interaction, functions as id.
+     * GUI向玩家提出的问题。这是交互的关键，充当ID。
      *
-     * @return the text inquiry.
+     * @return 文本问题。
      */
     Component getInquiry();
 
     /**
-     * Get a list of all possible responses.
+     * 获取所有可能响应的列表。
      *
-     * @return a list of the possible responses the player can give..
+     * @return 玩家可以给出的可能响应的列表。
      */
     List<Component> getPossibleResponses();
 
     /**
-     * Get possible further interaction from the GUI on response.
+     * 获取响应后GUI可能的进一步交互。
      *
-     * @param response the response given to the GUI.
-     * @return an instance of ICitizenInquiry if existent, else null.
+     * @param response 玩家提供给GUI的响应。
+     * @return 如果存在，则返回ICitizenInquiry的实例，否则返回null。
      */
     @Nullable
     Component getResponseResult(final Component response);
 
     /**
-     * Check if this interaction is a primary interaction or secondary interaction.
+     * 检查此交互是否为主要交互还是次要交互。
      *
-     * @return true if primary.
+     * @return 如果是主要交互，则返回true。
      */
     boolean isPrimary();
 
     /**
-     * Get the priority of this interaction response handler.
+     * 获取此交互响应处理程序的优先级。
      *
-     * @return the chat priority.
+     * @return 聊天优先级。
      */
     IChatPriority getPriority();
 
     /**
-     * Check if this response handler is still visible for the player.
+     * 检查此响应处理程序是否对玩家仍然可见。
      *
-     * @param world the world this citizen is in.
-     * @return true if so.
+     * @param world 此居民所在的世界。
+     * @return 如果仍然可见，则返回true。
      */
     boolean isVisible(final Level world);
 
     /**
-     * Check if this response handler is still valid.
+     * 检查此响应处理程序是否仍然有效。
      *
-     * @param colony the colony the citizen is in.
-     * @return true if still valid, else false.
+     * @param colony 此居民所在的殖民地。
+     * @return 如果仍然有效，则返回true，否则返回false。
      */
     boolean isValid(final ICitizenData colony);
 
     /**
-     * Server side action triggered on a possible response.
+     * 在可能的响应上触发的服务器端操作。
      *
-     * @param response the clicked string response of the player.
-     * @param player   the world it was triggered in.
-     * @param data     the citizen related to it.
+     * @param response 玩家点击的字符串响应。
+     * @param player   触发它的世界。
+     * @param data     与之相关的居民数据。
      */
     void onServerResponseTriggered(final Component response, final Player player, final ICitizenData data);
 
     /**
-     * Client side action triggered on a possible response.
+     * 在可能的响应上触发的客户端端操作。
      *
-     * @param response the clicked string response of the player.
-     * @param player   the client side world.
-     * @param data     the citizen data assigned to it.
-     * @param window   the window it was triggered in.
-     * @return if wishing to continue interacting.
+     * @param response 玩家点击的字符串响应。
+     * @param player   客户端端的世界。
+     * @param data     分配给它的居民数据。
+     * @param window   触发它的窗口。
+     * @return 是否希望继续交互。
      */
     @OnlyIn(Dist.CLIENT)
     boolean onClientResponseTriggered(final Component response, final Player player, final ICitizenDataView data, final BOWindow window);
 
     /**
-     * Remove a certain parent.
+     * 移除特定的父交互。
      *
-     * @param inquiry the parent inquiry.
+     * @param inquiry 父交互的问题。
      */
     void removeParent(Component inquiry);
 
     /**
-     * Gen all child interactions related to this.
+     * 生成与此相关的所有子交互。
      *
-     * @return all child interactions.
+     * @return 所有子交互。
      */
     List<IInteractionResponseHandler> genChildInteractions();
 
     /**
-     * Type id used to deserialize.
+     * 用于反序列化的类型ID。
      *
-     * @return the string type.
+     * @return 字符串类型。
      */
     String getType();
 
     /**
-     * Callback for showing the interaction, to set interaction specific stuff
+     * 打开交互时的回调，用于设置特定于交互的内容。
      */
     default void onWindowOpened(final BOWindow window, final ICitizenDataView dataView) {}
 
     /**
-     * Gets the icon to render for this interaction
+     * 获取要为此交互渲染的图标。
      *
-     * @return resourcelocation for icon
+     * @return 图标的资源位置。
      */
     default ResourceLocation getInteractionIcon()
     {

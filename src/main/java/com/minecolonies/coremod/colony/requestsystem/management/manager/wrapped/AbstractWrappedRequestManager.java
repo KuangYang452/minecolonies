@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
- * Wrapper class for a Manager. Subclasses of this have custom behaviour on at least one method.
+ * 包装类，用于管理请求的管理器。此类的子类在至少一个方法上具有自定义行为。
  */
 public abstract class AbstractWrappedRequestManager implements IRequestManager
 {
@@ -38,9 +38,9 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * The colony this manager manages the requests for.
+     * 该管理器管理的殖民地的信息。
      *
-     * @return The colony this manager manages the requests for.
+     * @return 该管理器管理的殖民地。
      */
     @NotNull
     @Override
@@ -50,9 +50,9 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method used to get the FactoryController of the RequestManager.
+     * 获取RequestManager的FactoryController的方法。
      *
-     * @return The FactoryController of this RequestManager.
+     * @return 该RequestManager的FactoryController。
      */
     @NotNull
     @Override
@@ -62,12 +62,12 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method to create a request for a given object
+     * 为给定对象创建请求的方法。
      *
-     * @param requester The requester.
-     * @param object    The Object that is being requested.
-     * @return The token representing the request.
-     * @throws IllegalArgumentException is thrown when this manager cannot produce a request for the given types.
+     * @param requester 请求者。
+     * @param object    被请求的对象。
+     * @return 代表请求的令牌。
+     * @throws IllegalArgumentException 当此管理器无法为给定类型生成请求时抛出。
      */
     @NotNull
     @Override
@@ -77,10 +77,10 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method used to assign a request to a resolver.
+     * 分配请求给解析器的方法。
      *
-     * @param token The token of the request to assign.
-     * @throws IllegalArgumentException when the token is not registered to a request, or is already assigned to a resolver.
+     * @param token 要分配的请求的令牌。
+     * @throws IllegalArgumentException 当令牌未注册到请求或已分配给解析器时抛出。
      */
     @Override
     public void assignRequest(@NotNull final IToken<?> token) throws IllegalArgumentException
@@ -89,12 +89,12 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method used to create and immediately assign a request.
+     * 创建并立即分配请求的方法。
      *
-     * @param requester The requester of the requestable.
-     * @param object    The requestable
-     * @return The token that represents the request.
-     * @throws IllegalArgumentException when either createRequest or assignRequest have thrown an IllegalArgumentException
+     * @param requester 请求者。
+     * @param object    请求的对象。
+     * @return 代表请求的令牌。
+     * @throws IllegalArgumentException 当createRequest或assignRequest抛出IllegalArgumentException时抛出。
      */
     @NotNull
     @Override
@@ -112,11 +112,11 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method to get a request for a given token.
+     * 获取给定令牌的请求的方法。
      *
-     * @param token The token to get a request for.
-     * @return The request of the given type for that token.
-     * @throws IllegalArgumentException when either their is no request with that token, or the token does not produce a request of the given type T.
+     * @param token 要获取请求的令牌。
+     * @return 该令牌的请求的类型。
+     * @throws IllegalArgumentException 当没有该令牌的请求或令牌不产生给定类型T的请求时抛出。
      */
     @Nullable
     @Override
@@ -126,11 +126,11 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method to get a resolver from its token.
+     * 从令牌获取解析器的方法。
      *
-     * @param token the token.
-     * @return The resolver registered with the given token.
-     * @throws IllegalArgumentException when the token is unknown.
+     * @param token 令牌。
+     * @return 使用给定令牌注册的解析器。
+     * @throws IllegalArgumentException 当令牌未知时抛出。
      */
     @NotNull
     @Override
@@ -140,11 +140,11 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method to get a resolver for a given request.
+     * 为给定请求获取解析器的方法。
      *
-     * @param requestToken The token of the request to get resolver for.
-     * @return Null if the request is not yet resolved, or else the assigned resolver.
-     * @throws IllegalArgumentException Thrown when the token is unknown.
+     * @param requestToken 获取解析器的请求的令牌。
+     * @return 如果请求尚未解析，则返回null，否则返回分配的解析器。
+     * @throws IllegalArgumentException 当令牌未知时抛出。
      */
     @Nullable
     @Override
@@ -154,11 +154,11 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method to update the state of a given request.
+     * 更新给定请求的状态的方法。
      *
-     * @param token The token that represents a given request to update.
-     * @param state The new state of that request.
-     * @throws IllegalArgumentException when the token is unknown to this manager.
+     * @param token 代表要更新的请求的令牌。
+     * @param state 请求的新状态。
+     * @throws IllegalArgumentException 当此管理器未知令牌时抛出。
      */
     @Override
     public void updateRequestState(@NotNull final IToken<?> token, @NotNull final RequestState state) throws IllegalArgumentException
@@ -173,10 +173,10 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method used to indicate to this manager that a new Provider has been added to the colony.
+     * 通知此管理器殖民地已添加新提供者的方法。
      *
-     * @param provider The new provider.
-     * @throws IllegalArgumentException is thrown when a provider with the same token is already registered.
+     * @param provider 新提供者。
+     * @throws IllegalArgumentException 当已经注册具有相同令牌的提供者时抛出。
      */
     @Override
     public void onProviderAddedToColony(@NotNull final IRequestResolverProvider provider) throws IllegalArgumentException
@@ -185,10 +185,10 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     }
 
     /**
-     * Method used to indicate to this manager that Provider has been removed from the colony.
+     * 通知此管理器殖民地已从提供者中移除的方法。
      *
-     * @param provider The removed provider.
-     * @throws IllegalArgumentException is thrown when no provider with the same token is registered.
+     * @param provider 被移除的提供者。
+     * @throws IllegalArgumentException 当没有注册具有相同令牌的提供者时抛出。
      */
     @Override
     public void onProviderRemovedFromColony(@NotNull final IRequestResolverProvider provider) throws IllegalArgumentException
@@ -280,7 +280,7 @@ public abstract class AbstractWrappedRequestManager implements IRequestManager
     @Override
     public void onColonyUpdate(@NotNull final Predicate<IRequest<?>> shouldTriggerReassign)
     {
-        throw new UnsupportedOperationException("This method cannot be used by Wrapped Request Managers!");
+        throw new UnsupportedOperationException("包装请求管理器不能使用此方法！");
     }
 
     @Override
