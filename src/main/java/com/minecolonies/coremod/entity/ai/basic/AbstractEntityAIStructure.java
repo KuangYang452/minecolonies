@@ -80,17 +80,17 @@ import static com.minecolonies.coremod.entity.ai.util.BuildingStructureHandler.S
 public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?, J>, B extends AbstractBuildingStructureBuilder> extends AbstractEntityAIInteract<J, B>
 {
     /**
-     * The current structure task to be build.
+     * 当前要建造的结构任务。
      */
     protected Tuple<StructurePlacer, BuildingStructureHandler<J, B>> structurePlacer;
 
     /**
-     * If the structure state is currently reached limit rather than block placement.
+     * 如果结构状态当前已达到极限而不是阻止放置。
      */
     protected boolean limitReached = false;
 
     /**
-     * Different item check result possibilities.
+     * 不同的物品检查结果可能性。
      */
     public enum ItemCheckResult
     {
@@ -100,86 +100,86 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Predicate defining things we don't want the builders to ever touch.
+     * 定义建造者绝不应该触及的事物的断言。
      */
     protected TriPredicate<BlueprintPositionInfo, BlockPos, IStructureHandler> DONT_TOUCH_PREDICATE = (info, worldPos, handler) ->
     {
         final BlockState worldState = handler.getWorld().getBlockState(worldPos);
 
         return worldState.getBlock() instanceof IBuilderUndestroyable
-                 || worldState.getBlock() == Blocks.BEDROCK
-                 || (info.getBlockInfo().getState().getBlock() instanceof AbstractBlockHut && handler.getWorldPos().equals(worldPos)
-                       && worldState.getBlock() instanceof AbstractBlockHut);
+                || worldState.getBlock() == Blocks.BEDROCK
+                || (info.getBlockInfo().getState().getBlock() instanceof AbstractBlockHut && handler.getWorldPos().equals(worldPos)
+                && worldState.getBlock() instanceof AbstractBlockHut);
     };
 
     /**
-     * Position where the Builders constructs from.
+     * 建筑师开始建造的位置。
      */
     protected BlockPos workFrom;
 
     /**
-     * Block to mine.
+     * 要挖掘的方块。
      */
     protected BlockPos blockToMine;
 
     /**
-     * The id in the list of the last picked up item.
+     * 最后拾取的物品列表中的项目ID。
      */
     private int pickUpCount = 0;
 
     /**
-     * 创建此 AI 基类并设置重要事项。
+     * 创建此AI基类并设置重要事项。
      * <p>
      * 请始终使用此构造函数！
      *
-     * @param job 使用此基类的 AI 的工作类。
+     * @param job 使用此基类的AI的工作类。
      */
     protected AbstractEntityAIStructure(@NotNull final J job)
     {
         super(job);
         this.registerTargets(
 
-          /*
-           * 拾取可能被丢弃的物品
-           */
-          new AITarget(PICK_UP_RESIDUALS, this::pickUpResiduals, TICKS_SECOND),
-          /*
-           * 检查是否应该执行任务
-           */
-          new AIEventTarget(AIBlockingEventType.STATE_BLOCKING, this::checkIfCanceled, IDLE, 1),
-          /*
-           * 选择适当的状态来执行下一步
-           */
-          new AITarget(LOAD_STRUCTURE, this::loadRequirements, 5),
-          /*
-           * 选择适当的状态来执行下一步
-           */
-          new AITarget(START_BUILDING, this::startBuilding, 1),
-          /*
-           * 选择适当的状态来执行下一步
-           */
-          new AITarget(MINE_BLOCK, this::doMining, 10),
-          /*
-           * 检查是否需要建造某物
-           */
-          new AITarget(IDLE, this::isThereAStructureToBuild, () -> START_BUILDING, 100),
-          /*
-           * 建造建筑的结构和基础
-           */
-          new AITarget(BUILDING_STEP, this::structureStep, STANDARD_DELAY),
-          /*
-           * 完成建筑并将控制权交还给 AI
-           */
-          new AITarget(COMPLETE_BUILD, this::completeBuild, STANDARD_DELAY),
-          new AITarget(PICK_UP, this::pickUpMaterial, 5)
+                /*
+                 * 拾取可能被丢弃的物品
+                 */
+                new AITarget(PICK_UP_RESIDUALS, this::pickUpResiduals, TICKS_SECOND),
+                /*
+                 * 检查是否应该执行任务
+                 */
+                new AIEventTarget(AIBlockingEventType.STATE_BLOCKING, this::checkIfCanceled, IDLE, 1),
+                /*
+                 * 选择适当的状态来执行下一步
+                 */
+                new AITarget(LOAD_STRUCTURE, this::loadRequirements, 5),
+                /*
+                 * 选择适当的状态来执行下一步
+                 */
+                new AITarget(START_BUILDING, this::startBuilding, 1),
+                /*
+                 * 选择适当的状态来执行下一步
+                 */
+                new AITarget(MINE_BLOCK, this::doMining, 10),
+                /*
+                 * 检查是否需要建造某物
+                 */
+                new AITarget(IDLE, this::isThereAStructureToBuild, () -> START_BUILDING, 100),
+                /*
+                 * 建造建筑的结构和基础
+                 */
+                new AITarget(BUILDING_STEP, this::structureStep, STANDARD_DELAY),
+                /*
+                 * 完成建筑并将控制权交还给AI
+                 */
+                new AITarget(COMPLETE_BUILD, this::completeBuild, STANDARD_DELAY),
+                new AITarget(PICK_UP, this::pickUpMaterial, 5)
         );
 
     }
 
     /**
-     * State to pick up material before going back to work.
+     * 状态：在继续工作之前拾取材料。
      *
-     * @return the next state to go to.
+     * @return 下一个状态。
      */
     public IAIState pickUpMaterial()
     {
@@ -231,9 +231,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Pick up residuals within the building area.
+     * 拾取建筑区域内的残留物品。
      *
-     * @return the next state to go to.
+     * @return 下一个状态。
      */
     protected IAIState pickUpResiduals()
     {
@@ -261,9 +261,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Completition logic.
+     * 完成逻辑。
      *
-     * @return the final state after completition.
+     * @return 完成后的最终状态。
      */
     protected IAIState completeBuild()
     {
@@ -275,11 +275,11 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Start building this StructureIterator.
+     * 开始建造这个StructureIterator。
      * <p>
-     * Will determine where to start.
+     * 将确定从哪里开始。
      *
-     * @return the new State to start in.
+     * @return 开始的新状态。
      */
     @NotNull
     protected IAIState startBuilding()
@@ -292,8 +292,8 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * The next state after structure loading.
-     * @return the next state.
+     * 结构加载后的下一个状态。
+     * @return 下一个状态。
      */
     public IAIState afterStructureLoading()
     {
@@ -301,12 +301,12 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Walk to the current construction site.
+     * 走到当前建设地点。
      * <p>
-     * Calculates and caches the position where to walk to.
+     * 计算并缓存要走到的位置。
      *
-     * @param currentBlock the current block it is working on.
-     * @return true while walking to the site.
+     * @param currentBlock 当前正在工作的方块。
+     * @return 在走到工地时返回true。
      */
     public boolean walkToConstructionSite(final BlockPos currentBlock)
     {
@@ -315,12 +315,12 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
             workFrom = getWorkingPosition(currentBlock);
         }
 
-        //The miner shouldn't search for a save position. Just let him build from where he currently is.
+        //矿工不应搜索安全位置。只需从当前位置建造即可。
         return worker.isWorkerAtSiteWithMove(workFrom, STANDARD_WORKING_RANGE) || MathUtils.twoDimDistance(worker.blockPosition(), workFrom) < MIN_WORKING_RANGE;
     }
 
     /**
-     * Checks for blocks that need to be treated as deco
+     * 检查需要作为装饰处理的方块。
      */
     protected static boolean isDecoItem(Block block)
     {
@@ -328,9 +328,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * The Structure step to execute the actual placement actions etc.
+     * 执行实际的放置等操作的结构步骤。
      *
-     * @return the next step to go to.
+     * @return 前进到的下一个步骤。
      */
     protected IAIState structureStep()
     {
@@ -348,10 +348,10 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
 
         checkForExtraBuildingActions();
 
-        // some things to do first! then we go to the actual phase!
+        //一些事情要做！然后我们进入实际阶段！
 
-        //Fill workFrom with the position from where the builder should build.
-        //also ensure we are at that position.
+        //填充workFrom，指示建筑师应该从哪里开始建造。
+        //还确保我们在该位置。
         final BlockPos progress = getProgressPos() == null ? NULL_POS : getProgressPos().getA();
         final BlockPos worldPos = structurePlacer.getB().getProgressPosInWorld(progress);
         if (getProgressPos() != null)
@@ -371,7 +371,7 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
         switch (structurePlacer.getB().getStage())
         {
             case BUILD_SOLID:
-                //structure
+                //结构
 
                 result = placer.executeStructureStep(world,
                   null,
@@ -385,12 +385,12 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
                 break;
             case CLEAR_WATER:
 
-                //water
+                //水
                 result = placer.executeStructureStep(world, null, progress, StructurePlacer.Operation.WATER_REMOVAL,
                   () -> placer.getIterator().decrement((info, pos, handler) -> handler.getWorld().getBlockState(pos).getFluidState().isEmpty()), false);
                 break;
             case CLEAR_NON_SOLIDS:
-                // clear air
+                // 清除空气
                 result = placer.executeStructureStep(world,
                   null,
                   progress,
@@ -401,7 +401,7 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
                 break;
             case DECORATE:
 
-                // not solid
+                // 非实体
                 result = placer.executeStructureStep(world,
                   null,
                   progress,
@@ -413,12 +413,12 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
                   false);
                 break;
             case SPAWN:
-                // entities
+                // 实体
                 result = placer.executeStructureStep(world, null, progress, StructurePlacer.Operation.BLOCK_PLACEMENT,
                   () -> placer.getIterator().increment(DONT_TOUCH_PREDICATE.or((info, pos, handler) -> info.getEntities().length == 0)), true);
                 break;
             case REMOVE_WATER:
-                //water
+                //水
                 placer.getIterator().setRemoving();
                 result = placer.executeStructureStep(world, null, progress, StructurePlacer.Operation.WATER_REMOVAL,
                   () -> placer.getIterator().decrement((info, pos, handler) -> info.getBlockInfo().getState().getFluidState().isEmpty()), false);
@@ -510,8 +510,8 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Get the level that affects the place speed.
-     * @return the level.
+     * 获取影响放置速度的等级。
+     * @return 等级。
      */
     public abstract int getPlaceSpeedLevel();
 
@@ -534,8 +534,8 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Separate step for mining.
-     * @return the next state to go to.
+     * 用于采矿的单独步骤。
+     * @return 下一个要前往的状态。
      */
     public IAIState doMining()
     {
@@ -554,13 +554,13 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Loads the structure given the name, rotation and position.
+     * 根据名称、旋转次数和位置加载结构。
      *
-     * @param name        the name to retrieve  it.
-     * @param rotateTimes number of times to rotateWithMirror it.
-     * @param position    the position to set it.
-     * @param isMirrored  is the structure mirroed?
-     * @param removal     if removal step.
+     * @param name        要获取的名称。
+     * @param rotateTimes 旋转的次数。
+     * @param position    要设置的位置。
+     * @param isMirrored  结构是否镜像？
+     * @param removal     是否是移除步骤。
      */
     public void loadStructure(@NotNull final String name, final int rotateTimes, final BlockPos position, final boolean isMirrored, final boolean removal)
     {
@@ -600,7 +600,7 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
         if (!structure.hasBluePrint())
         {
             handleSpecificCancelActions();
-            Log.getLogger().warn("Couldn't find structure with name: " + name + " aborting loading procedure");
+            Log.getLogger().warn("找不到名称为: " + name + " 的结构，中止加载过程");
             return;
         }
         final MutableComponent jobName = Component.translatable(worker.getCitizenData().getJob().getJobRegistryEntry().getTranslationKey().toLowerCase());
@@ -615,8 +615,8 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Set the structure placer.
-     * @param structure the placer.
+     * 设置结构放置者。
+     * @param structure 放置者。
      */
     public void setStructurePlacer(final BuildingStructureHandler<J, B> structure)
     {
@@ -624,12 +624,12 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Check the placers inventory for the items in the itemList and remove it of the list if found.
+     * 检查放置者的库存中是否有物品列表中的物品，并在找到后从列表中移除它们。
      *
-     * @param placer   the placer.
-     * @param itemList the list to check.
-     * @param force    if force insertion.
-     * @return true if need to request.
+     * @param placer   放置者。
+     * @param itemList 要检查的物品列表。
+     * @param force    是否强制插入。
+     * @return 如果需要请求则返回true。
      */
     public static <J extends AbstractJobStructure<?, J>, B extends AbstractBuildingStructureBuilder> ItemCheckResult hasListOfResInInvOrRequest(
       @NotNull final AbstractEntityAIStructure<J, B> placer,
@@ -751,8 +751,8 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Load all requirements of the structure.
-     * @return the next state to go to.
+     * 加载结构的所有要求。
+     * @return 下一个要前往的状态。
      */
     public IAIState loadRequirements()
     {
@@ -760,44 +760,44 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Iterates through all the required resources and stores them in the building.
-     * @return true if finished.
+     * 遍历所有所需资源，并将其存储在建筑中。
+     * @return 如果完成则返回true。
      */
     public boolean requestMaterials()
     {
         /*
-         *  Override if needed.
+         * 如果需要，可以进行覆盖。
          */
         return true;
     }
 
     /**
-     * Register the block as needed at the building if possible.
+     * 将块注册为需要的块，如果可能的话。
      *
-     * @param stack the stack.
+     * @param stack 块的堆栈。
      */
     public void registerBlockAsNeeded(final ItemStack stack)
     {
         /*
-         * Override in child if possible.
+         * 如果需要的话，在子类中进行覆盖。
          */
     }
 
     /**
-     * Store the progressPos in the building if possible for the worker.
+     * 如果需要，将进度位置存储在建筑中，供工人使用。
      *
-     * @param blockPos the progressResult.
-     * @param stage    the current stage.
+     * @param blockPos 进度位置。
+     * @param stage    当前阶段。
      */
     public void storeProgressPos(final BlockPos blockPos, final BuildingStructureHandler.Stage stage)
     {
         /*
-         * Override if needed.
+         * 如果需要，可以进行覆盖。
          */
     }
 
     /**
-     * Fill the list of the item positions to gather.
+     * 填充物品列表。
      */
     @Override
     public void fillItemsList()
@@ -815,19 +815,19 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Calculates the working position.
+     * 计算工作位置。
      * <p>
-     * Takes a min distance from width and length.
+     * 从宽度和长度中取一个最小的距离。
      * <p>
-     * Then finds the floor level at that distance and then check if it does contain two air levels.
+     * 然后查找该距离处的地板级别，然后检查它是否包含两个空气级别。
      *
-     * @param targetPosition the position to work at.
-     * @return BlockPos position to work from.
+     * @param targetPosition 要工作的位置。
+     * @return 从哪个位置开始工作的BlockPos。
      */
     @Override
     public BlockPos getWorkingPosition(final BlockPos targetPosition)
     {
-        //get length or width either is larger.
+        // 获取长度或宽度中较大的一个。
         final int length = structurePlacer.getB().getBluePrint().getSizeX();
         final int width = structurePlacer.getB().getBluePrint().getSizeZ();
         final int distance = Math.max(width, length) + MIN_ADDITIONAL_RANGE_TO_BUILD;
@@ -836,23 +836,23 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Defines blocks that can be built for free.
+     * 定义可免费建造的块。
      *
-     * @param block The block to check if it is free.
-     * @return true or false.
+     * @param block 要检查是否免费的块。
+     * @return true或false。
      */
     public static boolean isBlockFree(@Nullable final BlockState block)
     {
         return block == null
-                 || BlockUtils.isWater(block)
-                 || block.is(BlockTags.LEAVES)
-                 || block.getBlock() == ModBlocks.blockDecorationPlaceholder;
+                || BlockUtils.isWater(block)
+                || block.is(BlockTags.LEAVES)
+                || block.getBlock() == ModBlocks.blockDecorationPlaceholder;
     }
 
     /**
-     * Let childs overwrite this if necessary.
+     * 如果需要，子类可以重写此方法。
      *
-     * @return true if so.
+     * @return 如果需要，返回true。
      */
     protected boolean isAlreadyCleared()
     {
@@ -860,9 +860,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Get the current working position for the worker. If workFrom is null calculate a new one.
+     * 获取工人的当前工作位置。如果workFrom为null，则计算一个新位置。
      *
-     * @return the current working position.
+     * @return 当前的工作位置。
      */
     protected BlockPos getCurrentWorkingPosition()
     {
@@ -870,9 +870,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Check if there is a StructureIterator to be build.
+     * 检查是否存在要建造的结构。
      *
-     * @return true if we should start building.
+     * @return 如果应该开始建造则返回true。
      */
     protected boolean isThereAStructureToBuild()
     {
@@ -885,42 +885,42 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Reduces the needed resources by 1.
+     * 减少所需资源的数量。
      *
-     * @param stack the stack which has been used now.
+     * @param stack 已使用的堆栈。
      */
     public void reduceNeededResources(final ItemStack stack)
     {
         /*
-         * Nothing to be done here. Workers overwrite this if necessary.
+         * 在这里没有需要做的事情。工人如果需要的话会覆盖这个方法。
          */
     }
 
     /**
-     * Check for extra building options to do with each block.
+     * 检查是否有额外的建筑选项与每个块相关。
      */
     public void checkForExtraBuildingActions()
     {
         /*
-         * Override by worker if necessary.
+         * 如果需要，可以在工人中进行覆盖。
          */
     }
 
     /**
-     * Specific actions to handle a cancellation of a structure.
+     * 处理结构取消的特定操作。
      */
     public void handleSpecificCancelActions()
     {
         /*
-         * Child classes have to override this.
+         * 子类必须覆盖此方法。
          */
     }
 
     /**
-     * Check how much of a certain stuck is actually required.
+     * 检查实际需要多少特定的物品。
      *
-     * @param stack the stack to check.
-     * @return the new stack with the correct amount.
+     * @param stack 要检查的堆栈。
+     * @return 包含正确数量的新堆栈。
      */
     @Nullable
     public ItemStack getTotalAmount(@Nullable final ItemStack stack)
@@ -929,7 +929,7 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Set the currentStructure to null.
+     * 将currentStructure设置为null。
      */
     public void resetCurrentStructure()
     {
@@ -939,9 +939,9 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Get the worker of the AI.
+     * 获取AI的工人。
      *
-     * @return the EntityCitizen object.
+     * @return EntityCitizen对象。
      */
     public AbstractEntityCitizen getWorker()
     {
@@ -949,26 +949,26 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Get the current structure progress,
+     * 获取当前结构的进度。
      *
-     * @return the progress with the current stage.
+     * @return 带有当前阶段的进度。
      */
     public abstract Tuple<BlockPos, BuildingStructureHandler.Stage> getProgressPos();
 
     /**
-     * Check if a solid substitution block should be overwritten in a specific case.
+     * 检查是否应该覆盖特定情况下的固体替代块。
      *
-     * @param worldBlock    the worldblock.
-     * @param worldMetadata the world metadata.
-     * @return true if should be overwritten.
+     * @param worldBlock    世界块。
+     * @param worldMetadata 世界元数据。
+     * @return 如果应该覆盖则返回true。
      */
     public abstract boolean shallReplaceSolidSubstitutionBlock(final Block worldBlock, final BlockState worldMetadata);
 
     /**
-     * Searches a handy block to substitute a non-solid space which should be guaranteed solid.
+     * 寻找一个方便的块来替代一个本应是固体的空间。
      *
-     * @param ignored the location the block should be at.
-     * @return the Block.
+     * @param ignored 要放置的位置。
+     * @return 块。
      */
     public BlockState getSolidSubstitution(final BlockPos ignored)
     {
@@ -976,14 +976,14 @@ public abstract class AbstractEntityAIStructure<J extends AbstractJobStructure<?
     }
 
     /**
-     * Execute specific actions on loading a structure.
+     * 执行加载结构时的特定操作。
      */
     protected abstract void executeSpecificCompleteActions();
 
     /**
-     * Check if the structure tusk has been canceled.
+     * 检查结构任务是否已取消。
      *
-     * @return true if reset to idle.
+     * @return 如果重置为空闲状态则返回true。
      */
     protected abstract boolean checkIfCanceled();
 }

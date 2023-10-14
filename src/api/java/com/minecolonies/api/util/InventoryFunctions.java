@@ -9,27 +9,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.*;
 
 /**
- * Java8 functional interfaces for inventories. Most methods will be remapping of parameters to reduce duplication. Because of erasure clashes, not
- * all combinations are supported.
+ * 用于库存的Java 8函数接口。大多数方法将重新映射参数以减少重复。由于类型擦除冲突，不支持所有组合。
  */
 public final class InventoryFunctions
 {
     /**
-     * Private constructor to hide implicit one.
+     * 隐藏默认构造函数的私有构造函数。
      */
     private InventoryFunctions()
     {
         /*
-         * Intentionally left empty.
+         * 故意留空。
          */
     }
 
     /**
-     * Search for a stack in an Inventory matching the predicate.
+     * 在库存中查找与给定断言匹配的物品堆。
      *
-     * @param provider the provider to search in
-     * @param tester   the function to use for testing slots
-     * @return true if it found a stack
+     * @param provider 要搜索的提供者
+     * @param tester   用于测试槽位的函数
+     * @return 如果找到了物品堆，则为true
      */
     public static boolean matchFirstInProvider(final ICapabilityProvider provider, @NotNull final Predicate<ItemStack> tester)
     {
@@ -37,12 +36,12 @@ public final class InventoryFunctions
     }
 
     /**
-     * Topmost function to actually loop over the provider. Will return if it found something.
+     * 实际循环遍历提供者的顶层函数。如果找到一个匹配的物品堆，将返回。
      *
-     * @param provider       the provider to loop over
-     * @param tester         the function to use for testing slots
-     * @param stopAfterFirst if it should stop executing after finding one stack that applies
-     * @return true if it found a stack
+     * @param provider       要遍历的提供者
+     * @param tester         用于测试槽位的函数
+     * @param stopAfterFirst 是否在找到一个匹配的物品堆后停止执行
+     * @return 如果找到了物品堆，则为true
      */
     private static boolean matchInProvider(
       @Nullable final ICapabilityProvider provider,
@@ -61,7 +60,7 @@ public final class InventoryFunctions
             for (int slot = 0; slot < size; slot++)
             {
                 final ItemStack stack = handler.getStackInSlot(slot);
-                //Unchain the function and apply it
+                // 解链函数并应用它
                 if (tester.apply(provider).apply(slot).test(stack))
                 {
                     foundOne = true;
@@ -77,12 +76,11 @@ public final class InventoryFunctions
     }
 
     /**
-     * Topmost matchFirst function, will stop after it finds the first
-     * itemstack.
+     * 顶层的matchFirst函数，将在找到第一个物品堆后停止。
      *
-     * @param provider the provider to search in
-     * @param tester   the function to use for testing slots
-     * @return true if it found a stack
+     * @param provider 要搜索的提供者
+     * @param tester   用于测试槽位的函数
+     * @return 如果找到了物品堆，则为true
      */
     /*
     private static boolean matchFirstInProvider(
@@ -94,12 +92,12 @@ public final class InventoryFunctions
     */
 
     /**
-     * Search for a stack in an Inventory matching the predicate.
+     * 在库存中查找与给定断言匹配的物品堆。
      *
-     * @param provider the provider to search in
-     * @param tester   the function to use for testing slots
-     * @param action   the function to use if a slot matches
-     * @return true if it found a stack
+     * @param provider 要搜索的提供者
+     * @param tester   用于测试槽位的函数
+     * @param action   如果槽位匹配，要使用的函数
+     * @return 如果找到了物品堆，则为true
      */
     public static boolean matchFirstInProviderWithAction(
       final ICapabilityProvider provider,
@@ -121,12 +119,12 @@ public final class InventoryFunctions
     }
 
     /**
-     * Search for a stack in an Inventory matching the predicate.
+     * 在处理程序中查找与给定断言匹配的物品堆。
      *
-     * @param itemHandler the handler to search in
-     * @param tester      the function to use for testing slots
-     * @param action      the function to use if a slot matches
-     * @return true if it found a stack
+     * @param itemHandler 处理程序要搜索的
+     * @param tester      用于测试槽位的函数
+     * @param action      如果槽位匹配，要使用的函数
+     * @return 如果找到了物品堆，则为true
      */
     public static boolean matchFirstInHandlerWithAction(
       @NotNull final IItemHandler itemHandler,
@@ -147,11 +145,11 @@ public final class InventoryFunctions
     }
 
     /**
-     * Will return if it found something in the handler.
+     * 如果在处理程序中找到了某物品堆，将返回。
      *
-     * @param handler the handler to check
-     * @param tester  the function to use for testing slots
-     * @return true if it found a stack
+     * @param handler 要检查的处理程序
+     * @param tester  用于测试槽位的函数
+     * @return 如果找到了物品堆，则为true
      */
     private static boolean matchInHandler(
       @Nullable final IItemHandler handler,
@@ -166,7 +164,7 @@ public final class InventoryFunctions
         for (int slot = 0; slot < size; slot++)
         {
             final ItemStack stack = handler.getStackInSlot(slot);
-            //Unchain the function and apply it
+            // 解链函数并应用它
             if (tester.apply(handler).apply(slot).test(stack))
             {
                 return true;
@@ -177,12 +175,12 @@ public final class InventoryFunctions
     }
 
     /**
-     * Search for a stack in an Inventory matching the predicate.
+     * 在库存中查找与给定断言匹配的物品堆。
      *
-     * @param provider the provider to search in
-     * @param tester   the function to use for testing slots
-     * @param action   the function to use if a slot matches
-     * @return true if it found a stack
+     * @param provider 要搜索的提供者
+     * @param tester   用于测试槽位的函数
+     * @param action   如果槽位匹配，要使用的函数
+     * @return 如果找到了物品堆，则为true
      */
     public static boolean matchFirstInProviderWithSimpleAction(
       final ICapabilityProvider provider,
@@ -204,11 +202,11 @@ public final class InventoryFunctions
     }
 
     /**
-     * Search for a stack in an Inventory matching the predicate. (IInventory, Integer) -&gt; Boolean
+     * 在库存中查找与给定断言匹配的物品堆。 (IInventory, Integer) -&gt; Boolean
      *
-     * @param inventory the inventory to search in
-     * @param tester    the function to use for testing slots
-     * @return true if it found a stack
+     * @param inventory 要搜索的库存
+     * @param tester    用于测试槽位的函数
+     * @return 如果找到了物品堆，则为true
      */
     public static boolean matchFirstInProvider(final ICapabilityProvider inventory, @NotNull final BiPredicate<Integer, ItemStack> tester)
     {
@@ -216,32 +214,32 @@ public final class InventoryFunctions
     }
 
     /**
-     * Functional interface describing a Action that is executed ones a Match (the given ItemStack) is found in the given slot.
+     * 描述在找到匹配的物品堆后执行的操作的功能接口。
      */
     @FunctionalInterface
     public interface IMatchActionResult extends ObjIntConsumer<ICapabilityProvider>
     {
         /**
-         * Method executed when a match has been found.
+         * 当找到与搜索断言匹配的物品堆时执行的方法。
          *
-         * @param provider  The itemstack that matches the predicate for the search.
-         * @param slotIndex The slotindex in which this itemstack was found.
+         * @param provider 与搜索断言匹配的物品堆。
+         * @param slotIndex 找到此物品堆的槽位索引。
          */
         @Override
         void accept(ICapabilityProvider provider, int slotIndex);
     }
 
     /**
-     * Functional interface describing a Action that is executed ones a Match (the given ItemStack) is found in the given slot.
+     * 描述在找到匹配的物品堆后执行的操作的功能接口。
      */
     @FunctionalInterface
     public interface IMatchActionResultHandler extends ObjIntConsumer<IItemHandler>
     {
         /**
-         * Method executed when a match has been found.
+         * 当找到与搜索断言匹配的物品堆时执行的方法。
          *
-         * @param handler   The itemstack that matches the predicate for the search.
-         * @param slotIndex The slotindex in which this itemstack was found.
+         * @param handler 与搜索断言匹配的物品堆。
+         * @param slotIndex 找到此物品堆的槽位索引。
          */
         @Override
         void accept(IItemHandler handler, int slotIndex);

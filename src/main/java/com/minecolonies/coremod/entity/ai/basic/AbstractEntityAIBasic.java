@@ -1820,8 +1820,9 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         final IBuilding building = getBuildingToDump();
         if (InventoryUtils.openSlotCount(worker.getInventoryCitizen()) <= 0)
         {
-            return false;
-        }   //背包已满,返回false
+            currentSlot = 0;
+            return true;
+        }   //背包已满,返回true
 
         final IItemHandler handler = building.getCapability(ITEM_HANDLER_CAPABILITY, null).orElse(null);
         if (handler == null)
@@ -1869,28 +1870,39 @@ public abstract class AbstractEntityAIBasic<J extends AbstractJob<?, J>, B exten
         final IBuilding building = getBuildingToDump();
         final IItemHandler handler = building.getCapability(ITEM_HANDLER_CAPABILITY, null).orElse(null);
         if (handler == null) {
-            return false;
-        }   //容器不存在,返回false
+            currentSlot2 = 0;
+            return true;
+        }   //容器不存在,返回true
         if (InventoryUtils.openSlotCount(handler) <= 0) {
-            return false;
-        }   //建筑库存已满,返回false
+            currentSlot2 = 0;
+            return true;
+        }   //建筑库存已满,返回true
         if (currentSlot2 >= worker.getInventoryCitizen().getSlots()) {
             currentSlot2 = 0;
             return true;
         }   //指针超过最大容量,返回true
         final ItemStack stack = worker.getInventoryCitizen().getStackInSlot(currentSlot2);
         if (stack.isEmpty()) {
+            currentSlot2++;
             return false;
         }   //指向物品格为空,返回false
         List<ItemStack> reservedItems = itemsNiceToHave();
+        if(reservedItems.isEmpty()){
+            currentSlot2 = 0;
+            return true;
+        }   //需保管物品表为空，返回true
         ItemStack itemStack = worker.getInventoryCitizen().getStackInSlot(currentSlot2);
         for (ItemStack item : reservedItems) {
-            if (item == itemStack) {
+            if (item == itemStack) {//格子物品等于需保留物品则卸下并+1，否则直接+1
                 //检查结束,取出物品放入仓库,标记建筑需要更新,消耗饱食度
                 final ItemStack activeStack = worker.getInventoryCitizen().extractItem(currentSlot2, 64, false);
                 InventoryUtils.transferItemStackIntoNextBestSlotInItemHandler(activeStack, handler);
                 building.markDirty();
                 worker.decreaseSaturationForContinuousAction();
+                currentSlot2++;
+                return false;
+            }else{
+                currentSlot2++;
                 return false;
             }
         }

@@ -5,15 +5,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Interface for tickable things.
+ * 可以进行tick的接口。
  */
 public interface ITickable
 {
     /**
-     * Tick the tickable with parameters.
-     * @param level the world its ticking in.
-     * @param state its state.
-     * @param pos the position its ticking at.
+     * 使用参数来进行tick。
+     * @param level 进行tick的世界。
+     * @param state 它的状态。
+     * @param pos 进行tick的位置。
      */
     default void tick(final Level level, final BlockState state, final BlockPos pos)
     {
@@ -21,7 +21,7 @@ public interface ITickable
     }
 
     /**
-     * Default parameterless ticking implementation.
+     * 默认的无参数tick实现。
      */
     default void tick()
     {

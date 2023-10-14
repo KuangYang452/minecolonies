@@ -50,55 +50,55 @@ import static com.minecolonies.api.util.constant.BuildingConstants.DEACTIVATED;
 import static com.minecolonies.api.util.constant.NbtTagConstants.TAG_BUILDING_TYPE;
 
 /**
- * Class which handles the tileEntity of our colonyBuildings.
+ * 处理村庄建筑瓦砾的方块实体的类。
  */
 @SuppressWarnings("PMD.ExcessiveImports")
 public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding implements ITickable
 {
     /**
-     * NBTTag to store the colony id.
+     * 用于存储村庄ID的NBTTag。
      */
     private static final String TAG_COLONY = "colony";
     private static final String TAG_MIRROR = "mirror";
     private static final String TAG_STYLE  = "style";
 
     /**
-     * The colony id.
+     * 村庄ID。
      */
     private int colonyId = 0;
 
     /**
-     * The colony.
+     * 村庄。
      */
     private IColony colony;
 
     /**
-     * The building the tileEntity belongs to.
+     * 瓦砾所属的建筑。
      */
     private IBuilding building;
 
     /**
-     * Check if the building has a mirror.
+     * 检查建筑是否有镜像。
      */
     private boolean mirror;
 
     /**
-     * The style of the building.
+     * 建筑的风格。
      */
     private String style = "";
 
     /**
-     * The name of the building location.
+     * 建筑位置的名称。
      */
     public ResourceLocation registryName;
 
     /**
-     * Create the combined inv wrapper for the building.
+     * 创建建筑的合并存储包装器。
      */
     private LazyOptional<CombinedItemHandler> combinedInv;
 
     /**
-     * Default constructor used to create a new TileEntity via reflection. Do not use.
+     * 用于反射创建新的方块实体的默认构造函数。不要使用。
      */
     public TileEntityColonyBuilding(final BlockPos pos, final BlockState state)
     {
@@ -106,9 +106,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Alternative overriden constructor.
+     * 替代的重载构造函数。
      *
-     * @param type the entity type.
+     * @param type 实体类型。
      */
     public TileEntityColonyBuilding(final BlockEntityType<? extends AbstractTileEntityColonyBuilding> type, final BlockPos pos, final BlockState state)
     {
@@ -116,9 +116,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Returns the colony ID.
+     * 返回村庄ID。
      *
-     * @return ID of the colony.
+     * @return 村庄的ID。
      */
     @Override
     public int getColonyId()
@@ -127,9 +127,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Returns the colony of the tile entity.
+     * 返回方块实体的村庄。
      *
-     * @return Colony of the tile entity.
+     * @return 方块实体的村庄。
      */
     @Override
     public IColony getColony()
@@ -142,7 +142,7 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Synchronises colony references from the tile entity.
+     * 从方块实体同步村庄的引用。
      */
     private void updateColonyReferences()
     {
@@ -157,10 +157,10 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
                 colony = IColonyManager.getInstance().getColonyByWorld(colonyId, getLevel());
             }
 
-            // It's most probably previewed building, please don't spam it here.
+            // 这很可能是一个预览建筑，请不要在这里打印日志。
             if (colony == null && !getLevel().isClientSide)
             {
-                //log on the server
+                // 在服务器端打印日志
                 //Log.getLogger().info(String.format("TileEntityColonyBuilding at %s:[%d,%d,%d] had colony.",getWorld().getWorldInfo().getWorldName(), pos.getX(), pos.getY(), pos.getZ()));
             }
         }
@@ -176,9 +176,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Returns the position of the tile entity.
+     * 返回方块实体的位置。
      *
-     * @return Block Coordinates of the tile entity.
+     * @return 方块实体的坐标位置。
      */
     @Override
     public BlockPos getPosition()
@@ -187,10 +187,10 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Check for a certain item and return the position of the chest containing it.
+     * 检查某个物品，并返回包含该物品的箱子位置。
      *
-     * @param itemStackSelectionPredicate the stack to search for.
-     * @return the position or null.
+     * @param itemStackSelectionPredicate 用于搜索的物品栈。
+     * @return 位置或null。
      */
     @Override
     @Nullable
@@ -224,9 +224,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Sets the colony of the tile entity.
+     * 设置方块实体的村庄。
      *
-     * @param c Colony to set in references.
+     * @param c 要设置为引用的村庄。
      */
     @Override
     public void setColony(final IColony c)
@@ -283,9 +283,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Returns the building associated with the tile entity.
+     * 返回与方块实体关联的建筑。
      *
-     * @return {@link IBuildingContainer} associated with the tile entity.
+     * @return 与方块实体关联的{@link IBuildingContainer}。
      */
     @Override
     public IBuilding getBuilding()
@@ -298,9 +298,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Sets the building associated with the tile entity.
+     * 设置与方块实体关联的建筑。
      *
-     * @param b {@link IBuilding} to associate with the tile entity.
+     * @param b 要与方块实体关联的{@link IBuilding}。
      */
     @Override
     public void setBuilding(final IBuilding b)
@@ -316,9 +316,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Returns the view of the building associated with the tile entity.
+     * 返回与方块实体关联的建筑的视图。
      *
-     * @return {@link IBuildingView} the tile entity is associated with.
+     * @return 与方块实体关联的{@link IBuildingView}。
      */
     @Override
     public IBuildingView getBuildingView()
@@ -381,22 +381,22 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Checks if the player has permission to access the hut.
+     * 检查玩家是否有权限访问瓦砾。
      *
-     * @param player Player to check permission of.
-     * @return True when player has access, or building doesn't exist, otherwise false.
+     * @param player 要检查权限的玩家。
+     * @return 当玩家有权限或建筑不存在时返回true，否则返回false。
      */
     @Override
     public boolean hasAccessPermission(final Player player)
     {
-        //TODO This is called every tick the GUI is open. Is that bad?
+        //TODO 每次打开GUI都会调用这个方法，是否合适？
         return building == null || building.getColony().getPermissions().hasPermission(player, Action.ACCESS_HUTS);
     }
 
     /**
-     * Set if the entity is mirrored.
+     * 设置方块实体是否有镜像。
      *
-     * @param mirror true if so.
+     * @param mirror 如果有镜像则为true。
      */
     @Override
     public void setMirror(final boolean mirror)
@@ -405,9 +405,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Check if building is mirrored.
+     * 检查建筑是否有镜像。
      *
-     * @return true if so.
+     * @return 如果有镜像则为true。
      */
     @Override
     public boolean isMirrored()
@@ -416,9 +416,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Getter for the style.
+     * 获取建筑的风格。
      *
-     * @return the string of it.
+     * @return 风格字符串。
      */
     @Override
     public String getStyle()
@@ -427,9 +427,9 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Set the style of the tileEntity.
+     * 设置方块实体的风格。
      *
-     * @param style the style to set.
+     * @param style 要设置的风格。
      */
     @Override
     public void setStyle(final String style)
@@ -452,13 +452,13 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     @Override
     public void updateBlockState()
     {
-        // Do nothing
+        // 什么都不做
     }
 
     @Override
     public void setSingle(final boolean single)
     {
-        // Do nothing, these are always single!
+        // 什么都不做，这些方块实体总是单独的！
     }
 
     @NotNull
@@ -469,7 +469,7 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
         {
             if (combinedInv == null)
             {
-                //Add additional containers
+                //添加额外的容器
                 final Set<IItemHandlerModifiable> handlers = new LinkedHashSet<>();
                 final Level world = colony.getWorld();
                 if (world != null)
@@ -511,8 +511,8 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
     }
 
     /**
-     * Reactivate the hut of this tileEntity.
-     * Load the schematic data and set the style correctly.
+     * 重新激活该方块实体的瓦砾。
+     * 加载原理图数据并正确设置风格。
      */
     public void reactivate()
     {
@@ -523,7 +523,7 @@ public class TileEntityColonyBuilding extends AbstractTileEntityColonyBuilding i
             this.setStyle(tags.get(0));
         }
 
-        //todo remove after rescan of 1.19 worldgen colonies
+        //todo 移除1.19世界生成村庄的重新扫描之后移除
         if (this.getSchematicName().contains("home"))
         {
             this.setSchematicName(this.getSchematicName().replace("home", "residence"));

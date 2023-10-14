@@ -26,29 +26,29 @@ import java.util.function.Predicate;
 public abstract class AbstractTileEntityColonyBuilding extends TileEntityRack implements IBlueprintDataProvider
 {
     /**
-     * Version of the TE data.
+     * TE数据的版本。
      */
     private static final String TAG_VERSION = "version";
     private static final int    VERSION     = 2;
 
     /**
-     * Corner positions of schematic, relative to te pos.
+     * 方案图的角落位置，相对于TE位置。
      */
     private BlockPos corner1             = BlockPos.ZERO;
     private BlockPos corner2 = BlockPos.ZERO;
 
     /**
-     * The TE's schematic name
+     * TE的方案名称
      */
     private String schematicName = "";
 
     /**
-     * Map of block positions relative to TE pos and string tags
+     * 相对于TE位置的块位置和字符串标签的映射。
      */
     private Map<BlockPos, List<String>> tagPosMap = new HashMap<>();
 
     /**
-     * Check if the building might have old data.
+     * 检查建筑是否可能有旧数据。
      */
     private int version = 0;
 
@@ -58,12 +58,12 @@ public abstract class AbstractTileEntityColonyBuilding extends TileEntityRack im
     }
 
     /**
-     * Finds the first @see ItemStack the type of {@code is}. It will be taken from the chest and placed in the worker inventory. Make sure that the worker stands next the chest to
-     * not break immersion. Also make sure to have inventory space for the stack.
+     * 查找第一个与{@code is}类型相同的@see ItemStack。它将从箱子中取出并放入工人的库存中。确保工人站在箱子旁边以
+     * 不破坏沉浸感。还要确保有足够的库存空间存放堆栈。
      *
-     * @param entity                      the tileEntity chest or building.
-     * @param itemStackSelectionPredicate the itemStack predicate.
-     * @return true if found the stack.
+     * @param entity                      箱子或建筑物的tileEntity。
+     * @param itemStackSelectionPredicate 物品堆叠的断言。
+     * @return 如果找到了堆栈，则返回true。
      */
     public static boolean isInTileEntity(final ICapabilityProvider entity, @NotNull final Predicate<ItemStack> itemStackSelectionPredicate)
     {
@@ -71,103 +71,103 @@ public abstract class AbstractTileEntityColonyBuilding extends TileEntityRack im
     }
 
     /**
-     * Returns the colony ID.
+     * 返回殖民地的ID。
      *
-     * @return ID of the colony.
+     * @return 殖民地的ID。
      */
     public abstract int getColonyId();
 
     /**
-     * Returns the colony of the tile entity.
+     * 返回tile entity的殖民地。
      *
-     * @return Colony of the tile entity.
+     * @return tile entity的殖民地。
      */
     public abstract IColony getColony();
 
     /**
-     * Sets the colony of the tile entity.
+     * 设置tile entity的殖民地。
      *
-     * @param c Colony to set in references.
+     * @param c 要设置的殖民地。
      */
     public abstract void setColony(IColony c);
 
     /**
-     * Returns the position of the tile entity.
+     * 返回tile entity的位置。
      *
-     * @return Block Coordinates of the tile entity.
+     * @return tile entity的块坐标。
      */
     public abstract BlockPos getPosition();
 
     /**
-     * Check for a certain item and return the position of the chest containing it.
+     * 检查特定物品并返回包含该物品的箱子的位置。
      *
-     * @param itemStackSelectionPredicate the stack to search for.
-     * @return the position or null.
+     * @param itemStackSelectionPredicate 要搜索的堆栈。
+     * @return 位置或null。
      */
     @Nullable
     public abstract BlockPos getPositionOfChestWithItemStack(@NotNull Predicate<ItemStack> itemStackSelectionPredicate);
 
     /**
-     * Returns the building associated with the tile entity.
+     * 返回与tile entity相关联的建筑物。
      *
-     * @return {@link IBuildingContainer} associated with the tile entity.
+     * @return 与tile entity相关联的{@link IBuildingContainer}。
      */
     public abstract IBuilding getBuilding();
 
     /**
-     * Sets the building associated with the tile entity.
+     * 设置与tile entity相关联的建筑物。
      *
-     * @param b {@link IBuildingContainer} to associate with the tile entity.
+     * @param b 要与tile entity相关联的{@link IBuildingContainer}。
      */
     public abstract void setBuilding(IBuilding b);
 
     /**
-     * Returns the view of the building associated with the tile entity.
+     * 返回与tile entity相关联的建筑物的视图。
      *
-     * @return {@link IBuildingView} the tile entity is associated with.
+     * @return tile entity相关联的{@link IBuildingView}。
      */
     public abstract IBuildingView getBuildingView();
 
     /**
-     * Checks if the player has permission to access the hut.
+     * 检查玩家是否有权访问小屋。
      *
-     * @param player Player to check permission of.
-     * @return True when player has access, or building doesn't exist, otherwise false.
+     * @param player 要检查权限的玩家。
+     * @return 如果玩家有访问权限，或者建筑不存在，则返回true，否则返回false。
      */
     public abstract boolean hasAccessPermission(Player player);
 
     /**
-     * Set if the entity is mirrored.
+     * 设置实体是否镜像。
      *
-     * @param mirror true if so.
+     * @param mirror 如果是镜像则为true。
      */
     public abstract void setMirror(boolean mirror);
 
     /**
-     * Check if building is mirrored.
+     * 检查建筑是否镜像。
      *
-     * @return true if so.
+     * @return 如果是镜像则为true。
      */
     public abstract boolean isMirrored();
 
     /**
-     * Getter for the style.
+     * 样式的获取器。
      *
-     * @return the string of it.
+     * @return 样式的字符串。
      */
     public abstract String getStyle();
 
     /**
-     * Set the style of the tileEntity.
+     * 设置tileEntity的样式。
      *
-     * @param style the style to set.
+     * @param style 要设置的样式。
      */
     public abstract void setStyle(String style);
 
     /**
-     * Get the building name that this {@link AbstractTileEntityColonyBuilding} belongs to.
+     * 获取属于此{@link AbstractTileEntityColonyBuilding}的建筑名称。
      *
-     * @return The buildings name.
+     * @return 建筑的名称。
      */
     public abstract ResourceLocation getBuildingName();
 
@@ -251,8 +251,8 @@ public abstract class AbstractTileEntityColonyBuilding extends TileEntityRack im
     }
 
     /**
-     * Check if the TE is on an old data version.
-     * @return true if so.
+     * 检查TE是否使用旧数据版本。
+     * @return 如果是，则返回true。
      */
     public boolean isOutdated()
     {
