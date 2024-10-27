@@ -19,8 +19,8 @@ import com.minecolonies.core.colony.expeditions.ExpeditionStage;
 import com.minecolonies.core.colony.expeditions.colony.types.ColonyExpeditionType;
 import com.minecolonies.core.colony.expeditions.colony.types.ColonyExpeditionTypeDifficulty;
 import com.minecolonies.core.colony.expeditions.encounters.ExpeditionEncounter;
-import com.minecolonies.core.colony.expeditions.encounters.ExpeditionEncounterManager;
 import com.minecolonies.core.datalistener.ColonyExpeditionTypeListener;
+import com.minecolonies.core.datalistener.ExpeditionEncounterListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -283,10 +283,10 @@ public class WindowTownHallExpeditions extends AbstractWindowSkeleton implements
                                             final MobKill item = currentStage.getKills().get(itemIndex);
                                             final EntityIcon entityIcon = childKills.findPaneOfTypeByID(PARTIAL_ITEM_PREFIX + colIndex, EntityIcon.class);
 
-                                            final ExpeditionEncounter encounter = ExpeditionEncounterManager.getInstance().getEncounter(item.encounterId());
+                                            final ExpeditionEncounter encounter = ExpeditionEncounterListener.getEncounter(item.encounterId());
                                             if (encounter != null)
                                             {
-                                                entityIcon.setEntity(encounter.getEntityType());
+                                                entityIcon.setEntity(encounter.entityType());
                                                 entityIcon.setCount(item.count());
                                             }
                                             else

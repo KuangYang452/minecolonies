@@ -2,8 +2,10 @@ package com.minecolonies.core.colony.expeditions.encounters;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -59,13 +61,50 @@ public class ExpeditionEncounterParser
     public static JsonObject toJson(final ExpeditionEncounter encounter)
     {
         final JsonObject object = new JsonObject();
-        object.addProperty(PROP_ENTITY_TYPE, EntityType.getKey(encounter.getEntityType()).toString());
-        object.addProperty(PROP_DAMAGE, encounter.getDamage());
-        object.addProperty(PROP_REFLECTING_DAMAGE, encounter.getReflectingDamage());
-        object.addProperty(PROP_HEALTH, encounter.getHealth());
-        object.addProperty(PROP_ARMOR, encounter.getArmor());
-        object.addProperty(PROP_LOOT_TABLE, encounter.getLootTable().toString());
-        object.addProperty(PROP_XP, encounter.getXp());
+        object.addProperty(PROP_ENTITY_TYPE, EntityType.getKey(encounter.entityType()).toString());
+        object.addProperty(PROP_DAMAGE, encounter.damage());
+        object.addProperty(PROP_REFLECTING_DAMAGE, encounter.reflectingDamage());
+        object.addProperty(PROP_HEALTH, encounter.health());
+        object.addProperty(PROP_ARMOR, encounter.armor());
+        object.addProperty(PROP_LOOT_TABLE, encounter.lootTable().toString());
+        object.addProperty(PROP_XP, encounter.xp());
         return object;
+    }
+
+    /**
+     * Turns an expedition encounter instance into NBT format.
+     *
+     * @param encounter the expedition encounter instance.
+     * @param buf       the buf to write into.
+     */
+    public static void toBuffer(final ExpeditionEncounter encounter, final FriendlyByteBuf buf)
+    {
+        buf.writeResourceLocation(encounter.id());
+        buf.writeRegistryId(ForgeRegistries.ENTITY_TYPES, encounter.entityType());
+        buf.writeFloat(encounter.damage());
+        buf.writeFloat(encounter.reflectingDamage());
+        buf.writeDouble(encounter.health());
+        buf.writeInt(encounter.armor());
+        buf.writeResourceLocation(encounter.lootTable());
+        buf.writeDouble(encounter.xp());
+    }
+
+    /**
+     * Attempt to parse an expedition encounter instance from a network buffer.
+     *
+     * @param buf the network buffer.
+     * @return the expedition encounter instance, or null.
+     */
+    public static ExpeditionEncounter fromBuffer(final FriendlyByteBuf buf)
+    {
+        final ResourceLocation id = buf.readResourceLocation();
+        final EntityType<?> entityType = buf.readRegistryIdSafe(EntityType.class);
+        final float damage = buf.readFloat();
+        final float reflectingDamage = buf.readFloat();
+        final double health = buf.readDouble();
+        final int armor = buf.readInt();
+        final ResourceLocation lootTable = buf.readResourceLocation();
+        final double xp = buf.readDouble();
+        return new ExpeditionEncounter(id, entityType, damage, reflectingDamage, health, armor, lootTable, xp);
     }
 }

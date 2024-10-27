@@ -123,7 +123,7 @@ public class DefaultExpeditionEncountersProvider implements DataProvider
         for (int i = 0; i < expeditionEncounters.size(); i++)
         {
             futures[i] =
-              DataProvider.saveStable(cachedOutput, ExpeditionEncounterParser.toJson(expeditionEncounters.get(i)), pathProvider.json(expeditionEncounters.get(i).getId()));
+              DataProvider.saveStable(cachedOutput, ExpeditionEncounterParser.toJson(expeditionEncounters.get(i)), pathProvider.json(expeditionEncounters.get(i).id()));
         }
         return CompletableFuture.allOf(futures);
     }

@@ -18,8 +18,8 @@ import com.minecolonies.core.colony.expeditions.ExpeditionCitizenMember;
 import com.minecolonies.core.colony.expeditions.ExpeditionVisitorMember;
 import com.minecolonies.core.colony.expeditions.colony.types.ColonyExpeditionType;
 import com.minecolonies.core.colony.expeditions.encounters.ExpeditionEncounter;
-import com.minecolonies.core.colony.expeditions.encounters.ExpeditionEncounterManager;
 import com.minecolonies.core.datalistener.ColonyExpeditionTypeListener;
+import com.minecolonies.core.datalistener.ExpeditionEncounterListener;
 import com.minecolonies.core.entity.visitor.ExpeditionaryVisitorType.DespawnTimeData.DespawnTime;
 import com.minecolonies.core.items.ItemAdventureToken;
 import net.minecraft.nbt.CompoundTag;
@@ -245,7 +245,7 @@ public class ColonyExpeditionEvent implements IColonyEvent
         MobType mobType = MobType.UNDEFINED;
         try
         {
-            final Entity entity = encounter.getEntityType().create(colony.getWorld());
+            final Entity entity = encounter.entityType().create(colony.getWorld());
             if (entity instanceof Mob mob)
             {
                 mobType = mob.getMobType();
@@ -259,7 +259,7 @@ public class ColonyExpeditionEvent implements IColonyEvent
 
         for (int i = 0; i < amount; i++)
         {
-            double encounterHealth = encounter.getHealth();
+            double encounterHealth = encounter.health();
 
             // Keep the fight going as long as the mob is not dead.
             while (encounterHealth > 0)
@@ -273,7 +273,7 @@ public class ColonyExpeditionEvent implements IColonyEvent
                 }
 
                 final ItemStack weapon = attacker.getPrimaryWeapon();
-                encounterHealth -= CombatRules.getDamageAfterAbsorb(getWeaponDamage(weapon, mobType), encounter.getArmor(), 0);
+                encounterHealth -= CombatRules.getDamageAfterAbsorb(getWeaponDamage(weapon, mobType), encounter.armor(), 0);
                 if (weapon.hurt(1, random, null))
                 {
                     attacker.setPrimaryWeapon(ItemStack.EMPTY);
@@ -281,9 +281,9 @@ public class ColonyExpeditionEvent implements IColonyEvent
 
                 if (encounterHealth > 0)
                 {
-                    final float damageAmount = handleDamageReduction(attacker, encounter.getDamage());
+                    final float damageAmount = handleDamageReduction(attacker, encounter.damage());
                     attacker.setHealth(Math.max(0, attacker.getHealth() - damageAmount));
-                    encounterHealth -= encounter.getReflectingDamage();
+                    encounterHealth -= encounter.reflectingDamage();
 
                     if (attacker.isDead())
                     {
@@ -294,8 +294,8 @@ public class ColonyExpeditionEvent implements IColonyEvent
 
             if (encounterHealth <= 0)
             {
-                expedition.mobKilled(encounter.getId());
-                final List<ItemStack> loot = processLootTable(encounter.getLootTable(), expeditionType);
+                expedition.mobKilled(encounter.id());
+                final List<ItemStack> loot = processLootTable(encounter.lootTable(), expeditionType);
                 loot.forEach(this::processReward);
             }
         }
@@ -352,7 +352,7 @@ public class ColonyExpeditionEvent implements IColonyEvent
             case TOKEN_TAG_EXPEDITION_TYPE_ENCOUNTER:
             {
                 final String encounterId = compound.getString(TOKEN_TAG_EXPEDITION_ENCOUNTER);
-                final ExpeditionEncounter encounter = ExpeditionEncounterManager.getInstance().getEncounter(new ResourceLocation(encounterId));
+                final ExpeditionEncounter encounter = ExpeditionEncounterListener.getEncounter(new ResourceLocation(encounterId));
                 if (encounter == null)
                 {
                     Log.getLogger().warn("Expedition loot table referred to encounter '{}' which does not exist.", encounterId);

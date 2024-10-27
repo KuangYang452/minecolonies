@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The message used to synchronize global expedition type data from a server to a remote client.
+ * The message used to synchronize global colony expedition type data from a server to a remote client.
  */
-public class GlobalExpeditionTypeSyncMessage implements IMessage
+public class GlobalColonyExpeditionTypeSyncMessage implements IMessage
 {
     /**
      * The buffer with the data.
@@ -24,7 +24,7 @@ public class GlobalExpeditionTypeSyncMessage implements IMessage
     /**
      * Empty constructor used when registering the message
      */
-    public GlobalExpeditionTypeSyncMessage()
+    public GlobalColonyExpeditionTypeSyncMessage()
     {
         super();
     }
@@ -34,7 +34,7 @@ public class GlobalExpeditionTypeSyncMessage implements IMessage
      *
      * @param buf the bytebuffer.
      */
-    public GlobalExpeditionTypeSyncMessage(final FriendlyByteBuf buf)
+    public GlobalColonyExpeditionTypeSyncMessage(final FriendlyByteBuf buf)
     {
         this.buffer = new FriendlyByteBuf(buf.copy());
     }

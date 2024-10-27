@@ -9,7 +9,7 @@ import com.minecolonies.api.util.Log;
 import com.minecolonies.core.Network;
 import com.minecolonies.core.colony.expeditions.colony.types.ColonyExpeditionType;
 import com.minecolonies.core.colony.expeditions.colony.types.ColonyExpeditionTypeParser;
-import com.minecolonies.core.network.messages.client.GlobalExpeditionTypeSyncMessage;
+import com.minecolonies.core.network.messages.client.GlobalColonyExpeditionTypeSyncMessage;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -103,7 +103,7 @@ public class ColonyExpeditionTypeListener extends SimpleJsonResourceReloadListen
         {
             ColonyExpeditionTypeParser.toBuffer(entry.getValue(), byteBuf);
         }
-        Network.getNetwork().sendToPlayer(new GlobalExpeditionTypeSyncMessage(byteBuf), player);
+        Network.getNetwork().sendToPlayer(new GlobalColonyExpeditionTypeSyncMessage(byteBuf), player);
     }
 
     /**
