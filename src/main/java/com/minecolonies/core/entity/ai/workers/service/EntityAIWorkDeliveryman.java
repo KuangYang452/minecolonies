@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import static com.minecolonies.api.entity.ai.statemachine.states.AIWorkerState.*;
@@ -144,7 +145,7 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
         setDelay(WALK_DELAY);
         final IRequest<? extends IDeliverymanRequestable> currentTask = job.getCurrentTask();
 
-        if (!(currentTask instanceof PickupRequest))
+        if (!(currentTask instanceof PickupRequest pickupRequest))
         {
             // The current task has changed since the Decision-state. Restart.
             return START_WORKING;
@@ -172,7 +173,7 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
             return START_WORKING;
         }
 
-        if (pickupFromBuilding(pickupBuilding))
+        if (pickupFromBuilding(pickupBuilding, pickupRequest))
         {
             this.alreadyKept = new ArrayList<>();
             this.currentSlot = 0;
@@ -203,9 +204,10 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
      * Gather not needed Items from building.
      *
      * @param building building to gather it from.
+     * @param request  the pickup request.
      * @return true when finished.
      */
-    private boolean pickupFromBuilding(@NotNull final IBuilding building)
+    private boolean pickupFromBuilding(@NotNull final IBuilding building, final PickupRequest request)
     {
         if (cannotHoldMoreItems() || InventoryUtils.openSlotCount(worker.getInventoryCitizen()) <= 0)
         {
@@ -241,20 +243,49 @@ public class EntityAIWorkDeliveryman extends AbstractEntityAIInteract<JobDeliver
             return false;
         }
 
-        if (ItemStackUtils.isEmpty(handler.getStackInSlot(currentSlot)))
+        if (request.getRequest().getPickupFilter() != null)
         {
-            return false;
+            final ListIterator<ItemStack> iterator = request.getRequest().getPickupFilter().listIterator();
+            while (iterator.hasNext())
+            {
+                final ItemStack filter = iterator.next();
+                if (ItemStackUtils.compareItemStacksIgnoreStackSize(stack, filter))
+                {
+                    final ItemStack activeStack = handler.extractItem(currentSlot, filter.getCount(), false);
+                    transferItemForPickup(activeStack);
+                    if (filter.getCount() == activeStack.getCount())
+                    {
+                        iterator.remove();
+                    }
+                    else
+                    {
+                        iterator.set(filter.copyWithCount(filter.getCount() - activeStack.getCount()));
+                    }
+                }
+            }
         }
+        else
+        {
+            final ItemStack activeStack = handler.extractItem(currentSlot, amount, false);
+            transferItemForPickup(activeStack);
+        }
+        return false;
+    }
 
-        final ItemStack activeStack = handler.extractItem(currentSlot, amount, false);
-        InventoryUtils.transferItemStackIntoNextBestSlotInItemHandler(activeStack, worker.getInventoryCitizen());
+    /**
+     * Transfer an item to the courier for pickup.
+     *
+     * @param stack the stack to transfer.
+     */
+    private void transferItemForPickup(final ItemStack stack)
+    {
+        InventoryUtils.transferItemStackIntoNextBestSlotInItemHandler(stack, worker.getInventoryCitizen());
         building.markDirty();
         worker.decreaseSaturationForContinuousAction();
 
         // The worker gets a little bit of exp for every itemstack he grabs.
         worker.getCitizenExperienceHandler().addExperience(0.01D);
         worker.getCitizenItemHandler().setHeldItem(InteractionHand.MAIN_HAND, SLOT_HAND);
-        return false;
     }
 
     /**

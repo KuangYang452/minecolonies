@@ -462,6 +462,11 @@ public abstract class AbstractEntityAICrafting<J extends AbstractJobCrafter<?, J
                         module.improveRecipe(currentRecipeStorage, job.getCraftCounter(), worker.getCitizenData());
                     }
 
+                    if (!currentRecipeStorage.getSecondaryOutputs().isEmpty())
+                    {
+                        building.createPickupRequest(10, currentRecipeStorage.getSecondaryOutputs());
+                    }
+
                     currentRecipeStorage = null;
                     resetValues();
 
