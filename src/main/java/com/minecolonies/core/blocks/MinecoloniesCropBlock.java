@@ -169,7 +169,6 @@ public class MinecoloniesCropBlock extends AbstractBlockMinecolonies<Minecolonie
 
     /**
      * Get the preferred farmland for this crop.
-     *
      * @return the preferred farmland.
      */
     public Block getPreferredFarmland()
