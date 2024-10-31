@@ -661,7 +661,12 @@ public abstract class AbstractEntityCitizen extends AbstractCivilianEntity imple
      */
     public abstract ICitizenDiseaseHandler getCitizenDiseaseHandler();
 
-    public abstract void setCitizenDiseaseHandler(ICitizenDiseaseHandler citizenDiseaseHandler);
+    /**
+     * The Handler to check if the health of the citizen.
+     *
+     * @return the instance of the handler.
+     */
+    public abstract ICitizenHealthHandler getCitizenHealthHandler();
 
     public abstract float getRotationYaw();
 

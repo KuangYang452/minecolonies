@@ -43,7 +43,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.InteractGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -121,7 +120,7 @@ VisitorCitizen extends AbstractEntityCitizen
      * The location used for requests
      */
     private ILocation              location = null;
-    private ICitizenDiseaseHandler citizenDiseaseHandler;
+    private ICitizenDiseaseHandler citizenWellBeingHandler;
 
     /**
      * Constructor for a new citizen typed entity.
@@ -140,7 +139,7 @@ VisitorCitizen extends AbstractEntityCitizen
         this.citizenJobHandler = new CitizenJobHandler(this);
         this.citizenSleepHandler = new CitizenSleepHandler(this);
         this.citizenExperienceHandler = new CitizenExperienceHandler(this);
-        this.citizenDiseaseHandler = new CitizenDiseaseHandler(this);
+        this.citizenWellBeingHandler = new CitizenDiseaseHandler(this);
 
         this.moveControl = new MovementHandler(this);
         this.setPersistenceRequired();
@@ -395,13 +394,7 @@ VisitorCitizen extends AbstractEntityCitizen
     @Override
     public ICitizenDiseaseHandler getCitizenDiseaseHandler()
     {
-        return citizenDiseaseHandler;
-    }
-
-    @Override
-    public void setCitizenDiseaseHandler(final ICitizenDiseaseHandler citizenDiseaseHandler)
-    {
-        this.citizenDiseaseHandler = citizenDiseaseHandler;
+        return citizenWellBeingHandler;
     }
 
     @Override
@@ -603,7 +596,7 @@ VisitorCitizen extends AbstractEntityCitizen
             compound.putInt(TAG_CITIZEN, citizenData.getId());
         }
 
-        citizenDiseaseHandler.write(compound);
+        citizenWellBeingHandler.write(compound);
     }
 
     @Override
@@ -620,7 +613,7 @@ VisitorCitizen extends AbstractEntityCitizen
             }
         }
 
-        citizenDiseaseHandler.read(compound);
+        citizenWellBeingHandler.read(compound);
     }
 
     @Override

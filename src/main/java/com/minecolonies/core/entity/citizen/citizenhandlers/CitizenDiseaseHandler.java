@@ -9,7 +9,6 @@ import com.minecolonies.api.entity.citizen.citizenhandlers.ICitizenDiseaseHandle
 import com.minecolonies.api.util.BlockPosUtil;
 import com.minecolonies.core.MineColonies;
 import com.minecolonies.core.colony.buildings.workerbuildings.BuildingHospital;
-import com.minecolonies.core.colony.jobs.AbstractJobGuard;
 import com.minecolonies.core.colony.jobs.JobHealer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,15 +21,10 @@ import static com.minecolonies.api.util.constant.Constants.ONE_HUNDRED_PERCENT;
 import static com.minecolonies.api.util.constant.StatisticsConstants.CITIZENS_HEALED;
 
 /**
- * Handler taking care of citizens getting stuck.
+ * Handler taking care of citizens their diseases.
  */
 public class CitizenDiseaseHandler implements ICitizenDiseaseHandler
 {
-    /**
-     * Health at which citizens seek a doctor.
-     */
-    public static final double SEEK_DOCTOR_HEALTH = 6.0;
-
     /**
      * Base likelihood of a citizen getting a disease.
      */
@@ -67,14 +61,7 @@ public class CitizenDiseaseHandler implements ICitizenDiseaseHandler
     private BlockPos hospitalPos = null;
 
     /**
-     * The initial citizen count
-     */
-    private static final int initialCitizenCount = IMinecoloniesAPI.getInstance()
-      .getConfig()
-      .getServer().initialCitizenAmount.get();
-
-    /**
-     * Constructor for the experience handler.
+     * Constructor for the disease handler.
      *
      * @param citizen the citizen owning the handler.
      */
@@ -118,11 +105,13 @@ public class CitizenDiseaseHandler implements ICitizenDiseaseHandler
                  && citizen.getCitizenColonyHandler().getColony().isActive()
                  && !(citizen.getCitizenJobHandler().getColonyJob() instanceof JobHealer)
                  && immunityTicks <= 0
-                 && citizen.getCitizenColonyHandler().getColony().getCitizenManager().getCurrentCitizenCount() > initialCitizenCount;
+                 && citizen.getCitizenColonyHandler().getColony().getCitizenManager().getCurrentCitizenCount() > IMinecoloniesAPI.getInstance()
+                                                                                                                   .getConfig()
+                                                                                                                   .getServer().initialCitizenAmount.get();
     }
 
     @Override
-    public void onCollission(@NotNull final AbstractEntityCitizen citizen)
+    public void onCollision(@NotNull final AbstractEntityCitizen citizen)
     {
         if (citizen.getCitizenDiseaseHandler().isSick()
               && canBecomeSick()
@@ -134,12 +123,6 @@ public class CitizenDiseaseHandler implements ICitizenDiseaseHandler
                 this.disease = citizen.getCitizenDiseaseHandler().getDisease();
             }
         }
-    }
-
-    @Override
-    public boolean isHurt()
-    {
-        return !(citizen.getCitizenJobHandler() instanceof AbstractJobGuard) && citizen.getHealth() < SEEK_DOCTOR_HEALTH && citizen.getCitizenData().getSaturation() > LOW_SATURATION;
     }
 
     @Override
@@ -210,34 +193,8 @@ public class CitizenDiseaseHandler implements ICitizenDiseaseHandler
     }
 
     @Override
-    public boolean sleepsAtHospital()
-    {
-        if (hospitalPos != null)
-        {
-            final IColony colony = citizen.getCitizenColonyHandler().getColony();
-            if (colony != null)
-            {
-                final BuildingHospital hospital = colony.getBuildingManager().getBuilding(hospitalPos, BuildingHospital.class);
-                if (hospital != null)
-                {
-                    return hospital.isInBed(citizen);
-                }
-                hospitalPos = null;
-            }
-        }
-        return hospitalPos != null;
-    }
-
-    @Override
     public void setSleepsAtHospital(final BuildingHospital buildingHospital)
     {
-        if (buildingHospital == null)
-        {
-            hospitalPos = null;
-        }
-        else
-        {
-            hospitalPos = buildingHospital.getPosition();
-        }
+        hospitalPos = buildingHospital != null ? buildingHospital.getPosition() : null;
     }
 }

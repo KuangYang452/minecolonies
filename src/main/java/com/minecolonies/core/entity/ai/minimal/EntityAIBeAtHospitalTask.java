@@ -1,6 +1,5 @@
 package com.minecolonies.core.entity.ai.minimal;
 
-import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.colony.buildings.IBuilding;
@@ -38,9 +37,9 @@ import static com.minecolonies.api.util.constant.TranslationConstants.WAITING_FO
 import static com.minecolonies.core.entity.ai.minimal.EntityAISickTask.DiseaseState.*;
 
 /**
- * The AI task for citizens to execute when they are sick.
+ * The AI task for citizens to go to the hospital for any condition.
  */
-public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IStateAI
+public class EntityAIBeAtHospitalTask implements IStateAI
 {
     /**
      * Min distance to hut before pathing to hospital.
@@ -70,58 +69,32 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
     /**
      * Attempts to position right in the bed.
      */
-    private static final int GOING_TO_BED_ATTEMPTS = 20;
-
-    /**
-     * Citizen data.
-     */
-    private final ICitizenData citizenData;
-
-    /**
-     * The waiting ticks.
-     */
-    private int waitingTicks = 0;
-
-    /**
-     * The bed the citizen is sleeping in.
-     */
-    private BlockPos usedBed;
-
-    /**
-     * The different types of AIStates related to being sick.
-     */
-    public enum DiseaseState implements IState
-    {
-        CHECK_FOR_CURE,
-        GO_TO_HUT,
-        SEARCH_HOSPITAL,
-        GO_TO_HOSPITAL,
-        WAIT_FOR_CURE,
-        FIND_EMPTY_BED,
-        APPLY_CURE,
-        WANDER
-    }
-
+    private static final int           GOING_TO_BED_ATTEMPTS = 20;
     /**
      * The citizen assigned to this task.
      */
-    private final EntityCitizen citizen;
-
+    private final        EntityCitizen citizen;
+    /**
+     * The waiting ticks.
+     */
+    private              int           waitingTicks          = 0;
+    /**
+     * The bed the citizen is sleeping in.
+     */
+    private              BlockPos      usedBed;
     /**
      * Restaurant to which the citizen should path.
      */
-    private BlockPos placeToPath;
+    private              BlockPos      placeToPath;
 
     /**
      * Instantiates this task.
      *
      * @param citizen the citizen.
      */
-    public EntityAISickTask(final EntityCitizen citizen)
+    public EntityAIBeAtHospitalTask(final EntityCitizen citizen)
     {
-        super(citizen);
         this.citizen = citizen;
-        this.citizenData = citizen.getCitizenData();
 
         citizen.getCitizenAI().addTransition(new TickingTransition<>(CitizenAIState.SICK, this::isSick, () -> CHECK_FOR_CURE, 20));
         citizen.getCitizenAI().addTransition(new TickingTransition<>(CHECK_FOR_CURE, () -> true, this::checkForCure, 20));
@@ -192,10 +165,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
                 {
                     final Level world = citizen.level;
                     BlockState state = world.getBlockState(pos);
-                    if (state.is(BlockTags.BEDS)
-                          && !state.getValue(BedBlock.OCCUPIED)
-                          && state.getValue(BedBlock.PART).equals(BedPart.HEAD)
-                          && world.isEmptyBlock(pos.above()))
+                    if (state.is(BlockTags.BEDS) && !state.getValue(BedBlock.OCCUPIED) && state.getValue(BedBlock.PART).equals(BedPart.HEAD) && world.isEmptyBlock(pos.above()))
                     {
                         citizen.getCitizenDiseaseHandler().setSleepsAtHospital(buildingHospital);
                         usedBed = pos;
@@ -250,11 +220,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
 
         citizen.swing(InteractionHand.MAIN_HAND);
         citizen.playSound(SoundEvents.NOTE_BLOCK_HARP.get(), (float) BASIC_VOLUME, (float) SoundUtils.getRandomPentatonic(citizen.getRandom()));
-        Network.getNetwork().sendToTrackingEntity(
-          new CircleParticleEffectMessage(
-            citizen.position().add(0, 2, 0),
-            ParticleTypes.HAPPY_VILLAGER,
-            waitingTicks), citizen);
+        Network.getNetwork().sendToTrackingEntity(new CircleParticleEffectMessage(citizen.position().add(0, 2, 0), ParticleTypes.HAPPY_VILLAGER, waitingTicks), citizen);
 
 
         waitingTicks++;
@@ -280,7 +246,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
                 final int slot = InventoryUtils.findFirstSlotInProviderNotEmptyWith(citizen, stack -> ItemStack.isSameItem(cure, stack));
                 if (slot != -1)
                 {
-                    citizenData.getInventory().extractItem(slot, 1, false);
+                    citizen.getCitizenData().getInventory().extractItem(slot, 1, false);
                 }
             }
         }
@@ -306,7 +272,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
      */
     private IState waitForCure()
     {
-        final IColony colony = citizenData.getColony();
+        final IColony colony = citizen.getCitizenData().getColony();
         placeToPath = colony.getBuildingManager().getBestBuilding(citizen, BuildingHospital.class);
 
         if (placeToPath == null)
@@ -364,7 +330,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
      */
     private IState goToHut()
     {
-        final IBuilding buildingWorker = citizenData.getWorkBuilding();
+        final IBuilding buildingWorker = citizen.getCitizenData().getWorkBuilding();
         citizen.getCitizenDiseaseHandler().setSleepsAtHospital(null);
 
         if (buildingWorker == null)
@@ -406,7 +372,7 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
      */
     private IState searchHospital()
     {
-        final IColony colony = citizenData.getColony();
+        final IColony colony = citizen.getCitizenData().getColony();
         placeToPath = colony.getBuildingManager().getBestBuilding(citizen, BuildingHospital.class);
 
         if (placeToPath == null)
@@ -417,17 +383,19 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
                 return CitizenAIState.IDLE;
             }
             final Disease disease = IColonyManager.getInstance().getCompatibilityManager().getDisease(id);
-            citizenData.triggerInteraction(new StandardInteraction(Component.translatable(NO_HOSPITAL, disease.getName(), disease.getCureString()),
-              Component.translatable(NO_HOSPITAL),
-              ChatPriority.BLOCKING));
+            citizen.getCitizenData()
+              .triggerInteraction(new StandardInteraction(Component.translatable(NO_HOSPITAL, disease.getName(), disease.getCureString()),
+                Component.translatable(NO_HOSPITAL),
+                ChatPriority.BLOCKING));
             return WANDER;
         }
         else if (!citizen.getCitizenDiseaseHandler().getDisease().isEmpty())
         {
             final Disease disease = IColonyManager.getInstance().getCompatibilityManager().getDisease(citizen.getCitizenDiseaseHandler().getDisease());
-            citizenData.triggerInteraction(new StandardInteraction(Component.translatable(WAITING_FOR_CURE, disease.getName(), disease.getCureString()),
-              Component.translatable(WAITING_FOR_CURE),
-              ChatPriority.BLOCKING));
+            citizen.getCitizenData()
+              .triggerInteraction(new StandardInteraction(Component.translatable(WAITING_FOR_CURE, disease.getName(), disease.getCureString()),
+                Component.translatable(WAITING_FOR_CURE),
+                ChatPriority.BLOCKING));
         }
 
         return GO_TO_HOSPITAL;
@@ -474,5 +442,19 @@ public class EntityAISickTask extends EntityAIBeAtHospitalTask implements IState
         citizen.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         placeToPath = null;
         citizen.getCitizenDiseaseHandler().setSleepsAtHospital(null);
+    }
+
+    /**
+     * The different types of AIStates related to being sick.
+     */
+    public enum MovementState implements IState
+    {
+        CHECK_FOR_CURE,
+        GO_TO_HUT,
+        SEARCH_HOSPITAL,
+        GO_TO_HOSPITAL,
+        WAIT_FOR_HEALING,
+        FIND_EMPTY_BED,
+        WANDER
     }
 }

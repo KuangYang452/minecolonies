@@ -34,7 +34,6 @@ import static com.minecolonies.api.util.constant.CitizenConstants.*;
 import static com.minecolonies.api.util.constant.Constants.DEFAULT_SPEED;
 import static com.minecolonies.api.util.constant.TranslationConstants.*;
 import static com.minecolonies.core.entity.ai.minimal.EntityAIEatTask.RESTAURANT_LIMIT;
-import static com.minecolonies.core.entity.citizen.citizenhandlers.CitizenDiseaseHandler.SEEK_DOCTOR_HEALTH;
 
 /**
  * High level AI for citizens, which switches between all the different AI states like sleeping,working,fleeing etc
@@ -145,10 +144,17 @@ public class CitizenAI implements IStateAI
         }
 
         // Sick at hospital
-        if (citizen.getCitizenDiseaseHandler().isSick() && citizen.getCitizenDiseaseHandler().sleepsAtHospital())
+        if (citizen.getCitizenDiseaseHandler().isSick())
         {
             citizen.getCitizenData().setVisibleStatus(VisibleCitizenStatus.SICK);
             return CitizenAIState.SICK;
+        }
+
+        // Hurt
+        if (citizen.getCitizenHealthHandler().isHurt() && citizen.getCitizenHealthHandler().canBeHealed() || citizen.getCitizenHealthHandler().getActiveHospital() != null)
+        {
+            citizen.getCitizenData().setVisibleStatus(VisibleCitizenStatus.HURT);
+            return CitizenAIState.HURT;
         }
 
         // Raiding
@@ -192,13 +198,6 @@ public class CitizenAI implements IStateAI
                     citizen.getCitizenSleepHandler().onWakeUp();
                 }
             }
-        }
-
-        // Sick
-        if (citizen.getCitizenDiseaseHandler().isSick() || citizen.getCitizenDiseaseHandler().isHurt())
-        {
-            citizen.getCitizenData().setVisibleStatus(VisibleCitizenStatus.SICK);
-            return CitizenAIState.SICK;
         }
 
         // Eating
@@ -279,7 +278,7 @@ public class CitizenAI implements IStateAI
 
         return citizen.getCitizenData().getSaturation() <= CitizenConstants.AVERAGE_SATURATION &&
                  (citizen.getCitizenData().getSaturation() <= RESTAURANT_LIMIT ||
-                    (citizen.getCitizenData().getSaturation() < LOW_SATURATION && citizen.getHealth() < SEEK_DOCTOR_HEALTH));
+                    (citizen.getCitizenData().getSaturation() < LOW_SATURATION && citizen.getCitizenHealthHandler().isHurt()));
     }
 
     /**

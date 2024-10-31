@@ -5,18 +5,14 @@ package com.minecolonies.api.entity.ai.statemachine.states;
  */
 public enum CitizenAIState implements IState
 {
-    IDLE(),
-    FLEE(),
-    EATING(),
-    SICK(),
+    IDLE,
+    FLEE,
+    EATING,
+    SICK,
+    HURT,
     SLEEP,
     MOURN,
     WORK,
     WORKING,
-    INACTIVE();
-
-    CitizenAIState()
-    {
-
-    }
+    INACTIVE
 }

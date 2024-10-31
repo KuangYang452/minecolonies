@@ -334,6 +334,8 @@ public final class TranslationConstants
     @NonNls
     public static final String WAITING_FOR_CURE                                                     = "com.minecolonies.coremod.ai.waitingforcure";
     @NonNls
+    public static final String HURT_NO_HOSPITAL                                                     = "com.minecolonies.coremod.ai.hurtnospital";
+    @NonNls
     public static final String PUPIL_NO_CARPET                                                      = "com.minecolonies.coremod.school.nocarpet";
     @NonNls
     public static final String RESEARCH_CONCLUDED                                                   = "com.minecolonies.coremod.university.researchconcluded.";
@@ -732,6 +734,8 @@ public final class TranslationConstants
     public static final String MESSAGE_INFO_CITIZEN_STATUS_SLEEPING = "com.minecolonies.gui.visiblestatus.sleep";
     @NonNls
     public static final String MESSAGE_INFO_CITIZEN_STATUS_SICK     = "com.minecolonies.gui.visiblestatus.sick";
+    @NonNls
+    public static final String MESSAGE_INFO_CITIZEN_STATUS_HURT     = "com.minecolonies.gui.visiblestatus.hurt";
     @NonNls
     public static final String MESSAGE_INFO_CITIZEN_STATUS_WORKING  = "com.minecolonies.gui.visiblestatus.working";
 

@@ -837,6 +837,7 @@
   "com.minecolonies.coremod.ai.norestaurant": "Please build a Restaurant or get me something to eat!",
   "com.minecolonies.coremod.ai.nohospital": "I have %s and need to be cured with %s! Please build a Hospital (or give me the items directly).",
   "com.minecolonies.coremod.ai.waitingforcure": "I'm waiting to be cured of %s and need to be cured with %s!",
+  "com.minecolonies.coremod.ai.hurtnohospital": "I've been hurt quite a lot! Please build a Hospital!",
 
   "com.minecolonies.coremod.status.serving": "Serving",
   "com.minecolonies.coremod.status.retrieving": "Retrieving from furnace",

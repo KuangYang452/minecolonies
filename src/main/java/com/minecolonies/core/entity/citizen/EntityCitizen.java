@@ -188,9 +188,14 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
     private ICitizenSleepHandler citizenSleepHandler;
 
     /**
-     * The citizen sleep handler.
+     * The citizen disease handler.
      */
     private ICitizenDiseaseHandler citizenDiseaseHandler;
+
+    /**
+     * The citizen health handler.
+     */
+    private final ICitizenHealthHandler citizenHealthHandler;
 
     /**
      * Our custom combat tracker.
@@ -281,6 +286,7 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
         this.citizenJobHandler = new CitizenJobHandler(this);
         this.citizenSleepHandler = new CitizenSleepHandler(this);
         this.citizenDiseaseHandler = new CitizenDiseaseHandler(this);
+        this.citizenHealthHandler = new CitizenHealthHandler(this);
 
         this.combatTracker = new CitizenCombatTracker(this);
         this.moveControl = new MovementHandler(this);
@@ -1239,10 +1245,15 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
         return citizenDiseaseHandler;
     }
 
+    /**
+     * The Handler to check if a citizen is sick.
+     *
+     * @return the instance of the handler.
+     */
     @Override
-    public void setCitizenDiseaseHandler(final ICitizenDiseaseHandler citizenDiseaseHandler)
+    public ICitizenHealthHandler getCitizenHealthHandler()
     {
-        this.citizenDiseaseHandler = citizenDiseaseHandler;
+        return citizenHealthHandler;
     }
 
     /**
@@ -1572,7 +1583,7 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
 
         if (!level.isClientSide && entity instanceof AbstractEntityCitizen)
         {
-            getCitizenDiseaseHandler().onCollission((AbstractEntityCitizen) entity);
+            getCitizenDiseaseHandler().onCollision((AbstractEntityCitizen) entity);
         }
     }
 
