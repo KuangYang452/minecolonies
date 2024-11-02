@@ -2,14 +2,15 @@ package com.minecolonies.core.commands.commandTypes;
 
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
-import com.minecolonies.api.util.MessageUtils;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 import static com.minecolonies.api.util.constant.translation.CommandTranslationConstants.COMMAND_COLONY_ID_NOT_FOUND;
+import static com.minecolonies.api.util.constant.translation.CommandTranslationConstants.COMMAND_REQUIRES_OFFICER;
 import static com.minecolonies.core.commands.CommandArgumentNames.COLONYID_ARG;
 
 /**
@@ -30,7 +31,7 @@ public interface IMCColonyOfficerCommand extends IMCCommand
 
 
         final Entity sender = context.getSource().getEntity();
-        if (!(sender instanceof Player))
+        if (!(sender instanceof final Player player))
         {
             return false;
         }
@@ -40,11 +41,17 @@ public interface IMCColonyOfficerCommand extends IMCCommand
         final IColony colony = IColonyManager.getInstance().getColonyByDimension(colonyID, context.getSource().getLevel().dimension());
         if (colony == null)
         {
-            MessageUtils.format(COMMAND_COLONY_ID_NOT_FOUND, colonyID).sendTo((Player) sender);
+            context.getSource().sendFailure(Component.translatable(COMMAND_COLONY_ID_NOT_FOUND, colonyID));
             return false;
         }
 
         // Check colony permissions
-        return IMCCommand.isPlayerOped((Player) sender) || colony.getPermissions().getRank((Player) sender).isColonyManager();
+        if (IMCCommand.isPlayerOped(player) || colony.getPermissions().getRank(player).isColonyManager())
+        {
+            return true;
+        }
+
+        context.getSource().sendFailure(Component.translatable(COMMAND_REQUIRES_OFFICER));
+        return false;
     }
 }

@@ -10,6 +10,8 @@ public class CommandTranslationConstants
     @NonNls
     public static final String COMMAND_REQUIRES_OP                           = "com.minecolonies.command.notop";
     @NonNls
+    public static final String COMMAND_REQUIRES_OFFICER                      = "com.minecolonies.command.notofficer";
+    @NonNls
     public static final String COMMAND_DISABLED_IN_CONFIG                    = "com.minecolonies.command.notenabledinconfig";
     @NonNls
     public static final String COMMAND_COLONY_ID_NOT_FOUND                   = "com.minecolonies.command.colonyidnotfound";

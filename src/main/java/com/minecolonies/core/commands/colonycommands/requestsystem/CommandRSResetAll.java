@@ -1,5 +1,6 @@
 package com.minecolonies.core.commands.colonycommands.requestsystem;
 
+import com.google.common.base.Stopwatch;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.core.commands.commandTypes.IMCOPCommand;
@@ -19,11 +20,13 @@ public class CommandRSResetAll implements IMCOPCommand
     @Override
     public int onExecute(final CommandContext<CommandSourceStack> context)
     {
+        final Stopwatch watch = Stopwatch.createStarted();
         for (final IColony colony : IColonyManager.getInstance().getAllColonies())
         {
             colony.getRequestManager().reset();
         }
-        context.getSource().sendSuccess(() -> Component.translatable(COMMAND_REQUEST_SYSTEM_RESET_ALL_SUCCESS), true);
+        watch.stop();
+        context.getSource().sendSuccess(() -> Component.translatable(COMMAND_REQUEST_SYSTEM_RESET_ALL_SUCCESS, watch.toString()), true);
 
         return 1;
     }

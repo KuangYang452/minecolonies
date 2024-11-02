@@ -1,9 +1,10 @@
 package com.minecolonies.core.commands.colonycommands.requestsystem;
 
+import com.google.common.base.Stopwatch;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.util.constant.translation.CommandTranslationConstants;
-import com.minecolonies.core.MineColonies;
+import com.minecolonies.core.commands.commandTypes.IMCColonyOfficerCommand;
 import com.minecolonies.core.commands.commandTypes.IMCCommand;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -13,7 +14,7 @@ import net.minecraft.network.chat.Component;
 
 import static com.minecolonies.core.commands.CommandArgumentNames.COLONYID_ARG;
 
-public class CommandRSReset implements IMCCommand
+public class CommandRSReset implements IMCColonyOfficerCommand
 {
     /**
      * What happens when the command is executed after preConditions are successful.
@@ -32,14 +33,10 @@ public class CommandRSReset implements IMCCommand
             return 0;
         }
 
-        if (!context.getSource().hasPermission(OP_PERM_LEVEL) && !MineColonies.getConfig().getServer().canPlayerUseResetCommand.get())
-        {
-            context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_DISABLED_IN_CONFIG), true);
-            return 0;
-        }
-
+        final Stopwatch watch = Stopwatch.createStarted();
         colony.getRequestManager().reset();
-        context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_REQUEST_SYSTEM_RESET_SUCCESS, colony.getName()), true);
+        watch.stop();
+        context.getSource().sendSuccess(() -> Component.translatable(CommandTranslationConstants.COMMAND_REQUEST_SYSTEM_RESET_SUCCESS, colony.getName(), watch.toString()), true);
 
         return 1;
     }

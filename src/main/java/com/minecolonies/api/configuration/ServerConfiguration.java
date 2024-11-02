@@ -57,7 +57,6 @@ public class ServerConfiguration extends AbstractConfiguration
     public final ForgeConfigSpec.BooleanValue canPlayerUseKillCitizensCommand;
     public final ForgeConfigSpec.BooleanValue canPlayerUseAddOfficerCommand;
     public final ForgeConfigSpec.BooleanValue canPlayerUseDeleteColonyCommand;
-    public final ForgeConfigSpec.BooleanValue canPlayerUseResetCommand;
 
     /*  --------------------------------------------------------------------------- *
      *  ------------------- ######## Claim settings ######## ------------------- *
@@ -163,7 +162,6 @@ public class ServerConfiguration extends AbstractConfiguration
         canPlayerUseKillCitizensCommand = defineBoolean(builder, "canplayerusekillcitizenscommand", false);
         canPlayerUseAddOfficerCommand = defineBoolean(builder, "canplayeruseaddofficercommand", true);
         canPlayerUseDeleteColonyCommand = defineBoolean(builder, "canplayerusedeletecolonycommand", false);
-        canPlayerUseResetCommand = defineBoolean(builder, "canplayeruseresetcommand", false);
 
         swapToCategory(builder, "claims");
 
