@@ -1,13 +1,13 @@
-package com.minecolonies.api.colony.citizens.event;
+package com.minecolonies.api.events.colony.citizens;
 
 import com.minecolonies.api.colony.ICitizenData;
 import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Event for when a citizen was removed from the colony.
+ * Event for when a citizen died in any colony.
  */
-public class CitizenRemovedEvent extends AbstractCitizenEvent
+public class CitizenDiedEvent extends AbstractCitizenEvent
 {
     /**
      * The damage source that caused a citizen to die.
@@ -15,12 +15,12 @@ public class CitizenRemovedEvent extends AbstractCitizenEvent
     private final @NotNull DamageSource source;
 
     /**
-     * Citizen removed event.
+     * Citizen died event.
      *
      * @param citizen the citizen related to the event.
-     * @param source  the way the citizen went out of the colony.
+     * @param source  the damage source the citizen died from.
      */
-    public CitizenRemovedEvent(final @NotNull ICitizenData citizen, final @NotNull DamageSource source)
+    public CitizenDiedEvent(final @NotNull ICitizenData citizen, final @NotNull DamageSource source)
     {
         super(citizen);
         this.source = source;

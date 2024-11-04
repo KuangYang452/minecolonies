@@ -174,14 +174,8 @@ public class SurvivalHandler implements ISurvivalBlueprintHandler
                   placementSettings.getMirror() != Mirror.NONE,
                   packName,
                   blueprintPath);
-                try
-                {
-                    MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, blockPos), world.getBlockState(blockPos.below()), player));
-                }
-                catch (final Exception e)
-                {
-                    Log.getLogger().error("Error during EntityPlaceEvent", e);
-                }
+
+                IMinecoloniesAPI.getInstance().getEventHandler().placeEntity(world, blockPos, player);
                 InventoryUtils.reduceStackInItemHandler(new InvWrapper(player.getInventory()), inventoryStack, 1);
 
                 if (tempColony == null)

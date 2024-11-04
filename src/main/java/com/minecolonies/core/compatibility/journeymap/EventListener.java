@@ -1,8 +1,8 @@
 package com.minecolonies.core.compatibility.journeymap;
 
 import com.minecolonies.api.colony.IColonyView;
-import com.minecolonies.api.colony.event.ClientChunkUpdatedEvent;
-import com.minecolonies.api.colony.event.ColonyViewUpdatedEvent;
+import com.minecolonies.api.events.colony.ClientChunkUpdatedEvent;
+import com.minecolonies.api.events.colony.ColonyViewUpdatedEvent;
 import com.minecolonies.api.colony.jobs.IJob;
 import com.minecolonies.api.colony.jobs.registry.IJobRegistry;
 import com.minecolonies.api.colony.jobs.registry.JobEntry;

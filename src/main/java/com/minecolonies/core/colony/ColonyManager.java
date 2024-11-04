@@ -1,17 +1,14 @@
 package com.minecolonies.core.colony;
 
+import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.blocks.AbstractBlockHut;
 import com.minecolonies.api.colony.*;
 import com.minecolonies.api.colony.buildings.IBuilding;
 import com.minecolonies.api.colony.buildings.views.IBuildingView;
-import com.minecolonies.api.colony.event.ColonyViewUpdatedEvent;
-import com.minecolonies.api.colony.managers.events.ColonyManagerLoadedEvent;
-import com.minecolonies.api.colony.managers.events.ColonyManagerUnloadedEvent;
 import com.minecolonies.api.colony.permissions.ColonyPlayer;
 import com.minecolonies.api.compatibility.CompatibilityManager;
 import com.minecolonies.api.compatibility.ICompatibilityManager;
 import com.minecolonies.api.crafting.IRecipeManager;
-import com.minecolonies.api.events.ColonyEvents;
 import com.minecolonies.api.sounds.SoundManager;
 import com.minecolonies.api.util.BlockPosUtil;
 import com.minecolonies.api.util.ColonyUtils;
@@ -202,7 +199,7 @@ public final class ColonyManager implements IColonyManager
                 return;
             }
 
-            ColonyEvents.deleteColony(colony);
+            IMinecoloniesAPI.getInstance().getEventHandler().deleteColony(colony);
             cap.deleteColony(id);
             BackUpHelper.markColonyDeleted(colony.getID(), colony.getDimension());
             colony.getImportantMessageEntityPlayers()
@@ -645,14 +642,7 @@ public final class ColonyManager implements IColonyManager
                 c.onWorldLoad(world);
             }
 
-            try
-            {
-                MinecraftForge.EVENT_BUS.post(new ColonyManagerLoadedEvent(this));
-            }
-            catch (final Exception e)
-            {
-                Log.getLogger().error("Error during ColonyManagerLoadedEvent", e);
-            }
+            IMinecoloniesAPI.getInstance().getEventHandler().managerLoaded(this);
         }
     }
 
@@ -679,14 +669,7 @@ public final class ColonyManager implements IColonyManager
                 BackUpHelper.backupColonyData();
             }
 
-            try
-            {
-                MinecraftForge.EVENT_BUS.post(new ColonyManagerUnloadedEvent(this));
-            }
-            catch (final Exception e)
-            {
-                Log.getLogger().error("Error during ColonyManagerUnloadedEvent", e);
-            }
+            IMinecoloniesAPI.getInstance().getEventHandler().managerUnloaded(this);
         }
     }
 
@@ -715,14 +698,7 @@ public final class ColonyManager implements IColonyManager
         }
         view.handleColonyViewMessage(colonyData, world, isNewSubscription);
 
-        try
-        {
-            MinecraftForge.EVENT_BUS.post(new ColonyViewUpdatedEvent(view));
-        }
-        catch (final Exception e)
-        {
-            Log.getLogger().error("Error during ColonyViewUpdatedEvent", e);
-        }
+        IMinecoloniesAPI.getInstance().getEventHandler().colonyViewUpdated(view);
     }
 
     @Override
