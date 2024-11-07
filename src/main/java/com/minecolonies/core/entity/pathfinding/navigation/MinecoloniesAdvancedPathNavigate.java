@@ -133,7 +133,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         this.nodeEvaluator.setCanFloat(true);
         getPathingOptions().setCanSwim(true);
 
-        stuckHandler = PathingStuckHandler.createStuckHandler().withTakeDamageOnStuck(0.2f).withTeleportSteps(6).withTeleportOnFullStuck();
+        stuckHandler = PathingStuckHandler.createStuckHandler().withTeleportSteps(6).withTeleportOnFullStuck();
     }
 
     @Override
@@ -1222,5 +1222,11 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     public PathResult getPathResult()
     {
         return pathResult;
+    }
+
+    @Override
+    public int getStuckLevel()
+    {
+        return stuckHandler.getStuckLevel();
     }
 }

@@ -94,19 +94,7 @@ public abstract class AbstractDrownedEntityPirate extends AbstractEntityRaiderMo
             newNavigator.setSwimSpeedFactor(getSwimSpeedFactor());
             newNavigator.setSpeedModifier(0.5);
             newNavigator.getPathingOptions().withStartSwimCost(0.0D).withSwimCost(0.0D).withDivingCost(0.0D).withCanEnterDoors(true).withDropCost(0.0D).withJumpCost(0.0D).withWalkUnderWater(true).withNonLadderClimbableCost(0.0D).setPassDanger(true);
-            PathingStuckHandler stuckHandler = PathingStuckHandler.createStuckHandler()
-                                                 .withTakeDamageOnStuck(0.4f)
-                                                 .withBuildLeafBridges()
-                                                 .withChanceToByPassMovingAway(0.20)
-                                                 .withPlaceLadders();
-
-            if (MinecoloniesAPIProxy.getInstance().getConfig().getServer().raidersbreakblocks.get())
-            {
-                stuckHandler.withBlockBreaks();
-                stuckHandler.withCompleteStuckBlockBreak(6);
-            }
-
-            newNavigator.setStuckHandler(stuckHandler);
+            newNavigator.setStuckHandler(PathingStuckHandler.createStuckHandler().withChanceToByPassMovingAway(0.20));
             this.newNavigator.setCanFloat(true);
         }
         return newNavigator;

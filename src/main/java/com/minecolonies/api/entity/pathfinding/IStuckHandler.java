@@ -13,4 +13,10 @@ public interface IStuckHandler
      * @param navigator navigator to check
      */
     void checkStuck(final AbstractAdvancedPathNavigate navigator);
+
+    /**
+     * Get the current stuck level.
+     * @return the current stuck level.
+     */
+    int getStuckLevel();
 }

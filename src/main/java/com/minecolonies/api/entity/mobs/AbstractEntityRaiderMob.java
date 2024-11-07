@@ -287,19 +287,7 @@ public abstract class AbstractEntityRaiderMob extends AbstractFastMinecoloniesEn
             newNavigator.getPathingOptions().withDropCost(1D);
             newNavigator.getPathingOptions().withJumpCost(1D);
             newNavigator.getPathingOptions().setPassDanger(true);
-            PathingStuckHandler stuckHandler = PathingStuckHandler.createStuckHandler()
-              .withTakeDamageOnStuck(0.4f)
-              .withBuildLeafBridges()
-              .withChanceToByPassMovingAway(0.20)
-              .withPlaceLadders();
-
-            if (MinecoloniesAPIProxy.getInstance().getConfig().getServer().raidersbreakblocks.get())
-            {
-                stuckHandler.withBlockBreaks();
-                stuckHandler.withCompleteStuckBlockBreak(6);
-            }
-
-            newNavigator.setStuckHandler(stuckHandler);
+            newNavigator.setStuckHandler(PathingStuckHandler.createStuckHandler().withChanceToByPassMovingAway(0.20));
         }
         return newNavigator;
     }
@@ -310,46 +298,6 @@ public abstract class AbstractEntityRaiderMob extends AbstractFastMinecoloniesEn
      * @return speed factor
      */
     public abstract double getSwimSpeedFactor();
-
-    /**
-     * Get the stack counter.
-     *
-     * @return the amount it got stuck already.
-     */
-    public int getStuckCounter()
-    {
-        return stuckCounter;
-    }
-
-    /**
-     * Set the stack counter.
-     *
-     * @param stuckCounter the amount.
-     */
-    public void setStuckCounter(final int stuckCounter)
-    {
-        this.stuckCounter = stuckCounter;
-    }
-
-    /**
-     * Get the ladder counter.
-     *
-     * @return the amount it got stuck and placed a ladder already.
-     */
-    public int getLadderCounter()
-    {
-        return ladderCounter;
-    }
-
-    /**
-     * Set the ladder counter.
-     *
-     * @param ladderCounter the amount.
-     */
-    public void setLadderCounter(final int ladderCounter)
-    {
-        this.ladderCounter = ladderCounter;
-    }
 
     @Override
     protected SoundEvent getHurtSound(final DamageSource damageSourceIn)

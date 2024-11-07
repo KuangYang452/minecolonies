@@ -228,4 +228,10 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
      * @return
      */
     public abstract PathResult getPathResult();
+
+    /**
+     * Get current stuck level.
+     * @return the stuck level.
+     */
+    public abstract int getStuckLevel();
 }
