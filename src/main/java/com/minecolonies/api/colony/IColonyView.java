@@ -178,7 +178,6 @@ public interface IColonyView extends IColony
      *
      * @param buf               {@link RegistryFriendlyByteBuf} to read from.
      * @param isNewSubscription Whether this is a new subscription of not.
-     * @return null == no response.
      */
     void handleColonyViewMessage(@NotNull RegistryFriendlyByteBuf buf, boolean isNewSubscription);
 
@@ -186,7 +185,6 @@ public interface IColonyView extends IColony
      * Update permissions.
      *
      * @param buf buffer containing permissions.
-     * @return null == no response
      */
     void handlePermissionsViewMessage(@NotNull RegistryFriendlyByteBuf buf);
 
@@ -194,7 +192,6 @@ public interface IColonyView extends IColony
      * Update a ColonyView's workOrders given a network data ColonyView update packet. This uses a full-replacement - workOrders do not get updated and are instead overwritten.
      *
      * @param buf Network data.
-     * @return null == no response.
      */
     void handleColonyViewWorkOrderMessage(RegistryFriendlyByteBuf buf);
 
@@ -203,7 +200,6 @@ public interface IColonyView extends IColony
      *
      * @param id  ID of the citizen.
      * @param buf Network data.
-     * @return null == no response.
      */
     void handleColonyViewCitizensMessage(int id, RegistryFriendlyByteBuf buf);
 
@@ -218,7 +214,6 @@ public interface IColonyView extends IColony
      * Remove a citizen from the ColonyView.
      *
      * @param citizen citizen ID.
-     * @return null == no response.
      */
     void handleColonyViewRemoveCitizenMessage(int citizen);
 
@@ -226,7 +221,6 @@ public interface IColonyView extends IColony
      * Remove a building from the ColonyView.
      *
      * @param buildingId location of the building.
-     * @return null == no response.
      */
     void handleColonyViewRemoveBuildingMessage(BlockPos buildingId);
 
@@ -234,7 +228,6 @@ public interface IColonyView extends IColony
      * Remove a workOrder from the ColonyView.
      *
      * @param workOrderId id of the workOrder.
-     * @return null == no response
      */
     void handleColonyViewRemoveWorkOrderMessage(int workOrderId);
 
@@ -243,7 +236,6 @@ public interface IColonyView extends IColony
      *
      * @param buildingId location of the building.
      * @param buf        buffer containing ColonyBuilding information.
-     * @return null == no response.
      */
     void handleColonyBuildingViewMessage(BlockPos buildingId, @NotNull RegistryFriendlyByteBuf buf);
 

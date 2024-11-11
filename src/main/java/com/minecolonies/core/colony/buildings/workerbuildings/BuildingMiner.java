@@ -276,9 +276,11 @@ public class BuildingMiner extends AbstractBuildingStructureBuilder
     /**
      * Initiates structure loading.
      *
-     * @param mineNode     the node to load it for.
-     * @param rotateTimes  The amount of time to rotate the structure.
-     * @param structurePos The position of the structure.
+     * @param mineNode      the node to load it for.
+     * @param structurePos  the position of the structure.
+     * @param buildingMiner the building reference.
+     * @param world         the level the building is in.
+     * @param job           the job reference.
      */
     public static void initStructure(final MineNode mineNode, final BlockPos structurePos, final BuildingMiner buildingMiner, final Level world, final JobMiner job)
     {

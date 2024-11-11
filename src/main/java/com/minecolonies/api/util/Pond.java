@@ -24,11 +24,11 @@ public final class Pond
     public static final int WATER_DEPTH_REQUIREMENT       = 2;
 
     /**
-     * Checks if on position "water" really is water, if the water is connected to land and if the pond is big enough (bigger then 20).
+     * Checks if on position "water" really is water, if the water is connected to land and if the pond is big enough (bigger than 20).
      *
      * @param world The world the player is in.
      * @param water The coordinate to check.
-     * @param problematicPosition Will contain position of problematic block (if not null && pond was not found).
+     * @param problematicPosition Will contain position of problematic block (if not null and pond was not found).
      * @return true if water.
      */
     public static boolean checkPond(@NotNull final BlockGetter world, @NotNull final BlockPos water, @Nullable final MutableBlockPos problematicPosition)

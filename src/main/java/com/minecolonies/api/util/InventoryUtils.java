@@ -1230,7 +1230,7 @@ public class InventoryUtils
     }
 
     /**
-     * Returns the amount of item stacks in an inventory. This equals {@link #getProviderAsList(ICapabilityProvider)}<code>.length();</code>.
+     * Returns the amount of item stacks in an inventory. This equals {@link InventoryUtils#getProviderAsList(IItemHandlerCapProvider)}<code>.length();</code>.
      *
      * @param provider {@link ICapabilityProvider} to count item stacks of.
      * @return Amount of item stacks in the {@link ICapabilityProvider}.

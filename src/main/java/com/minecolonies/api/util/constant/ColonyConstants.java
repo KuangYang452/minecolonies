@@ -3,6 +3,7 @@ package com.minecolonies.api.util.constant;
 import com.minecolonies.api.colony.IColony;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Comparator;
 import java.util.Random;
@@ -36,7 +37,7 @@ public final class ColonyConstants
     //  Settings
 
     /**
-     * The colony name prefix. Use {@link IColony#getTeamName()} to access the full name.
+     * The colony name prefix. Use {@link IColony#getTeamName(Level, int)} to access the full name.
      */
     public static final String TEAM_COLONY_NAME = "c";
 

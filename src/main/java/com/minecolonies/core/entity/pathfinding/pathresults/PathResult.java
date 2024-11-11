@@ -181,7 +181,7 @@ public class PathResult<T extends AbstractPathJob>
     /**
      * Adds another player to the debug tracking
      *
-     * @param player ID
+     * @param uuid the player UUID.
      */
     public void addTrackingPlayer(final UUID uuid)
     {

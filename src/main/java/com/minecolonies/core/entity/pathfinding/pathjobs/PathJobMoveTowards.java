@@ -30,7 +30,6 @@ public class PathJobMoveTowards extends AbstractPathJob
      * @param start       starting location.
      * @param direction   location to avoid.
      * @param minDistance how far to move away.
-     * @param range       max range to search.
      * @param entity      the entity.
      */
     public PathJobMoveTowards(

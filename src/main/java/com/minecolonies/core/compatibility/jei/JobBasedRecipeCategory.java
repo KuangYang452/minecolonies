@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 /**
  * Base class for a JEI recipe category that displays a Minecolonies citizen based on a job.
- //* @param <T> The recipe type.
+ * @param <T> The recipe type.
  */
 public abstract class JobBasedRecipeCategory<T> extends AbstractRecipeCategory<T>
 {

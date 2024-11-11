@@ -51,7 +51,7 @@ public class PathfindingUtils
      * Set the set of reached blocks to the client.
      *
      * @param reached the reached blocks.
-     * @param mob     the tracked mob.
+     * @param players the target players to receive the message.
      */
     public static void syncDebugReachedPositions(final HashSet<BlockPos> reached, final List<ServerPlayer> players)
     {

@@ -766,7 +766,6 @@ public final class ColonyView implements IColonyView
      *
      * @param buf               {@link RegistryFriendlyByteBuf} to read from.
      * @param isNewSubscription Whether this is a new subscription of not.
-     * @return null == no response.
      */
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -916,7 +915,6 @@ public final class ColonyView implements IColonyView
      * Update permissions.
      *
      * @param buf buffer containing permissions.
-     * @return null == no response
      */
     @Override
     public void handlePermissionsViewMessage(@NotNull final RegistryFriendlyByteBuf buf)
@@ -928,7 +926,6 @@ public final class ColonyView implements IColonyView
      * Update a ColonyView's workOrders given a network data ColonyView update packet. This uses a full-replacement - workOrders do not get updated and are instead overwritten.
      *
      * @param buf Network data.
-     * @return null == no response.
      */
     @Override
     public void handleColonyViewWorkOrderMessage(final RegistryFriendlyByteBuf buf)
@@ -961,7 +958,6 @@ public final class ColonyView implements IColonyView
      *
      * @param id  ID of the citizen.
      * @param buf Network data.
-     * @return null == no response.
      */
     @Override
     public void handleColonyViewCitizensMessage(final int id, final RegistryFriendlyByteBuf buf)
@@ -1005,7 +1001,6 @@ public final class ColonyView implements IColonyView
      * Remove a citizen from the ColonyView.
      *
      * @param citizen citizen ID.
-     * @return null == no response.
      */
     @Override
     public void handleColonyViewRemoveCitizenMessage(final int citizen)
@@ -1017,7 +1012,6 @@ public final class ColonyView implements IColonyView
      * Remove a building from the ColonyView.
      *
      * @param buildingId location of the building.
-     * @return null == no response.
      */
     @Override
     public void handleColonyViewRemoveBuildingMessage(final BlockPos buildingId)
@@ -1033,7 +1027,6 @@ public final class ColonyView implements IColonyView
      * Remove a workOrder from the ColonyView.
      *
      * @param workOrderId id of the workOrder.
-     * @return null == no response
      */
     @Override
     public void handleColonyViewRemoveWorkOrderMessage(final int workOrderId)
@@ -1046,7 +1039,6 @@ public final class ColonyView implements IColonyView
      *
      * @param buildingId location of the building.
      * @param buf        buffer containing ColonyBuilding information.
-     * @return null == no response.
      */
     @Override
     public void handleColonyBuildingViewMessage(final BlockPos buildingId, @NotNull final RegistryFriendlyByteBuf buf)

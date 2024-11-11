@@ -1,22 +1,21 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
         maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-        maven {
-            name 'LDTTeam - Modding'
-            url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+            name = 'Tableau'
+            url = uri('https://ldtteam.jfrog.io/artifactory/tableau/')
         }
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+    id 'com.ldtteam.tableau' version '1.0.0-SNAPSHOT'
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-gradle.startParameter.setProjectProperties(new HashMap<>(gradle.startParameter.getProjectProperties()))
-gradle.startParameter.getProjectProperties().put("build.start", Long.toString(System.currentTimeMillis()))
+features {
+    usesCrowdin = true
+}
 
 rootProject.name = "minecolonies"

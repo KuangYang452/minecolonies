@@ -1,5 +1,74 @@
-plugins {
-  id "org.sonarqube" version "3.0"
+repositories {
+    maven {
+        name = 'JEI'
+        url = uri('https://maven.blamejared.com/')
+    }
+    maven {
+        name = 'JourneyMap'
+        url = uri('https://jm.gserv.me/repository/maven-public/')
+    }
+    maven {
+        name = 'Rei'
+        url = uri('https://maven.shedaniel.me/')
+    }
 }
 
-apply from: 'https://raw.githubusercontent.com/ldtteam/OperaPublicaCreator/ng7/gradle/mod.gradle'
+dependencies {
+    if (project.findProperty('useJourneymap') == true) {
+        runtimeOnly 'flat:journeymap-neoforge:1.21-6.0.0-beta.19'
+    }
+}
+
+tableau {
+    mod {
+        minecraftVersion = '1.21.1'
+        modId = 'minecolonies'
+        modName = 'MineColonies'
+        modDescription = 'MineColonies is a colony simulator within Minecraft! There are numerous types of workers, and each worker has its own type of hut, letting you build a busy and vibrant village/town/city/colony. There is no coded limit to the number of NPC\'s at your disposal, so you can create a small, efficient village dedicated to a particular type of worker or a sprawling metropolis with hundreds of workers. It\'s entirely up to you!'
+        modLogo = 'minecolonies_logo.png'
+        publisher = 'LDTTeam'
+        displayUrl = uri('https://minecolonies.com')
+        repositoryUrl = uri('https://github.com/ldtteam/minecolonies')
+        issueTrackerUrl = uri('https://github.com/ldtteam/minecolonies/issues/new/choose')
+        license = 'GPLv3'
+        versioning {
+            version = '0.0.0'
+            suffix = 'alpha'
+        }
+    }
+
+    modDependencies {
+        required 'com.ldtteam:structurize:[1.0.754-1.21.1-snapshot,)'
+        required 'com.ldtteam:blockui:[1.0.192-1.21.1-snapshot,)'
+        required 'com.ldtteam:domum-ornamentum:[1.0.204-1.21.1-snapshot,)'
+        required 'com.ldtteam:multipiston:[1.2.51-1.21.1-snapshot,)'
+        required 'com.ldtteam:datagenerators:[1.20.4-0.1.57-ALPHA,)'
+
+        optional 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
+        optional 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
+//        optional 'slimeknights.tconstruct:TConstruct:1.21.1-0'
+//        optional 'slimeknights.mantle:Mantle:1.21.1-0'
+    }
+
+    java {
+        javaVersion = 21
+    }
+
+    resourceProcessing {
+        neogradle {
+            interpolateVersions = true
+        }
+    }
+
+    neogradle {
+        neoForgeVersion = '21.1.9'
+        autoGenerateModsToml = true
+
+        dataGenMod('structurize')
+        dataGenMod('domum_ornamentum')
+    }
+
+    crowdin {
+
+    }
+}

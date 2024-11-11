@@ -57,8 +57,8 @@ public class WindowSupplies extends AbstractBlueprintManipulationWindow
     /**
      * Create a new supply tool window.
      *
-     * @param pos        the pos its initiated at.
-     * @param itemInHand
+     * @param pos  the pos its initiated at.
+     * @param type whether to place a "supplycamp" or "supplyship"
      */
     public WindowSupplies(@Nullable final BlockPos pos, final String type)
     {
