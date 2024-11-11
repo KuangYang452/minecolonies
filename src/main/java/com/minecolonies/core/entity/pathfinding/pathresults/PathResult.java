@@ -279,7 +279,13 @@ public class PathResult<T extends AbstractPathJob>
             path = pathCalculation.get();
             pathCalculation = null;
             setStatus(PathFindingStatus.CALCULATION_COMPLETE);
-            job.syncDebug(getDebugWatchers());
+            var watchers = getDebugWatchers();
+            job.syncDebug(watchers);
+
+            if (!watchers.isEmpty())
+            {
+                Log.getLogger().info(" Finished pathjob:" + job + " reaches: " + path.canReach() + " path target:" + path.getTarget());
+            }
         }
         catch (InterruptedException | ExecutionException e)
         {
