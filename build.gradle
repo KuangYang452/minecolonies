@@ -38,11 +38,36 @@ tableau {
     }
 
     modDependencies {
-        required 'com.ldtteam:structurize:[1.0.754-1.21.1-snapshot,)'
-        required 'com.ldtteam:blockui:[1.0.192-1.21.1-snapshot,)'
-        required 'com.ldtteam:domum-ornamentum:[1.0.204-1.21.1-snapshot,)'
-        required 'com.ldtteam:multipiston:[1.2.51-1.21.1-snapshot,)'
-        required 'com.ldtteam:datagenerators:[1.20.4-0.1.57-ALPHA,)'
+        required('com.ldtteam:structurize') {
+            version {
+                strictly '[1.0.754-1.21.1-snapshot,)'
+                prefer '1.0.754-1.21.1-snapshot'
+            }
+        }
+        required('com.ldtteam:blockui') {
+            version {
+                strictly '[1.0.192-1.21.1-snapshot,)'
+                prefer '1.0.192-1.21.1-snapshot'
+            }
+        }
+        required('com.ldtteam:domum-ornamentum') {
+            version {
+                strictly '[1.0.204-1.21.1-snapshot,)'
+                prefer '1.0.204-1.21.1-snapshot'
+            }
+        }
+        required('com.ldtteam:multipiston') {
+            version {
+                strictly '[1.2.51-1.21.1-snapshot,)'
+                prefer '1.2.51-1.21.1-snapshot'
+            }
+        }
+        required('com.ldtteam:datagenerators') {
+            version {
+                strictly '[1.20.4-0.1.57-ALPHA,)'
+                prefer '1.20.4-0.1.57-snapshot'
+            }
+        }
 
         optional 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
         optional 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
