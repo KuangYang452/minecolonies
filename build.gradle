@@ -14,6 +14,9 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
+    compileOnly 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
+
     if (project.findProperty('useJourneymap') == true) {
         runtimeOnly 'flat:journeymap-neoforge:1.21-6.0.0-beta.19'
     }
@@ -69,8 +72,8 @@ tableau {
             }
         }
 
-        optional 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
-        optional 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
+//        optional 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
+//        optional 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
 //        optional 'slimeknights.tconstruct:TConstruct:1.21.1-0'
 //        optional 'slimeknights.mantle:Mantle:1.21.1-0'
     }
