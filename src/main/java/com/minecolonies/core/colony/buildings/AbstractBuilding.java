@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.ldtteam.structurize.blueprints.v1.Blueprint;
 import com.ldtteam.structurize.storage.StructurePacks;
+import com.ldtteam.structurize.util.BlockUtils;
 import com.minecolonies.api.MinecoloniesAPIProxy;
 import com.minecolonies.api.blocks.AbstractBlockHut;
 import com.minecolonies.api.colony.ICitizenData;
@@ -59,12 +60,14 @@ import com.minecolonies.core.tileentities.TileEntityColonyBuilding;
 import com.minecolonies.core.util.ChunkDataHelper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -108,6 +111,11 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     public static final ISettingKey<BoolSetting> BREEDING = new SettingKey<>(BoolSetting.class, new ResourceLocation(MOD_ID, "breeding"));
 
     public static final ISettingKey<BoolSetting> USE_SHEARS = new SettingKey<>(BoolSetting.class, new ResourceLocation(Constants.MOD_ID, "useshears"));
+
+    /**
+     * Best possible standing pos score.
+     */
+    private static final int BEST_STANDING_SCORE = 10;
 
     /**
      * The data store id for request system related data.
@@ -154,6 +162,11 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
      * Day the next pickup should happen.
      */
     public int pickUpDay = -1;
+
+    /**
+     * Cached position for citizen standing position next to hut block.
+     */
+    private BlockPos cachedStandingPosition;
 
     /**
      * Constructor for a AbstractBuilding.
@@ -748,24 +761,6 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     }
 
     /**
-     * If an incoming request is a minimum stock request.
-     *
-     * @param request the request to check.
-     * @return true if so.
-     */
-    public boolean isMinimumStockRequest(final IRequest<? extends IDeliverable> request)
-    {
-        for (final IMinimumStockModule module : getModulesByType(IMinimumStockModule.class))
-        {
-            if (module.isMinimumStockRequest(request))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Set the custom building name of the building.
      *
      * @param name the name to set.
@@ -992,6 +987,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
         getModulesByType(IBuildingEventsModule.class).forEach(module -> module.onUpgradeComplete(newLevel));
         colony.getResearchManager().checkAutoStartResearch();
         colony.getBuildingManager().onBuildingUpgradeComplete(this, newLevel);
+        cachedStandingPosition = null;
     }
 
     @Override
@@ -1046,6 +1042,61 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     public void resetGuardBuildingNear()
     {
         this.recheckGuardBuildingNear = true;
+    }
+
+    @Override
+    public BlockPos getStandingPosition()
+    {
+        if (cachedStandingPosition == null)
+        {
+            if (!WorldUtil.isEntityBlockLoaded(colony.getWorld(), getPosition()))
+            {
+                return getPosition();
+            }
+
+            BlockPos bestPos = getPosition();
+            int bestScore = 0;
+
+            //Return true if the building is null to stall the worker
+            for (final Direction dir : Direction.Plane.HORIZONTAL)
+            {
+                final BlockPos currentPos = getPosition().relative(dir);
+                final BlockState hereState = colony.getWorld().getBlockState(currentPos);
+                // Check air here and air above.
+                if ((!hereState.getBlock().properties.hasCollision || hereState.is(BlockTags.WOOL_CARPETS))
+                      && !colony.getWorld().getBlockState(currentPos.above()).getBlock().properties.hasCollision
+                      && BlockUtils.isAnySolid(colony.getWorld().getBlockState(currentPos.below())))
+                {
+                    int localScore = BEST_STANDING_SCORE;
+                    if (colony.getWorld().canSeeSky(currentPos))
+                    {
+                        // More critical
+                        localScore-=2;
+                    }
+                    if (colony.getWorld().getBlockState(getPosition()).getValue(AbstractBlockHut.FACING) == dir)
+                    {
+                        // Less critical
+                        localScore--;
+                    }
+
+                    if (localScore == BEST_STANDING_SCORE)
+                    {
+                        cachedStandingPosition = currentPos;
+                        return cachedStandingPosition;
+                    }
+
+                    if (localScore > bestScore)
+                    {
+                        bestScore = localScore;
+                        bestPos = currentPos;
+                    }
+                }
+            }
+
+            // prefer default rotation of the building facing this.
+            cachedStandingPosition = bestPos;
+        }
+        return cachedStandingPosition == null ? getPosition() : cachedStandingPosition;
     }
 
     //------------------------- Starting Required Tools/Item handling -------------------------//
@@ -1137,7 +1188,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
 
         if (keepFood())
         {
-            toKeep.put(stack -> ItemStackUtils.CAN_EAT.test(stack) && canEat(stack), new Tuple<>(getBuildingLevel() * 2, true));
+            toKeep.put(stack -> FoodUtils.canEat(stack, null, this), new Tuple<>(getBuildingLevel() * 2, true));
         }
         for (final IHasRequiredItemsModule module : getModulesByType(IHasRequiredItemsModule.class))
         {
@@ -1146,12 +1197,6 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
 
         getModulesByType(IAltersRequiredItems.class).forEach(module -> module.alterItemsToBeKept((stack, qty, inv) -> toKeep.put(stack, new Tuple<>(qty, inv))));
         return toKeep;
-    }
-
-    @Override
-    public boolean canEat(final ItemStack stack)
-    {
-        return FoodUtils.canEat(stack, this.getBuildingLevel());
     }
 
     @Override
@@ -1478,7 +1523,14 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
     @Override
     public boolean hasWorkerOpenRequestsFiltered(final int citizenId, @NotNull final Predicate<IRequest<?>> selectionPredicate)
     {
-        return getOpenRequests(citizenId).stream().anyMatch(selectionPredicate);
+        for (final IRequest<?> req : getOpenRequests(citizenId))
+        {
+            if (selectionPredicate.test(req))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -1491,7 +1543,7 @@ public abstract class AbstractBuilding extends AbstractBuildingContainer
 
         for (final IToken<?> token : getOpenRequestsByCitizen().get(citizen.getId()))
         {
-            if (!citizen.isRequestAsync(token))
+            if (!citizen.isRequestAsync(token) && colony.getRequestManager().getRequestForToken(token) != null)
             {
                 return true;
             }
