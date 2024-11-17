@@ -1,9 +1,10 @@
 package com.minecolonies.core.util;
 
-import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.IColonyTagCapability;
+import com.minecolonies.api.eventbus.events.colony.ClientChunkUpdatedEvent;
 import com.minecolonies.api.util.ChunkCapData;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -71,6 +72,6 @@ public class ChunkClientDataHelper
             cap.setStaticColonyClaim(chunkCapData.getStaticColonyClaim());
         }
 
-        IMinecoloniesAPI.getInstance().getEventHandler().chunkUpdated(chunk);
+        MinecraftForge.EVENT_BUS.post(new ClientChunkUpdatedEvent(chunk));
     }
 }

@@ -1,14 +1,13 @@
-package com.minecolonies.api.events.colony;
+package com.minecolonies.api.eventbus.events.colony;
 
 import com.minecolonies.api.colony.IColony;
-import net.minecraftforge.eventbus.api.Event;
+import com.minecolonies.api.eventbus.events.AbstractEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This is a colony-related event in the Forge sense, not in the
- * {@link com.minecolonies.api.colony.colonyEvents.IColonyEvent} sense.
+ * Any colony related event, provides the target colony the event occurred in.
  */
-public abstract class AbstractColonyEvent extends Event
+public abstract class AbstractColonyEvent extends AbstractEvent
 {
     /**
      * The colony this event was called in.

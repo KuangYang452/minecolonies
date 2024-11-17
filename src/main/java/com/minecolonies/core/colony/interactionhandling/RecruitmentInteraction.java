@@ -8,10 +8,11 @@ import com.ldtteam.blockui.views.BOWindow;
 import com.ldtteam.blockui.views.Box;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.*;
-import com.minecolonies.api.events.IModEventHandler.CitizenAddedSource;
 import com.minecolonies.api.colony.interactionhandling.IChatPriority;
 import com.minecolonies.api.colony.interactionhandling.IInteractionResponseHandler;
 import com.minecolonies.api.colony.interactionhandling.ModInteractionResponseHandlers;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedEvent;
 import com.minecolonies.api.util.InventoryUtils;
 import com.minecolonies.api.util.MessageUtils;
 import com.minecolonies.api.util.Tuple;
@@ -188,7 +189,9 @@ public class RecruitmentInteraction extends ServerCitizenInteraction
                         MessageUtils.format(MESSAGE_RECRUITMENT_SUCCESS, data.getName()).sendTo(colony).forAllPlayers();
                     }
 
-                    IMinecoloniesAPI.getInstance().getEventHandler().citizenAdded(newCitizen, CitizenAddedSource.HIRED);
+                    IMinecoloniesAPI.getInstance()
+                      .getEventBus()
+                      .post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(newCitizen, CitizenAddedEvent.CitizenAddedSource.HIRED));
                 }
             }
             else

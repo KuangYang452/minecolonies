@@ -1,4 +1,4 @@
-package com.minecolonies.api.events;
+package com.minecolonies.api.eventbus.events;
 
 import net.minecraftforge.eventbus.api.Event;
 

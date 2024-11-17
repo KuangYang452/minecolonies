@@ -1,4 +1,4 @@
-package com.minecolonies.api.events.colony;
+package com.minecolonies.api.eventbus.events.colony;
 
 import com.minecolonies.api.colony.IColonyView;
 import org.jetbrains.annotations.NotNull;

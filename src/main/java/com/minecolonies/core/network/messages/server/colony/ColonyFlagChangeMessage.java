@@ -2,6 +2,8 @@ package com.minecolonies.core.network.messages.server.colony;
 
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.IColony;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.ColonyFlagChangedEvent;
 import com.minecolonies.api.util.constant.Constants;
 import com.minecolonies.core.network.messages.server.AbstractColonyServerMessage;
 import net.minecraft.nbt.CompoundTag;
@@ -43,7 +45,7 @@ public class ColonyFlagChangeMessage extends AbstractColonyServerMessage
     protected void onExecute(NetworkEvent.Context ctxIn, boolean isLogicalServer, IColony colony)
     {
         colony.setColonyFlag(patterns);
-        IMinecoloniesAPI.getInstance().getEventHandler().colonyFlagChanged(colony);
+        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_FLAG_CHANGED, new ColonyFlagChangedEvent(colony));
     }
 
     @Override

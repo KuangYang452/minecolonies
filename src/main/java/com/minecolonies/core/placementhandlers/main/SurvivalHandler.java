@@ -39,7 +39,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -174,8 +176,14 @@ public class SurvivalHandler implements ISurvivalBlueprintHandler
                   placementSettings.getMirror() != Mirror.NONE,
                   packName,
                   blueprintPath);
-
-                IMinecoloniesAPI.getInstance().getEventHandler().placeEntity(world, blockPos, player);
+                try
+                {
+                    MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, blockPos), world.getBlockState(blockPos.below()), player));
+                }
+                catch (final Exception e)
+                {
+                    Log.getLogger().error("Error during EntityPlaceEvent", e);
+                }
                 InventoryUtils.reduceStackInItemHandler(new InvWrapper(player.getInventory()), inventoryStack, 1);
 
                 if (tempColony == null)

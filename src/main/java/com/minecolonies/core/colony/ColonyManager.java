@@ -9,6 +9,11 @@ import com.minecolonies.api.colony.permissions.ColonyPlayer;
 import com.minecolonies.api.compatibility.CompatibilityManager;
 import com.minecolonies.api.compatibility.ICompatibilityManager;
 import com.minecolonies.api.crafting.IRecipeManager;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.ColonyManagerLoadedEvent;
+import com.minecolonies.api.eventbus.events.ColonyManagerUnloadedEvent;
+import com.minecolonies.api.eventbus.events.colony.ColonyDeletedEvent;
+import com.minecolonies.api.eventbus.events.colony.ColonyViewUpdatedEvent;
 import com.minecolonies.api.sounds.SoundManager;
 import com.minecolonies.api.util.BlockPosUtil;
 import com.minecolonies.api.util.ColonyUtils;
@@ -199,7 +204,7 @@ public final class ColonyManager implements IColonyManager
                 return;
             }
 
-            IMinecoloniesAPI.getInstance().getEventHandler().deleteColony(colony);
+            IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_DELETED, new ColonyDeletedEvent(colony));
             cap.deleteColony(id);
             BackUpHelper.markColonyDeleted(colony.getID(), colony.getDimension());
             colony.getImportantMessageEntityPlayers()
@@ -642,7 +647,7 @@ public final class ColonyManager implements IColonyManager
                 c.onWorldLoad(world);
             }
 
-            IMinecoloniesAPI.getInstance().getEventHandler().managerLoaded(this);
+            IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_MANAGER_LOADED, new ColonyManagerLoadedEvent(this));
         }
     }
 
@@ -669,7 +674,7 @@ public final class ColonyManager implements IColonyManager
                 BackUpHelper.backupColonyData();
             }
 
-            IMinecoloniesAPI.getInstance().getEventHandler().managerUnloaded(this);
+            IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_MANAGER_UNLOADED, new ColonyManagerUnloadedEvent(this));
         }
     }
 
@@ -698,7 +703,7 @@ public final class ColonyManager implements IColonyManager
         }
         view.handleColonyViewMessage(colonyData, world, isNewSubscription);
 
-        IMinecoloniesAPI.getInstance().getEventHandler().colonyViewUpdated(view);
+        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_VIEW_UPDATED, new ColonyViewUpdatedEvent(view));
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.minecolonies.core.network.messages.server.colony;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.buildings.views.IBuildingView;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.ColonyTeamColorChangedEvent;
 import com.minecolonies.core.network.messages.server.AbstractColonyServerMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.ChatFormatting;
@@ -66,6 +68,6 @@ public class TeamColonyColorChangeMessage extends AbstractColonyServerMessage
     protected void onExecute(final NetworkEvent.Context ctxIn, final boolean isLogicalServer, final IColony colony)
     {
         colony.setColonyColor(ChatFormatting.values()[colorOrdinal]);
-        IMinecoloniesAPI.getInstance().getEventHandler().colonyTeamColorChanged(colony);
+        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_TEAM_COLOR_CHANGED, new ColonyTeamColorChangedEvent(colony));
     }
 }

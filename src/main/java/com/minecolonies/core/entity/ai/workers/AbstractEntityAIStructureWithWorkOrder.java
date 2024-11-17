@@ -13,6 +13,8 @@ import com.minecolonies.api.colony.workorders.IWorkOrder;
 import com.minecolonies.api.colony.workorders.WorkOrderType;
 import com.minecolonies.api.crafting.ItemStorage;
 import com.minecolonies.api.entity.ai.statemachine.states.IAIState;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.buildings.BuildingConstructionEvent;
 import com.minecolonies.api.tileentities.AbstractTileEntityColonyBuilding;
 import com.minecolonies.api.util.*;
 import com.minecolonies.api.util.constant.Constants;
@@ -427,7 +429,7 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
                 {
                     Log.getLogger()
                       .error("Builder ({}:{}) ERROR - Finished, but missing building({})",
-                        worker.getCitizenColonyHandler().getColony().getID(),
+                        worker.getCitizenColonyHandler().getColonyOrRegister().getID(),
                         worker.getCitizenData().getId(),
                         wo.getLocation());
                 }
@@ -450,7 +452,7 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
                             building.setDeconstructed();
                             break;
                     }
-                    IMinecoloniesAPI.getInstance().getEventHandler().buildingCompleted(building, workOrderBuilding);
+                    IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.BUILDING_COMPLETED, new BuildingConstructionEvent(building, workOrderBuilding));
                 }
             }
         }

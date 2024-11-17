@@ -1,4 +1,4 @@
-package com.minecolonies.api.events.colony.citizens;
+package com.minecolonies.api.eventbus.events.colony.citizens;
 
 import com.minecolonies.api.colony.ICitizenData;
 import net.minecraft.world.damagesource.DamageSource;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Event for when a citizen died in any colony.
  */
-public class CitizenDiedEvent extends AbstractCitizenEvent
+public final class CitizenDiedEvent extends AbstractCitizenEvent
 {
     /**
      * The damage source that caused a citizen to die.

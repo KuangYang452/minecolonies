@@ -8,12 +8,13 @@ import com.minecolonies.api.colony.ICivilianData;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.buildings.HiringMode;
 import com.minecolonies.api.colony.buildings.IBuilding;
-import com.minecolonies.api.events.IModEventHandler.CitizenAddedSource;
 import com.minecolonies.api.colony.managers.interfaces.ICitizenManager;
 import com.minecolonies.api.entity.ModEntities;
 import com.minecolonies.api.entity.citizen.AbstractCivilianEntity;
 import com.minecolonies.api.entity.citizen.AbstractEntityCitizen;
 import com.minecolonies.api.entity.citizen.happiness.IHappinessModifier;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedEvent;
 import com.minecolonies.api.util.*;
 import com.minecolonies.api.util.constant.CitizenConstants;
 import com.minecolonies.core.MineColonies;
@@ -363,7 +364,7 @@ public class CitizenManager implements ICitizenManager
         citizens.put(citizenData.getId(), citizenData);
         spawnOrCreateCitizen(citizenData, world, spawnPos);
 
-        IMinecoloniesAPI.getInstance().getEventHandler().citizenAdded(citizenData, CitizenAddedSource.RESURRECTED);
+        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(citizenData, CitizenAddedEvent.CitizenAddedSource.RESURRECTED));
         return citizenData;
     }
 
@@ -621,7 +622,7 @@ public class CitizenManager implements ICitizenManager
 
                 spawnOrCreateCivilian(newCitizen, colony.getWorld(), null, true);
 
-                IMinecoloniesAPI.getInstance().getEventHandler().citizenAdded(newCitizen, CitizenAddedSource.INITIAL);
+                IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(newCitizen, CitizenAddedEvent.CitizenAddedSource.INITIAL));
                 colony.getEventDescriptionManager().addEventDescription(new CitizenSpawnedEvent(colony.getBuildingManager().getTownHall().getPosition(),
                       newCitizen.getName()));
             }

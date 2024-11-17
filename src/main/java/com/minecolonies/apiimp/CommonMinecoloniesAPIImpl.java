@@ -24,8 +24,8 @@ import com.minecolonies.api.entity.citizen.happiness.HappinessRegistry;
 import com.minecolonies.api.entity.mobs.registry.IMobAIRegistry;
 import com.minecolonies.api.entity.pathfinding.registry.IPathNavigateRegistry;
 import com.minecolonies.api.equipment.registry.EquipmentTypeEntry;
-import com.minecolonies.api.events.ForgeModEventHandler;
-import com.minecolonies.api.events.IModEventHandler;
+import com.minecolonies.api.eventbus.DefaultEventBus;
+import com.minecolonies.api.eventbus.EventBus;
 import com.minecolonies.api.quests.registries.QuestRegistries;
 import com.minecolonies.api.research.IGlobalResearchTree;
 import com.minecolonies.api.research.ModResearchCostTypes.ResearchCostType;
@@ -63,7 +63,7 @@ public class CommonMinecoloniesAPIImpl implements IMinecoloniesAPI
     private final IJobDataManager                        jobDataManager         = new JobDataManager();
     private final IGuardTypeDataManager                  guardTypeDataManager   = new com.minecolonies.core.colony.buildings.registry.GuardTypeDataManager();
     private final IInteractionResponseHandlerDataManager interactionDataManager = new InteractionResponseHandlerManager();
-    private final IModEventHandler                       modEventHandler        = new ForgeModEventHandler();
+    private final EventBus                               modEventBus            = new DefaultEventBus();
 
     private IForgeRegistry<EquipmentTypeEntry>                         equipmentTypeRegistry;
     private IForgeRegistry<BuildingEntry>                              buildingRegistry;
@@ -399,9 +399,9 @@ public class CommonMinecoloniesAPIImpl implements IMinecoloniesAPI
     }
 
     @Override
-    public IModEventHandler getEventHandler()
+    public EventBus getEventBus()
     {
-        return modEventHandler;
+        return modEventBus;
     }
 }
 

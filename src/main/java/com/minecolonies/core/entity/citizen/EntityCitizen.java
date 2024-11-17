@@ -28,6 +28,8 @@ import com.minecolonies.api.entity.citizen.citizenhandlers.*;
 import com.minecolonies.api.entity.citizen.happiness.ExpirationBasedHappinessModifier;
 import com.minecolonies.api.entity.citizen.happiness.StaticHappinessSupplier;
 import com.minecolonies.api.entity.pathfinding.proxy.IWalkToProxy;
+import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenRemovedEvent;
 import com.minecolonies.api.inventory.InventoryCitizen;
 import com.minecolonies.api.inventory.container.ContainerCitizenInventory;
 import com.minecolonies.api.items.ModItems;
@@ -1647,7 +1649,7 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
               Component.literal(damageSource.getLocalizedDeathMessage(this).getString()).getString().replaceFirst(this.getDisplayName().getString(), "Citizen");
             citizenColonyHandler.getColonyOrRegister().getEventDescriptionManager().addEventDescription(new CitizenDiedEvent(blockPosition(), citizenData.getName(), deathCause));
 
-            IMinecoloniesAPI.getInstance().getEventHandler().citizenDied(citizenData, damageSource);
+            IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_DIED, new com.minecolonies.api.eventbus.events.colony.citizens.CitizenDiedEvent(citizenData, damageSource));
         }
         super.die(damageSource);
     }
@@ -1656,7 +1658,7 @@ public class EntityCitizen extends AbstractEntityCitizen implements IThreatTable
     public void remove(final @NotNull RemovalReason reason)
     {
         super.remove(reason);
-        IMinecoloniesAPI.getInstance().getEventHandler().citizenRemoved(citizenData, reason);
+        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_REMOVED, new CitizenRemovedEvent(citizenData, reason));
     }
 
     /**

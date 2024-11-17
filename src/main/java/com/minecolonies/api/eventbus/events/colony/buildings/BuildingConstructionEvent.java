@@ -1,4 +1,4 @@
-package com.minecolonies.api.events.colony.buildings;
+package com.minecolonies.api.eventbus.events.colony.buildings;
 
 import com.minecolonies.api.colony.buildings.IBuilding;
 import com.minecolonies.core.colony.workorders.WorkOrderBuilding;

@@ -1,11 +1,11 @@
 package com.minecolonies.core.colony.crafting;
 
 import com.google.gson.JsonObject;
-import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.blocks.ModBlocks;
 import com.minecolonies.api.colony.buildings.modules.ICraftingBuildingModule;
 import com.minecolonies.api.colony.buildings.registry.BuildingEntry;
 import com.minecolonies.api.crafting.ItemStorage;
+import com.minecolonies.api.eventbus.events.CustomRecipesReloadedEvent;
 import com.minecolonies.api.loot.ModLootTables;
 import com.minecolonies.api.util.Log;
 import com.minecolonies.core.Network;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootDataManager;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -432,6 +433,13 @@ public class CustomRecipeManager
             lootTables.put(id, drops);
         }
 
-        IMinecoloniesAPI.getInstance().getEventHandler().customRecipesLoaded();
+        try
+        {
+            MinecraftForge.EVENT_BUS.post(new CustomRecipesReloadedEvent());
+        }
+        catch (final Exception e)
+        {
+            Log.getLogger().error("Error during CustomRecipesReloadedEvent", e);
+        }
     }
 }
