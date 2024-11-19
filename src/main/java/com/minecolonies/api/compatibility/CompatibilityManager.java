@@ -694,7 +694,8 @@ public class CompatibilityManager implements ICompatibilityManager
             {
                 smeltableOres.add(new ItemStorage(stack));
             }
-            else if (stack.getItem() instanceof BlockItem)
+
+            if (stack.getItem() instanceof BlockItem)
             {
                 oreBlocks.add(((BlockItem) stack.getItem()).getBlock());
             }

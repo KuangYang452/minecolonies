@@ -227,9 +227,13 @@ public class BuildingSmeltery extends AbstractBuilding
                 List<ItemStack> drops = Block.getDrops(b.defaultBlockState(), (ServerLevel) building.getColony().getWorld(), building.getID(), null);
                 for (ItemStack drop : drops)
                 {
-                    if (!drop.isEmpty())
+                    if (!drop.isEmpty() && !drop.is(input))
                     {
                         drop.setCount(1);
+                    }
+                    else
+                    {
+                        drop.setCount(0);
                     }
                 }
 

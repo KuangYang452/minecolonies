@@ -586,7 +586,7 @@ public class RecipeStorage implements IRecipeStorage
             }
         }
 
-        return insertCraftedItems(handlers, getPrimaryOutput(), context, doInsert);
+        return insertCraftedItems(input, handlers, getPrimaryOutput(), context, doInsert);
     }
 
     @Override
@@ -598,9 +598,10 @@ public class RecipeStorage implements IRecipeStorage
     /**
      * Inserted the resulting items into the itemHandlers.
      *
+     * @param input
      * @param handlers the handlers.
      */
-    private List<ItemStack> insertCraftedItems(final List<IItemHandler> handlers, ItemStack outputStack, LootParams context, boolean doInsert)
+    private List<ItemStack> insertCraftedItems(final @NotNull List<ItemStorage> input, final List<IItemHandler> handlers, ItemStack outputStack, LootParams context, boolean doInsert)
     {
         final List<ItemStack> resultStacks = new ArrayList<>();
         final List<ItemStack> secondaryStacks = new ArrayList<>();
@@ -628,7 +629,13 @@ public class RecipeStorage implements IRecipeStorage
 
         if(loot != null && context != null)
         {
-            secondaryStacks.addAll(loot.getRandomItems(context));
+            for (final ItemStack theLoot : loot.getRandomItems(context))
+            {
+                if (!input.contains(new ItemStorage(theLoot)))
+                {
+                    secondaryStacks.add(theLoot);
+                }
+            }
         }
 
         resultStacks.addAll(secondaryStacks.stream().map(ItemStack::copy).collect(Collectors.toList()));
