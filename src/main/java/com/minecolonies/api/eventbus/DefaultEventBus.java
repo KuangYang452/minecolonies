@@ -46,7 +46,7 @@ public class DefaultEventBus implements EventBus
             }
             catch (Exception ex)
             {
-                Log.getLogger().warn("Sending event '{}' for type '{}'. Error occurred in handler '{}':", event.getEventId(), eventType.getIdentifier(), handler.toString(), ex);
+                Log.getLogger().warn("Sending event '{}' for type '{}'. Error occurred in handler:", event.getEventId(), eventType.getIdentifier(), ex);
             }
         }
     }
