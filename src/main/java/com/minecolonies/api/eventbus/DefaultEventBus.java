@@ -24,8 +24,7 @@ public class DefaultEventBus implements EventBus
     {
         Log.getLogger().debug("Registering event handler for id {}.", eventType.getIdentifier());
 
-        eventHandlersPerType.putIfAbsent(eventType.getIdentifier(), new ArrayList<>());
-        eventHandlersPerType.get(eventType.getIdentifier()).add(handler);
+        eventHandlersPerType.computeIfAbsent(eventType.getIdentifier(), (f) -> new ArrayList<>()).add(handler);
     }
 
     @Override
@@ -37,7 +36,7 @@ public class DefaultEventBus implements EventBus
             return;
         }
 
-        Log.getLogger().debug("Event id: {}; Sending event for type '{}' to {} handlers.", event.getEventId(), eventType.getIdentifier(), eventHandlers.size());
+        Log.getLogger().debug("Sending event '{}' for type '{}'. Sending to {} handlers.", event.getEventId(), eventType.getIdentifier(), eventHandlers.size());
 
         for (final EventHandler<?> handler : eventHandlers)
         {
@@ -47,7 +46,7 @@ public class DefaultEventBus implements EventBus
             }
             catch (Exception ex)
             {
-                Log.getLogger().warn("Event id: {};'Error occurred during processing event handler:", event.getEventId(), ex);
+                Log.getLogger().warn("Sending event '{}' for type '{}'. Error occurred in handler '{}':", event.getEventId(), eventType.getIdentifier(), handler.toString(), ex);
             }
         }
     }
