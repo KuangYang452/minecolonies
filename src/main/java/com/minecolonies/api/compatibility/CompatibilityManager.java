@@ -689,13 +689,14 @@ public class CompatibilityManager implements ICompatibilityManager
     {
         if (stack.is(Tags.Items.ORES) || stack.is(ModTags.breakable_ore) || stack.is(ModTags.raw_ore))
         {
-            if (stack.getItem() instanceof BlockItem)
-            {
-                oreBlocks.add(((BlockItem) stack.getItem()).getBlock());
-            }
-            if (!MinecoloniesAPIProxy.getInstance().getFurnaceRecipes().getSmeltingResult(stack).isEmpty())
+            final ItemStack smeltingResult = MinecoloniesAPIProxy.getInstance().getFurnaceRecipes().getSmeltingResult(stack);
+            if (smeltingResult != null && !ItemStackUtils.compareItemStacksIgnoreStackSize(smeltingResult, stack))
             {
                 smeltableOres.add(new ItemStorage(stack));
+            }
+            else if (stack.getItem() instanceof BlockItem)
+            {
+                oreBlocks.add(((BlockItem) stack.getItem()).getBlock());
             }
         }
     }

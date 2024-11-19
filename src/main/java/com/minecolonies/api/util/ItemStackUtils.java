@@ -585,6 +585,11 @@ public final class ItemStackUtils
       final boolean min,
       final boolean matchNBTExactly)
     {
+        if (itemStack1 == itemStack2)
+        {
+            return true;
+        }
+
         if (isEmpty(itemStack1) && isEmpty(itemStack2))
         {
             return true;
