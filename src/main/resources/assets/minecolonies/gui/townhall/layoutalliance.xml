@@ -7,7 +7,7 @@
         <box size="100% 25" linewidth="1">
             <label id="name" size="100 12" pos="5 0" color="black"/>
             <label id="dist" size="40 13" pos="112 12" color="black"/>
-            <button id="tp" size="100 12" pos="5 12" label="$(com.minecolonies.coremod.permission.teleport_to_colony)"/>
+            <button id="tp" size="100 12" pos="5 12" label="$(com.minecolonies.coremod.permission.teleport_to_colony)" textscale="0.8"/>
         </box>
     </list>
 

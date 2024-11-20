@@ -8,6 +8,7 @@ import com.minecolonies.api.colony.buildings.views.IBuildingView;
 import com.minecolonies.api.colony.buildings.workerbuildings.ITownHallView;
 import com.minecolonies.api.colony.fields.IField;
 import com.minecolonies.api.colony.managers.interfaces.*;
+import com.minecolonies.api.colony.permissions.Action;
 import com.minecolonies.api.colony.permissions.ColonyPlayer;
 import com.minecolonies.api.colony.permissions.IPermissions;
 import com.minecolonies.api.colony.permissions.Rank;
@@ -31,6 +32,7 @@ import com.minecolonies.core.colony.buildings.views.AbstractBuildingView;
 import com.minecolonies.core.colony.buildings.workerbuildings.BuildingTownHall;
 import com.minecolonies.core.colony.managers.ResearchManager;
 import com.minecolonies.core.colony.managers.StatisticsManager;
+import com.minecolonies.core.colony.permissions.Permissions;
 import com.minecolonies.core.colony.permissions.PermissionsView;
 import com.minecolonies.core.colony.requestsystem.management.manager.StandardRequestManager;
 import com.minecolonies.core.colony.workorders.AbstractWorkOrder;
@@ -367,14 +369,15 @@ public final class ColonyView implements IColonyView
         buf.writeBoolean(colony.getRaiderManager().areSpiesEnabled());
         // ToDo: rework ally system
         final List<IColony> allies = new ArrayList<>();
-        for (final ColonyPlayer player : colony.getPermissions().getFilteredPlayers(Rank::isColonyManager))
+        final Permissions perms = colony.getPermissions();
+        for (final ColonyPlayer player : perms.getFilteredPlayers(rank -> perms.hasPermission(rank, Action.TELEPORT_TO_COLONY)))
         {
             final IColony col = IColonyManager.getInstance().getIColonyByOwner(colony.getWorld(), player.getID());
-            if (col != null)
+            if (col != null && col.getID() != colony.getID())
             {
-                for (final ColonyPlayer owner : colony.getPermissions().getPlayersByRank(colony.getPermissions().getRankOwner()))
+                for (final ColonyPlayer owner : perms.getPlayersByRank(perms.getRankOwner()))
                 {
-                    if (col.getPermissions().getRank(owner.getID()).isColonyManager() && col.getID() != colony.getID())
+                    if (col.getPermissions().hasPermission(col.getPermissions().getRank(owner.getID()), Action.TELEPORT_TO_COLONY))
                     {
                         allies.add(col);
                     }
@@ -393,12 +396,12 @@ public final class ColonyView implements IColonyView
         }
 
         final List<IColony> feuds = new ArrayList<>();
-        for (final ColonyPlayer player : colony.getPermissions().getFilteredPlayers(Rank::isHostile))
+        for (final ColonyPlayer player : perms.getFilteredPlayers(Rank::isHostile))
         {
             final IColony col = IColonyManager.getInstance().getIColonyByOwner(colony.getWorld(), player.getID());
             if (col != null)
             {
-                for (final ColonyPlayer owner : colony.getPermissions().getPlayersByRank(colony.getPermissions().getRankOwner()))
+                for (final ColonyPlayer owner : perms.getPlayersByRank(perms.getRankOwner()))
                 {
                     if (col.getPermissions().getRank(owner.getID()).isHostile())
                     {
