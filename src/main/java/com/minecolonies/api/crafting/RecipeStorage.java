@@ -623,7 +623,7 @@ public class RecipeStorage implements IRecipeStorage
         }
 
         if (loot == null && lootTable != null)
-        {
+        {    
             loot = context.getLevel().getServer().getLootData().getLootTable(lootTable);
         }
 
