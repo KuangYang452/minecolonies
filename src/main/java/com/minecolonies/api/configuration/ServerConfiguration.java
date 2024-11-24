@@ -97,7 +97,6 @@ public class ServerConfiguration extends AbstractConfiguration
      *  -------------------------------------------------------------------------------- */
 
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> configListStudyItems;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> luckyOres;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> diseases;
     public final ForgeConfigSpec.BooleanValue                        auditCraftingTags;
     public final ForgeConfigSpec.BooleanValue                        debugInventories;
@@ -196,18 +195,6 @@ public class ServerConfiguration extends AbstractConfiguration
         configListStudyItems = defineList(builder, "configliststudyitems",
           Arrays.asList
                   ("minecraft:paper;400;100", "minecraft:book;600;10"),
-          s -> s instanceof String);
-
-        luckyOres = defineList(builder, "luckyores",
-          Arrays.asList
-                  ("minecraft:coal_ore!64",
-                    "minecraft:copper_ore!48",
-                    "minecraft:iron_ore!32",
-                    "minecraft:gold_ore!16",
-                    "minecraft:redstone_ore!8",
-                    "minecraft:lapis_ore!4",
-                    "minecraft:diamond_ore!2",
-                    "minecraft:emerald_ore!1"),
           s -> s instanceof String);
 
         diseases = defineList(builder, "diseases",
