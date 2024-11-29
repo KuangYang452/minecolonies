@@ -10,12 +10,13 @@ pluginManagement {
 }
 
 plugins {
-    id 'com.ldtteam.tableau' version '1.0.0-SNAPSHOT'
+    id 'com.ldtteam.tableau' version '0.0.0-LOCAL'
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
 features {
     usesCrowdin = true
+    usesModDependencies = true
 }
 
 rootProject.name = "minecolonies"

@@ -26,6 +26,7 @@ tableau {
     mod {
         minecraftVersion = '1.21.1'
         modId = 'minecolonies'
+        group = 'com.ldtteam'
         modName = 'MineColonies'
         modDescription = 'MineColonies is a colony simulator within Minecraft! There are numerous types of workers, and each worker has its own type of hut, letting you build a busy and vibrant village/town/city/colony. There is no coded limit to the number of NPC\'s at your disposal, so you can create a small, efficient village dedicated to a particular type of worker or a sprawling metropolis with hundreds of workers. It\'s entirely up to you!'
         modLogo = 'minecolonies_logo.png'
@@ -72,8 +73,8 @@ tableau {
             }
         }
 
-//        optional 'mezz.jei:jei-1.21.1-neoforge-api:19.19.6.235'
-//        optional 'info.journeymap:journeymap-api-neoforge:2.0.0-1.21.1-SNAPSHOT'
+        optionalRuntime 'jei', '[19.19.6.235,)'
+        optionalRuntime 'journeymap', '[1.21-6.0.0-beta.19,)'
 //        optional 'slimeknights.tconstruct:TConstruct:1.21.1-0'
 //        optional 'slimeknights.mantle:Mantle:1.21.1-0'
     }
@@ -82,18 +83,12 @@ tableau {
         javaVersion = 21
     }
 
-    resourceProcessing {
-        neogradle {
-            interpolateVersions = true
-        }
-    }
-
     neogradle {
         neoForgeVersion = '21.1.9'
         autoGenerateModsToml = true
 
-        dataGenMod('structurize')
-        dataGenMod('domum_ornamentum')
+        additionalDataGenMod 'structurize'
+        additionalDataGenMod 'domum_ornamentum'
     }
 
     crowdin {
