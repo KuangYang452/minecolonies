@@ -63,11 +63,11 @@ public class ServerConfiguration extends AbstractConfiguration
      *  ------------------- ######## Claim settings ######## ------------------- *
      *  --------------------------------------------------------------------------- */
 
-    public final ForgeConfigSpec.IntValue     maxColonySize;
-    public final ForgeConfigSpec.IntValue     minColonyDistance;
-    public final ForgeConfigSpec.IntValue     initialColonySize;
-    public final ForgeConfigSpec.IntValue     maxDistanceFromWorldSpawn;
-    public final ForgeConfigSpec.IntValue     minDistanceFromWorldSpawn;
+    public final ForgeConfigSpec.IntValue maxColonySize;
+    public final ForgeConfigSpec.IntValue minColonyDistance;
+    public final ForgeConfigSpec.IntValue initialColonySize;
+    public final ForgeConfigSpec.IntValue maxDistanceFromWorldSpawn;
+    public final ForgeConfigSpec.IntValue minDistanceFromWorldSpawn;
 
     /*  ------------------------------------------------------------------------- *
      *  ------------------- ######## Combat Settings ######## ------------------- *
@@ -96,10 +96,7 @@ public class ServerConfiguration extends AbstractConfiguration
      *  ------------------- ######## Compatibility Settings ######## ------------------- *
      *  -------------------------------------------------------------------------------- */
 
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> configListStudyItems;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> configListRecruitmentItems;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> luckyOres;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> diseases;
     public final ForgeConfigSpec.BooleanValue                        auditCraftingTags;
     public final ForgeConfigSpec.BooleanValue                        debugInventories;
     public final ForgeConfigSpec.BooleanValue                        blueprintBuildMode;
@@ -117,7 +114,6 @@ public class ServerConfiguration extends AbstractConfiguration
      *  --------------------------------------------------------------------------------- */
 
     public final ForgeConfigSpec.BooleanValue creativeResolve;
-
 
     /**
      * Builds server configuration.
@@ -194,11 +190,6 @@ public class ServerConfiguration extends AbstractConfiguration
 
         swapToCategory(builder, "compatibility");
 
-        configListStudyItems = defineList(builder, "configliststudyitems",
-          Arrays.asList
-                  ("minecraft:paper;400;100", "minecraft:book;600;10"),
-          s -> s instanceof String);
-
         configListRecruitmentItems = defineList(builder, "configlistrecruitmentitems",
           Arrays.asList
                   ("minecraft:hay_block;3",
@@ -214,23 +205,6 @@ public class ServerConfiguration extends AbstractConfiguration
                     "minecraft:sunflower;5",
                     "minecraft:honeycomb;6",
                     "minecraft:quartz;3"),
-          s -> s instanceof String);
-        luckyOres = defineList(builder, "luckyores",
-          Arrays.asList
-                  ("minecraft:coal_ore!64",
-                    "minecraft:copper_ore!48",
-                    "minecraft:iron_ore!32",
-                    "minecraft:gold_ore!16",
-                    "minecraft:redstone_ore!8",
-                    "minecraft:lapis_ore!4",
-                    "minecraft:diamond_ore!2",
-                    "minecraft:emerald_ore!1"),
-          s -> s instanceof String);
-
-        diseases = defineList(builder, "diseases",
-          Arrays.asList("Influenza,100,minecraft:carrot,minecraft:potato",
-            "Measles,10,minecraft:dandelion,minecraft:kelp,minecraft:poppy",
-            "Smallpox,1,minecraft:honey_bottle,minecraft:golden_apple"),
           s -> s instanceof String);
 
         auditCraftingTags = defineBoolean(builder, "auditcraftingtags", false);
