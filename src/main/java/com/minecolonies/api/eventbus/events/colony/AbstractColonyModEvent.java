@@ -1,13 +1,13 @@
 package com.minecolonies.api.eventbus.events.colony;
 
 import com.minecolonies.api.colony.IColony;
-import com.minecolonies.api.eventbus.events.AbstractEvent;
+import com.minecolonies.api.eventbus.events.AbstractModEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Any colony related event, provides the target colony the event occurred in.
  */
-public abstract class AbstractColonyEvent extends AbstractEvent
+public abstract class AbstractColonyModEvent extends AbstractModEvent
 {
     /**
      * The colony this event was called in.
@@ -20,7 +20,7 @@ public abstract class AbstractColonyEvent extends AbstractEvent
      *
      * @param colony The colony related to the event.
      */
-    protected AbstractColonyEvent(@NotNull final IColony colony)
+    protected AbstractColonyModEvent(@NotNull final IColony colony)
     {
         this.colony = colony;
     }

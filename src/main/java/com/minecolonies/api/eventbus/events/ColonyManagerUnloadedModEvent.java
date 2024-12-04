@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Colony manager unloaded event.
  */
-public final class ColonyManagerUnloadedEvent extends AbstractEvent
+public final class ColonyManagerUnloadedModEvent extends AbstractModEvent
 {
     /**
      * The colony manager instance.
@@ -17,7 +17,7 @@ public final class ColonyManagerUnloadedEvent extends AbstractEvent
     /**
      * Event for colony manager loaded.
      */
-    public ColonyManagerUnloadedEvent(final @NotNull IColonyManager colonyManager)
+    public ColonyManagerUnloadedModEvent(final @NotNull IColonyManager colonyManager)
     {
         this.colonyManager = colonyManager;
     }

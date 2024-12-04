@@ -4,16 +4,16 @@ import com.minecolonies.api.colony.IColony;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Colony created event.
+ * Colony deleted event.
  */
-public final class ColonyCreatedEvent extends AbstractColonyEvent
+public final class ColonyDeletedModEvent extends AbstractColonyModEvent
 {
     /**
-     * Constructs a colony created event.
+     * Constructs a colony deleted event.
      *
      * @param colony The colony related to the event.
      */
-    public ColonyCreatedEvent(final @NotNull IColony colony)
+    public ColonyDeletedModEvent(final @NotNull IColony colony)
     {
         super(colony);
     }

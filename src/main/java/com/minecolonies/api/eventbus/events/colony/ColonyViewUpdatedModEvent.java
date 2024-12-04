@@ -6,14 +6,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This event is raised client-side whenever a particular colony's data is refreshed.
  */
-public final class ColonyViewUpdatedEvent extends AbstractColonyEvent
+public final class ColonyViewUpdatedModEvent extends AbstractColonyModEvent
 {
     /**
      * Constructs a new event.
      *
      * @param colony The colony (view) that was just updated.
      */
-    public ColonyViewUpdatedEvent(final @NotNull IColonyView colony)
+    public ColonyViewUpdatedModEvent(final @NotNull IColonyView colony)
     {
         super(colony);
     }

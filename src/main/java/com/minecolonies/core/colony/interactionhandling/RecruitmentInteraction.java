@@ -11,8 +11,7 @@ import com.minecolonies.api.colony.*;
 import com.minecolonies.api.colony.interactionhandling.IChatPriority;
 import com.minecolonies.api.colony.interactionhandling.IInteractionResponseHandler;
 import com.minecolonies.api.colony.interactionhandling.ModInteractionResponseHandlers;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedEvent;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedModEvent;
 import com.minecolonies.api.util.InventoryUtils;
 import com.minecolonies.api.util.MessageUtils;
 import com.minecolonies.api.util.Tuple;
@@ -191,7 +190,7 @@ public class RecruitmentInteraction extends ServerCitizenInteraction
 
                     IMinecoloniesAPI.getInstance()
                       .getEventBus()
-                      .post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(newCitizen, CitizenAddedEvent.CitizenAddedSource.HIRED));
+                      .post(new CitizenAddedModEvent(newCitizen, CitizenAddedModEvent.CitizenAddedSource.HIRED));
                 }
             }
             else

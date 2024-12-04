@@ -6,7 +6,7 @@ import com.minecolonies.core.colony.workorders.WorkOrderBuilding;
 /**
  * Event for when a building was built, upgraded, repaired or removed.
  */
-public final class BuildingConstructionEvent extends AbstractBuildingEvent
+public final class BuildingConstructionModEvent extends AbstractBuildingModEvent
 {
     /**
      * The work order which was completed.
@@ -19,7 +19,7 @@ public final class BuildingConstructionEvent extends AbstractBuildingEvent
      * @param building  the building the event was for.
      * @param workOrder the work order which was completed.
      */
-    public BuildingConstructionEvent(final IBuilding building, final WorkOrderBuilding workOrder)
+    public BuildingConstructionModEvent(final IBuilding building, final WorkOrderBuilding workOrder)
     {
         super(building);
         this.workOrder = workOrder;

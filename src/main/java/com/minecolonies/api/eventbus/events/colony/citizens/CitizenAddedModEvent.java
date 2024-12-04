@@ -5,7 +5,7 @@ import com.minecolonies.api.colony.ICitizenData;
 /**
  * Event for when a citizen was added to the colony.
  */
-public final class CitizenAddedEvent extends AbstractCitizenEvent
+public final class CitizenAddedModEvent extends AbstractCitizenModEvent
 {
     /**
      * The way the citizen came into the colony.
@@ -18,7 +18,7 @@ public final class CitizenAddedEvent extends AbstractCitizenEvent
      * @param citizen the citizen related to the event.
      * @param source  the way the citizen came into the colony.
      */
-    public CitizenAddedEvent(final ICitizenData citizen, final CitizenAddedSource source)
+    public CitizenAddedModEvent(final ICitizenData citizen, final CitizenAddedSource source)
     {
         super(citizen);
         this.source = source;

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Event for when a citizen was removed from the colony.
  */
-public final class CitizenRemovedEvent extends AbstractCitizenEvent
+public final class CitizenRemovedModEvent extends AbstractCitizenModEvent
 {
     /**
      * The damage source that caused a citizen to die.
@@ -20,7 +20,7 @@ public final class CitizenRemovedEvent extends AbstractCitizenEvent
      * @param citizen the citizen related to the event.
      * @param reason  the reason the citizen was removed.
      */
-    public CitizenRemovedEvent(final @NotNull ICitizenData citizen, final @NotNull Entity.RemovalReason reason)
+    public CitizenRemovedModEvent(final @NotNull ICitizenData citizen, final @NotNull Entity.RemovalReason reason)
     {
         super(citizen);
         this.reason = reason;

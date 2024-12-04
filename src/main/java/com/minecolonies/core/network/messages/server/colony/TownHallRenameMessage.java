@@ -3,8 +3,7 @@ package com.minecolonies.core.network.messages.server.colony;
 import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyView;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.ColonyNameChangedEvent;
+import com.minecolonies.api.eventbus.events.colony.ColonyNameChangedModEvent;
 import com.minecolonies.core.network.messages.server.AbstractColonyServerMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -56,6 +55,6 @@ public class TownHallRenameMessage extends AbstractColonyServerMessage
     {
         name = (name.length() <= MAX_NAME_LENGTH) ? name : name.substring(0, SUBSTRING_LENGTH);
         colony.setName(name);
-        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_NAME_CHANGED, new ColonyNameChangedEvent(colony));
+        IMinecoloniesAPI.getInstance().getEventBus().post(new ColonyNameChangedModEvent(colony));
     }
 }

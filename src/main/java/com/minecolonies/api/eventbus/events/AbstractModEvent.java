@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Abstract implementation for this mod bus events.
  */
-public class AbstractEvent implements IModEvent
+public class AbstractModEvent implements IModEvent
 {
     /**
      * The unique id for this event.
@@ -17,7 +17,7 @@ public class AbstractEvent implements IModEvent
     /**
      * Default constructor.
      */
-    protected AbstractEvent()
+    protected AbstractModEvent()
     {
         this.eventId = UUID.randomUUID();
     }

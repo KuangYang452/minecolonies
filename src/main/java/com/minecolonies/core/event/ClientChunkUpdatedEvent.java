@@ -1,4 +1,4 @@
-package com.minecolonies.api.eventbus.events.colony;
+package com.minecolonies.core.event;
 
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.eventbus.api.Event;

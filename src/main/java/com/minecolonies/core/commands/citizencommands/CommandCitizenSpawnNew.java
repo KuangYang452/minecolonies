@@ -4,8 +4,7 @@ import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.ICitizenData;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedEvent;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedModEvent;
 import com.minecolonies.core.commands.commandTypes.IMCCommand;
 import com.minecolonies.core.commands.commandTypes.IMCOPCommand;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -43,7 +42,7 @@ public class CommandCitizenSpawnNew implements IMCOPCommand
         final ICitizenData newCitizen = colony.getCitizenManager().spawnOrCreateCivilian(null, colony.getWorld(), null, true);
         context.getSource().sendSuccess(() -> Component.translatable(COMMAND_CITIZEN_SPAWN_SUCCESS, newCitizen.getName()), true);
 
-        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(newCitizen, CitizenAddedEvent.CitizenAddedSource.COMMANDS));
+        IMinecoloniesAPI.getInstance().getEventBus().post(new CitizenAddedModEvent(newCitizen, CitizenAddedModEvent.CitizenAddedSource.COMMANDS));
         return 1;
     }
 

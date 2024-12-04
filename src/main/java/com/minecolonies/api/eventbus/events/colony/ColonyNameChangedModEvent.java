@@ -4,16 +4,16 @@ import com.minecolonies.api.colony.IColony;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Colony flag changed event.
+ * Colony name changed event.
  */
-public final class ColonyFlagChangedEvent extends AbstractColonyEvent
+public final class ColonyNameChangedModEvent extends AbstractColonyModEvent
 {
     /**
-     * Constructs a colony flag changed event.
+     * Constructs a colony name changed event.
      *
      * @param colony the colony related to the event.
      */
-    public ColonyFlagChangedEvent(final @NotNull IColony colony)
+    public ColonyNameChangedModEvent(final @NotNull IColony colony)
     {
         super(colony);
     }

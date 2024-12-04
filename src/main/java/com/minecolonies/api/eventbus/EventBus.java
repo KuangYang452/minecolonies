@@ -10,20 +10,18 @@ public interface EventBus
     /**
      * Subscribe to the given event type, providing a handler function.
      *
-     * @param eventType the event type to subscribe to.
+     * @param eventType the event class type.
      * @param handler   the handler function handling the event logic.
      * @param <T>       the generic type of the event class.
      */
-    <T extends IModEvent> void subscribe(final @NotNull IModEventType<T> eventType, final @NotNull EventHandler<T> handler);
+    <T extends IModEvent> void subscribe(final @NotNull Class<T> eventType, final @NotNull EventHandler<T> handler);
 
     /**
      * Posts a new event on the event bus for the given type.
      *
-     * @param eventType the event type to subscribe to.
-     * @param event     the event to send.
-     * @param <T>       the generic type of the event class.
+     * @param event the event to send.
      */
-    <T extends IModEvent> void post(final @NotNull IModEventType<T> eventType, final @NotNull T event);
+    void post(final @NotNull IModEvent event);
 
     /**
      * The event handler lambda definition.

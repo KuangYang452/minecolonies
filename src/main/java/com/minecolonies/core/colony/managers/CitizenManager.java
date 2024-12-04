@@ -13,8 +13,7 @@ import com.minecolonies.api.entity.ModEntities;
 import com.minecolonies.api.entity.citizen.AbstractCivilianEntity;
 import com.minecolonies.api.entity.citizen.AbstractEntityCitizen;
 import com.minecolonies.api.entity.citizen.happiness.IHappinessModifier;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedEvent;
+import com.minecolonies.api.eventbus.events.colony.citizens.CitizenAddedModEvent;
 import com.minecolonies.api.util.*;
 import com.minecolonies.api.util.constant.CitizenConstants;
 import com.minecolonies.core.MineColonies;
@@ -364,7 +363,7 @@ public class CitizenManager implements ICitizenManager
         citizens.put(citizenData.getId(), citizenData);
         spawnOrCreateCitizen(citizenData, world, spawnPos);
 
-        IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(citizenData, CitizenAddedEvent.CitizenAddedSource.RESURRECTED));
+        IMinecoloniesAPI.getInstance().getEventBus().post(new CitizenAddedModEvent(citizenData, CitizenAddedModEvent.CitizenAddedSource.RESURRECTED));
         return citizenData;
     }
 
@@ -622,7 +621,7 @@ public class CitizenManager implements ICitizenManager
 
                 spawnOrCreateCivilian(newCitizen, colony.getWorld(), null, true);
 
-                IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.CITIZEN_ADDED, new CitizenAddedEvent(newCitizen, CitizenAddedEvent.CitizenAddedSource.INITIAL));
+                IMinecoloniesAPI.getInstance().getEventBus().post(new CitizenAddedModEvent(newCitizen, CitizenAddedModEvent.CitizenAddedSource.INITIAL));
                 colony.getEventDescriptionManager().addEventDescription(new CitizenSpawnedEvent(colony.getBuildingManager().getTownHall().getPosition(),
                       newCitizen.getName()));
             }

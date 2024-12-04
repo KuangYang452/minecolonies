@@ -13,8 +13,7 @@ import com.minecolonies.api.colony.workorders.IWorkOrder;
 import com.minecolonies.api.colony.workorders.WorkOrderType;
 import com.minecolonies.api.crafting.ItemStorage;
 import com.minecolonies.api.entity.ai.statemachine.states.IAIState;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.buildings.BuildingConstructionEvent;
+import com.minecolonies.api.eventbus.events.colony.buildings.BuildingConstructionModEvent;
 import com.minecolonies.api.tileentities.AbstractTileEntityColonyBuilding;
 import com.minecolonies.api.util.*;
 import com.minecolonies.api.util.constant.Constants;
@@ -452,7 +451,7 @@ public abstract class AbstractEntityAIStructureWithWorkOrder<J extends AbstractJ
                             building.setDeconstructed();
                             break;
                     }
-                    IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.BUILDING_COMPLETED, new BuildingConstructionEvent(building, workOrderBuilding));
+                    IMinecoloniesAPI.getInstance().getEventBus().post(new BuildingConstructionModEvent(building, workOrderBuilding));
                 }
             }
         }

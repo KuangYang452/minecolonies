@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Event for when a citizen died in any colony.
  */
-public final class CitizenDiedEvent extends AbstractCitizenEvent
+public final class CitizenDiedModEvent extends AbstractCitizenModEvent
 {
     /**
      * The damage source that caused a citizen to die.
@@ -20,7 +20,7 @@ public final class CitizenDiedEvent extends AbstractCitizenEvent
      * @param citizen the citizen related to the event.
      * @param source  the damage source the citizen died from.
      */
-    public CitizenDiedEvent(final @NotNull ICitizenData citizen, final @NotNull DamageSource source)
+    public CitizenDiedModEvent(final @NotNull ICitizenData citizen, final @NotNull DamageSource source)
     {
         super(citizen);
         this.source = source;

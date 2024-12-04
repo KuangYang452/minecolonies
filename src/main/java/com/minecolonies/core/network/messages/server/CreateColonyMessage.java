@@ -5,8 +5,7 @@ import com.minecolonies.api.IMinecoloniesAPI;
 import com.minecolonies.api.colony.IColony;
 import com.minecolonies.api.colony.IColonyManager;
 import com.minecolonies.api.colony.buildings.IBuilding;
-import com.minecolonies.api.eventbus.MinecoloniesEventTypes;
-import com.minecolonies.api.eventbus.events.colony.ColonyCreatedEvent;
+import com.minecolonies.api.eventbus.events.colony.ColonyCreatedModEvent;
 import com.minecolonies.api.network.IMessage;
 import com.minecolonies.core.Network;
 import com.minecolonies.core.network.messages.client.colony.OpenBuildingUIMessage;
@@ -188,7 +187,7 @@ public class CreateColonyMessage implements IMessage
                   .sendTo(sender);
             }
 
-            IMinecoloniesAPI.getInstance().getEventBus().post(MinecoloniesEventTypes.COLONY_CREATED, new ColonyCreatedEvent(createdColony));
+            IMinecoloniesAPI.getInstance().getEventBus().post(new ColonyCreatedModEvent(createdColony));
             Network.getNetwork().sendToPlayer(new OpenBuildingUIMessage(building), sender);
             return;
         }

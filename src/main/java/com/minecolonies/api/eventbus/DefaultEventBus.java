@@ -1,6 +1,5 @@
 package com.minecolonies.api.eventbus;
 
-import com.google.gson.reflect.TypeToken;
 import com.minecolonies.api.util.Log;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,36 +16,36 @@ public class DefaultEventBus implements EventBus
     /**
      * The map of event handlers.
      */
-    private final Map<TypeToken<?>, List<EventHandler<?>>> eventHandlersPerType = new HashMap<>();
+    private final Map<Class<? extends IModEvent>, List<EventHandler<? extends IModEvent>>> eventHandlersPerType = new HashMap<>();
 
     @Override
-    public <T extends IModEvent> void subscribe(final @NotNull IModEventType<T> eventType, final @NotNull EventHandler<T> handler)
+    public <T extends IModEvent> void subscribe(final @NotNull Class<T> eventType, final @NotNull EventHandler<T> handler)
     {
-        Log.getLogger().debug("Registering event handler for id {}.", eventType.getIdentifier());
+        Log.getLogger().debug("Registering event handler for id {}.", eventType.getSimpleName());
 
-        eventHandlersPerType.computeIfAbsent(eventType.getIdentifier(), (f) -> new ArrayList<>()).add(handler);
+        eventHandlersPerType.computeIfAbsent(eventType, (f) -> new ArrayList<>()).add(handler);
     }
 
     @Override
-    public <T extends IModEvent> void post(final @NotNull IModEventType<T> eventType, final @NotNull T event)
+    public void post(final @NotNull IModEvent event)
     {
-        final List<EventHandler<?>> eventHandlers = eventHandlersPerType.get(eventType.getIdentifier());
+        final List<EventHandler<? extends IModEvent>> eventHandlers = eventHandlersPerType.get(event.getClass());
         if (eventHandlers == null)
         {
             return;
         }
 
-        Log.getLogger().debug("Sending event '{}' for type '{}'. Sending to {} handlers.", event.getEventId(), eventType.getIdentifier(), eventHandlers.size());
+        Log.getLogger().debug("Sending event '{}' for type '{}'. Sending to {} handlers.", event.getEventId(), event.getClass().getSimpleName(), eventHandlers.size());
 
-        for (final EventHandler<?> handler : eventHandlers)
+        for (final EventHandler<? extends IModEvent> handler : eventHandlers)
         {
             try
             {
-                ((EventHandler<T>) handler).apply(event);
+                ((EventHandler<IModEvent>) handler).apply(event);
             }
             catch (Exception ex)
             {
-                Log.getLogger().warn("Sending event '{}' for type '{}'. Error occurred in handler:", event.getEventId(), eventType.getIdentifier(), ex);
+                Log.getLogger().warn("Sending event '{}' for type '{}'. Error occurred in handler:", event.getEventId(), event.getClass().getSimpleName(), ex);
             }
         }
     }
